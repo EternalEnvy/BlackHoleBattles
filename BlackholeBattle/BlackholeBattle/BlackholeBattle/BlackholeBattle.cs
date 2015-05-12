@@ -71,7 +71,7 @@ namespace BlackholeBattle
                 this.Exit();
 
             // TODO: Add your update logic here
-            foreach(Vector4 v in yolo)
+            foreach()
             {
 
             }

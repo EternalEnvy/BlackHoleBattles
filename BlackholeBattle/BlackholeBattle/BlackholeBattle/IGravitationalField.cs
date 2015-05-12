@@ -6,9 +6,9 @@ using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    interface IGravitationalField
+    class GravitationalField
     {
-        public double mass;
-        public Vector3 FieldVector(Vector3 position);
+        public virtual double mass;
+        public virtual Vector3 position;
     }
 }

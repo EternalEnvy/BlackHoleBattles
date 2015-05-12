@@ -17,7 +17,6 @@ namespace BlackholeBattle
         {
             position += velocity;
             velocity += acceleration;
-
         }
         public Vector3 Collide(double objectMass, Vector3 vec, Vector3 pos)
         {
