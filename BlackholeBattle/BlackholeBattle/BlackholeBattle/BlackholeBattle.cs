@@ -19,13 +19,12 @@ namespace BlackholeBattle
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        static List<IGravitationalField> gravityObjects = new List<IGravitationalField>();
+        static List<GravitationalField> gravityObjects = new List<GravitationalField>();
         public BlackholeBattle()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
         /// This is where it can query for any required services and load any non-graphic
@@ -71,9 +70,15 @@ namespace BlackholeBattle
                 this.Exit();
 
             // TODO: Add your update logic here
-            foreach()
+            List<Tuple<Vector3, double>> positionMass = new List<Tuple<Vector3,double>>();
+            foreach(GravitationalField gravityObject in gravityObjects)
             {
-
+                positionMass.Add(new Tuple<Vector3, double>(gravityObject.position, gravityObject.mass));
+            }
+            foreach(GravitationalField gravityObject in gravityObjects)
+            {
+                if (gravityObject is Spheroid)
+                    (gravityObject as Spheroid).Update(positionMass);
             }
             base.Update(gameTime);
         }
