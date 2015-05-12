@@ -7,16 +7,24 @@ using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    class Spheroid
+    class Spheroid : GravitationalField
     {
         double mass;
         Vector3 position;
         Vector3 velocity;
         Vector3 acceleration;
-        public void Update()
+        public void Update(List<Tuple<Vector3, double>> positionMasses)
         {
-            position += velocity;
+            //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.
+            foreach (Tuple<Vector3, double> pm in positionMasses)
+            {
+                Vector3 distanceBetween = pm.Item1 - position;
+                double fG = G * pm.Item2 / Math.Pow(distanceBetween.Length(), 2);
+                distanceBetween.Normalize();
+                acceleration += distanceBetween * (float)fG;
+            }
             velocity += acceleration;
+            position += velocity;
         }
         public Vector3 Collide(double objectMass, Vector3 vec, Vector3 pos)
         {
