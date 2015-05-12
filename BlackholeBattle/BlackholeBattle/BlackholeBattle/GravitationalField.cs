@@ -9,8 +9,8 @@ namespace BlackholeBattle
     class GravitationalField
     {
         protected const double G = 100;
-        public virtual double mass;
-        public virtual Vector3 position;
+        public double mass;
+        public Vector3 position;
         
     }
 }
