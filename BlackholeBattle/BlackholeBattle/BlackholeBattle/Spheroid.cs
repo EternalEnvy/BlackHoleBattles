@@ -13,12 +13,12 @@ namespace BlackholeBattle
         Vector3 position;
         Vector3 velocity;
         Vector3 acceleration;
-        public void Update()
+        public virtual void Update()
         {
             position += velocity;
             velocity += acceleration;
         }
-        public Vector3 Collide(double objectMass, Vector3 vec, Vector3 pos)
+        public virtual Vector3 Collide(double objectMass, Vector3 vec, Vector3 pos)
         {
             //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
             //given initla velocities and masses, find final velocity. Modified to find velocity in x,y,and z direction
