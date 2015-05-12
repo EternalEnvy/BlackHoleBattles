@@ -14,11 +14,12 @@ namespace BlackholeBattle
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+    /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        static List<IGravitationalField> gravityObjects = new List<IGravitationalField>();
         public BlackholeBattle()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,7 +35,6 @@ namespace BlackholeBattle
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -71,7 +71,10 @@ namespace BlackholeBattle
                 this.Exit();
 
             // TODO: Add your update logic here
+            foreach(Vector4 v in yolo)
+            {
 
+            }
             base.Update(gameTime);
         }
 
