@@ -1,0 +1,9 @@
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\earth.xnb
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\BlackholeBattle.exe
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\BlackholeBattle.pdb
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\BlackholeBattle.csprojResolveAssemblyReference.cache
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\BlackholeBattle.exe
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\BlackholeBattle.pdb
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\mars.xnb
+C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\jupiter.xnb

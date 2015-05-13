@@ -9,10 +9,6 @@ namespace BlackholeBattle
 {
     class Spheroid : GravitationalField
     {
-        double mass;
-        Vector3 position;
-        Vector3 velocity;
-        Vector3 acceleration;
         public virtual void Update(List<Tuple<Vector3, double>> positionMasses)
         {
             //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.

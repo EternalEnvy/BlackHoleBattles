@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>earth.fbx</Source>
+      <Name>earth</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\earth.xnb</Output>
+      <Time>2015-05-12T18:20:47.9077131-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Key>
+        <Value>2015-05-12T18:23:47.1292679-04:00</Value>
+      </Dependency>
+    </Item>
+    <Item>
+      <Source>earth.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Output>
+      <Time>2015-05-12T18:20:47.9077131-04:00</Time>
+    </Item>
+    <Item>
+      <Source>mars.fbx</Source>
+      <Name>mars</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\mars.xnb</Output>
+      <Time>2015-05-12T18:32:50.630971-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Key>
+        <Value>2015-05-12T18:33:03.6352471-04:00</Value>
+      </Dependency>
+    </Item>
+    <Item>
+      <Source>mars.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Output>
+      <Time>2015-05-12T18:32:50.630971-04:00</Time>
+    </Item>
+    <Item>
+      <Source>jupiter.fbx</Source>
+      <Name>jupiter</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\jupiter.xnb</Output>
+      <Time>2015-05-12T18:33:58.2819038-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\jupiter_0.xml</Key>
+        <Value>2015-05-12T18:34:05.2795457-04:00</Value>
+      </Dependency>
+    </Item>
+    <Item>
+      <Source>jupiter.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\jupiter_0.xml</Output>
+      <Time>2015-05-12T18:33:58.2819038-04:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <ContentProjectGUID>{501EAF72-6E5B-4221-8CA3-87A44BC67FBC}</ContentProjectGUID>
+      <TargetPlatform>Windows</TargetPlatform>
+      <TargetProfile>Reach</TargetProfile>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\WINDOWS\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2015-01-30T17:24:23.5388161-05:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>

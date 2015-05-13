@@ -72,6 +72,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Blackhole.cs" />
     <Compile Include="ConnectDecisionPacket.cs" />
     <Compile Include="GravitationalField.cs" />
     <Compile Include="Packet.cs" />

@@ -11,6 +11,7 @@ namespace BlackholeBattle
         protected const double G = 100;
         public double mass;
         public Vector3 position;
-        
+        public Vector3 velocity;
+        public Vector3 acceleration;
     }
 }

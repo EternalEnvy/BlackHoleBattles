@@ -17,6 +17,12 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
+        private Vector3 position = Vector3.One;
+        private float zoom = 2500;
+        private float rotationY = 0.0f;
+        private float rotationX = 0.0f;
+        private Matrix gameWorldRotation;
+        private Model earth;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
@@ -45,7 +51,7 @@ namespace BlackholeBattle
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            earth = Content.Load<Model>("jupiter");
             // TODO: use this.Content to load your game content here
         }
 
@@ -66,8 +72,7 @@ namespace BlackholeBattle
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            UpdateGamePad();
 
             // TODO: Add your update logic here
             List<Tuple<Vector3, double>> positionMass = new List<Tuple<Vector3,double>>();
@@ -92,8 +97,85 @@ namespace BlackholeBattle
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            DrawModel(earth);
             base.Draw(gameTime);
+        }
+        private void DrawModel(Model m)
+        {
+            Matrix[] transforms = new Matrix[m.Bones.Count];
+            float aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
+            m.CopyAbsoluteBoneTransformsTo(transforms);
+            Matrix projection =
+                Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f),
+                aspectRatio, 1.0f, 10000.0f);
+            Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
+                Vector3.Zero, Vector3.Up);
+
+            foreach (ModelMesh mesh in m.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+                    effect.View = view;
+                    effect.Projection = projection;
+                    effect.World = gameWorldRotation *
+                        transforms[mesh.ParentBone.Index] *
+                        Matrix.CreateTranslation(position);
+                }
+                mesh.Draw();
+            }
+        }
+        private void UpdateGamePad()
+        {
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+            if (state.IsKeyDown(Keys.Right))
+            {
+                position.X += 10;
+            }
+            if (state.IsKeyDown(Keys.Left))
+            {
+                position.X -= 10;
+            }
+            if (state.IsKeyDown(Keys.Down))
+            {
+                position.Y += 10;
+            }
+            if (state.IsKeyDown(Keys.Up))
+            {
+                position.Y -= 10;
+            }
+            if(state.IsKeyDown(Keys.A))
+            {
+                zoom += 10;
+            }
+            if(state.IsKeyDown(Keys.Z))
+            {
+                zoom -= 10;
+            }
+            if(state.IsKeyDown(Keys.LeftShift))
+            {
+                rotationX += 10;
+            }
+            if(state.IsKeyDown(Keys.LeftControl))
+            {
+                rotationX -= 10;
+            }
+            if (state.IsKeyDown(Keys.RightShift))
+            {
+                rotationY += 10;
+            }
+            if (state.IsKeyDown(Keys.RightControl))
+            {
+                rotationY -= 10;
+            }
+            gameWorldRotation =
+                Matrix.CreateRotationX(MathHelper.ToRadians(rotationX)) *
+                Matrix.CreateRotationY(MathHelper.ToRadians(rotationY));
         }
     }
 }
