@@ -24,7 +24,6 @@ namespace BlackholeBattle
         private float rotationY = 0.0f;
         private float rotationX = 0.0f;
         private Matrix gameWorldRotation;
-        private static Vector3 position = new Vector3(0, 0, 600);
         private Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
         private Dictionary<string, Model> planets = new Dictionary<string, Model>();
         GraphicsDeviceManager graphics;
@@ -37,6 +36,8 @@ namespace BlackholeBattle
         }
         protected override void Initialize()
         {
+            gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 0), "earth"));
+            gravityObjects.Add(new Spheroid(new Vector3(400, 0, 600), new Vector3(0, 0, 0), "mars"));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -50,13 +51,13 @@ namespace BlackholeBattle
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            //planets.Add("venus", Content.Load<Model>("venus"));
+            planets.Add("venus", Content.Load<Model>("venus"));
             planets.Add("mars", Content.Load<Model>("mars"));
-            //planets.Add("earth", Content.Load<Model>("earth"));
-            //planets.Add("ganymede", Content.Load<Model>("ganymede"));
-            //planets.Add("neptune", Content.Load<Model>("neptune"));
-            //planets.Add("uranus", Content.Load<Model>("uranus"));
-            //planets.Add("moon", Content.Load<Model>("moon"));
+            planets.Add("earth", Content.Load<Model>("earth"));
+            planets.Add("ganymede", Content.Load<Model>("ganymede"));
+            planets.Add("neptune", Content.Load<Model>("neptune"));
+            planets.Add("uranus", Content.Load<Model>("uranus"));
+            planets.Add("moon", Content.Load<Model>("moon"));
         }
 
         protected override void UnloadContent()
@@ -67,41 +68,42 @@ namespace BlackholeBattle
         {
             UpdateGamePad();
 
-            List<Tuple<Vector3, double>> positionMass = new List<Tuple<Vector3, double>>();
+            List<GravitationalField> objects = new List<GravitationalField>();
             foreach (GravitationalField gravityObject in gravityObjects)
             {
-                positionMass.Add(new Tuple<Vector3, double>(gravityObject.position, gravityObject.mass));
+               objects.Add(gravityObject);
             }
             foreach (GravitationalField gravityObject in gravityObjects)
             {
                 if (gravityObject is Spheroid)
-                    (gravityObject as Spheroid).Update(positionMass);
+                    (gravityObject as Spheroid).Update(objects);
             }
+
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.Black);
-            spriteBatch.Draw(hudTexture, hudRectangle, Color.Black);
-            double index = 0;
-            foreach (KeyValuePair<string, Model> m in planets)
+            foreach(GravitationalField g in gravityObjects)
             {
-                DrawModel(m.Value);
-                index += 250;
+                DrawModel(planets[g.modelName], g.size, g.position);
             }
+            spriteBatch.Draw(hudTexture, hudRectangle, Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }
-        private void DrawModel(Model m)
+        private void DrawModel(Model m, double size, Vector3 position)
+            //draw model of size "size"
         {
+            float rad = m.Meshes[0].BoundingSphere.Transform(m.Meshes[0].ParentBone.Transform).Radius;
             Matrix[] transforms = new Matrix[m.Bones.Count];
             float aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
             m.CopyAbsoluteBoneTransformsTo(transforms);
             Matrix projection =
             Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f),
                aspectRatio, 1.0f, 10000.0f);
-           Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
+             Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
                Vector3.Zero, Vector3.Up);
 
             foreach (ModelMesh mesh in m.Meshes)
@@ -111,10 +113,9 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(4,4,4) * Matrix.CreateRotationX(MathHelper.ToRadians(rotationX)) * Matrix.CreateRotationY(MathHelper.ToRadians(rotationY)) * Matrix.CreateTranslation(position) ;
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationX(MathHelper.ToRadians(rotationX)) * Matrix.CreateRotationY(MathHelper.ToRadians(rotationY)) * Matrix.CreateTranslation(position);
                 }
-                mesh.Draw();
-                float rad = m.Meshes[0].BoundingSphere.Transform(m.Meshes[0].ParentBone.Transform).Radius;
+                mesh.Draw();          
             }
         }
         private void UpdateGamePad()
@@ -124,22 +125,6 @@ namespace BlackholeBattle
             if (state.IsKeyDown(Keys.Escape))
             {
                 this.Exit();
-            }
-            if (state.IsKeyDown(Keys.Right))
-            {
-                position.X -= 10;
-            }
-            if (state.IsKeyDown(Keys.Left))
-            {
-                position.X += 10;
-            }
-            if (state.IsKeyDown(Keys.Down))
-            {
-                position.Y += 10;
-            }
-            if (state.IsKeyDown(Keys.Up))
-            {
-                position.Y -= 10;
             }
             if (state.IsKeyDown(Keys.A))
             {

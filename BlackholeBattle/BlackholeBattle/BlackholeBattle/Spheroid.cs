@@ -9,64 +9,74 @@ namespace BlackholeBattle
 {
     class Spheroid : GravitationalField
     {
-        string modelName = "earth";
-        public Spheroid()
+        public Spheroid(Vector3 startingPos, Vector3 startingVelocity, string nameModel)
         {
-            mass = randall.Next(100, 1000);
+            modelName = nameModel;
+            position = startingPos;
+            velocity = startingVelocity;
+            acceleration = new Vector3(0, 0, 0);
+            mass = 1000;
         }
-        public virtual void Update(List<Tuple<Vector3, double>> positionMasses)
+        public void Update(List<GravitationalField> gravityObjects)
         {
             //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.
-            foreach (Tuple<Vector3, double> pm in positionMasses)
+            foreach (GravitationalField g in gravityObjects)
             {
-                Vector3 distanceBetween = pm.Item1 - position;
-                double fG = G * pm.Item2 / Math.Pow(distanceBetween.Length(), 2);
-                distanceBetween.Normalize();
-                acceleration += distanceBetween * (float)fG;
+                if (this != g)
+                {
+                    Vector3 distanceBetween = g.position - position;
+                    if(g.size + size > Math.Abs(distanceBetween.Length()))
+                    {
+                        Collide(g);
+                    }
+                    double fG = G * g.mass / Math.Pow(distanceBetween.Length(), 2);
+                    distanceBetween.Normalize();
+                    acceleration += distanceBetween * (float)fG;
+                }
             }
             velocity += acceleration;
             position += velocity;
         }
-        public virtual Vector3 Collide(double objectMass, Vector3 vec, Vector3 pos)
+        public void Collide(GravitationalField gravityObject)
         {
             //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
             //given initla velocities and masses, find final velocity. Modified to find velocity in x,y,and z direction
-            float velocityX = (float)((mass - objectMass) * velocity.X / (mass + objectMass) + 2 * objectMass * vec.X / (mass + objectMass));
-            float velocityY = (float)((mass - objectMass) * velocity.Y / (mass + objectMass) + 2 * objectMass * vec.Y / (mass + objectMass));
-            float velocityZ = (float)((mass - objectMass) * velocity.Z / (mass + objectMass) + 2 * objectMass * vec.Z / (mass + objectMass));
+            float velocityX = (float)((mass - gravityObject.mass) * velocity.X / (mass + gravityObject.mass) + 2 * gravityObject.mass * gravityObject.velocity.X / (mass + gravityObject.mass));
+            float velocityY = (float)((mass - gravityObject.mass) * velocity.Y / (mass + gravityObject.mass) + 2 * gravityObject.mass * gravityObject.velocity.Y / (mass + gravityObject.mass));
+            float velocityZ = (float)((mass - gravityObject.mass) * velocity.Z / (mass + gravityObject.mass) + 2 * gravityObject.mass * gravityObject.velocity.Z / (mass + gravityObject.mass));
 
-            velocityY += 2 * (float)Math.Sin(pos.Y - position.Y);
-            velocityZ += 2 * (float)Math.Sin(pos.Z - position.Z);
-            velocityX += 2 * (float)Math.Sin(pos.X - position.X);
+            //velocityY += 2 * (float)Math.Sin(pos.Y - position.Y);
+            //velocityZ += 2 * (float)Math.Sin(pos.Z - position.Z);
+            //velocityX += 2 * (float)Math.Sin(pos.X - position.X);
 
-            velocityX -= (float)Math.Cos(pos.Y - position.Y);
-            velocityX -= (float)Math.Cos(pos.Z - position.Z);
+            //velocityX -= (float)Math.Cos(pos.Y - position.Y);
+            //velocityX -= (float)Math.Cos(pos.Z - position.Z);
 
-            velocityY -= (float)Math.Cos(pos.X - position.X);
-            velocityY -= (float)Math.Cos(pos.Z - position.Z);
+            //velocityY -= (float)Math.Cos(pos.X - position.X);
+            //velocityY -= (float)Math.Cos(pos.Z - position.Z);
 
-            velocityZ -= (float)Math.Cos(pos.X - position.X);
-            velocityZ -= (float)Math.Cos(pos.Y - position.Y);
+            //velocityZ -= (float)Math.Cos(pos.X - position.X);
+            //velocityZ -= (float)Math.Cos(pos.Y - position.Y);
 
 
-            velocity.X = (float)(2 * mass * velocity.X / (mass + objectMass) - (mass - objectMass) * vec.X / (mass + objectMass));
-            velocity.Y = (float)(2 * mass * velocity.Y / (mass + objectMass) - (mass - objectMass) * vec.Y / (mass + objectMass));
-            velocity.Z = (float)(2 * mass * velocity.Z / (mass + objectMass) - (mass - objectMass) * vec.Z / (mass + objectMass));
+            velocity.X = (float)(2 * mass * velocity.X / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.X / (mass + gravityObject.mass));
+            velocity.Y = (float)(2 * mass * velocity.Y / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.Y / (mass + gravityObject.mass));
+            velocity.Z = (float)(2 * mass * velocity.Z / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.Z / (mass + gravityObject.mass));
 
-            velocity.Y -= 2 * (float)Math.Sin(pos.Y - position.Y);
-            velocity.Z -= 2 * (float)Math.Sin(pos.Z - position.Z);
-            velocity.X -= 2 * (float)Math.Sin(pos.X - position.X);
+            //velocity.Y -= 2 * (float)Math.Sin(pos.Y - position.Y);
+            //velocity.Z -= 2 * (float)Math.Sin(pos.Z - position.Z);
+            //velocity.X -= 2 * (float)Math.Sin(pos.X - position.X);
 
-            velocity.X += (float)Math.Cos(pos.Y - position.Y);
-            velocity.X += (float)Math.Cos(pos.Z - position.Z);
+            //velocity.X += (float)Math.Cos(pos.Y - position.Y);
+            //velocity.X += (float)Math.Cos(pos.Z - position.Z);
 
-            velocity.Y += (float)Math.Cos(pos.X - position.X);
-            velocity.Y += (float)Math.Cos(pos.Z - position.Z);
+            //velocity.Y += (float)Math.Cos(pos.X - position.X);
+            //velocity.Y += (float)Math.Cos(pos.Z - position.Z);
 
-            velocity.Z += (float)Math.Cos(pos.X - position.X);
-            velocity.Z += (float)Math.Cos(pos.Y - position.Y);
+            //velocity.Z += (float)Math.Cos(pos.X - position.X);
+            //velocity.Z += (float)Math.Cos(pos.Y - position.Y);
 
-            return new Vector3(velocityX, velocityY, velocityZ);
+            gravityObject.velocity = new Vector3(velocityX, velocityY, velocityZ);
         }
     }
 }
