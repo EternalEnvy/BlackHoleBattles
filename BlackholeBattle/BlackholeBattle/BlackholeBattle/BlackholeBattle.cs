@@ -17,12 +17,18 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
-        private Vector3 position = Vector3.One;
+        Player curPlayer = new Player("Default");
+        Texture2D hudTexture;
+        Rectangle hudRectangle;
         private float zoom = 2500;
         private float rotationY = 0.0f;
         private float rotationX = 0.0f;
         private Matrix gameWorldRotation;
-        private Model earth;
+
+        private static Vector3 avatarPosition = new Vector3(0, 0, -50);
+        private static Vector3 position = avatarPosition;
+        private Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
+        private Dictionary<string, Model> planets = new Dictionary<string, Model>();
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
@@ -31,56 +37,45 @@ namespace BlackholeBattle
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
+            hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            Color[] c = new Color[1];
+            Byte transparency_amount = 100;
+            c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
+            hudTexture.SetData<Color>(c);
+            IsMouseVisible = true;
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            earth = Content.Load<Model>("venus");
-            // TODO: use this.Content to load your game content here
+            planets.Add("venus", Content.Load<Model>("venus"));
+            planets.Add("mars", Content.Load<Model>("mars"));
+            planets.Add("earth", Content.Load<Model>("earth"));
+            planets.Add("ganymede", Content.Load<Model>("ganymede"));
+            planets.Add("neptune", Content.Load<Model>("neptune"));
+            planets.Add("uranus", Content.Load<Model>("uranus"));
+            planets.Add("moon", Content.Load<Model>("moon"));
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+       
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
             UpdateGamePad();
 
-            // TODO: Add your update logic here
-            List<Tuple<Vector3, double>> positionMass = new List<Tuple<Vector3,double>>();
-            foreach(GravitationalField gravityObject in gravityObjects)
+            List<Tuple<Vector3, double>> positionMass = new List<Tuple<Vector3, double>>();
+            foreach (GravitationalField gravityObject in gravityObjects)
             {
                 positionMass.Add(new Tuple<Vector3, double>(gravityObject.position, gravityObject.mass));
             }
-            foreach(GravitationalField gravityObject in gravityObjects)
+            foreach (GravitationalField gravityObject in gravityObjects)
             {
                 if (gravityObject is Spheroid)
                     (gravityObject as Spheroid).Update(positionMass);
@@ -94,22 +89,28 @@ namespace BlackholeBattle
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            spriteBatch.Begin();
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-            DrawModel(earth);
+            spriteBatch.Draw(hudTexture, hudRectangle, Color.Black);
+            double index = 0;
+            foreach (KeyValuePair<string, Model> m in planets)
+            {
+                DrawModel(m.Value, index);
+                index += 250;
+            }
+            spriteBatch.End();
             base.Draw(gameTime);
         }
-        private void DrawModel(Model m)
+        private void DrawModel(Model m, double index)
         {
             Matrix[] transforms = new Matrix[m.Bones.Count];
             float aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
             m.CopyAbsoluteBoneTransformsTo(transforms);
             Matrix projection =
-                Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f),
-                aspectRatio, 1.0f, 10000.0f);
-            Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
-                Vector3.Zero, Vector3.Up);
+            Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f),
+               aspectRatio, 1.0f, 10000.0f);
+           Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
+               Vector3.Zero, Vector3.Up);
 
             foreach (ModelMesh mesh in m.Meshes)
             {
@@ -118,9 +119,7 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = gameWorldRotation *
-                        transforms[mesh.ParentBone.Index] *
-                        Matrix.CreateTranslation(position);
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateTranslation(position + new Vector3((float)index, 0, 0));
                 }
                 mesh.Draw();
             }
@@ -135,11 +134,11 @@ namespace BlackholeBattle
             }
             if (state.IsKeyDown(Keys.Right))
             {
-                position.X += 10;
+                position.X -= 10;
             }
             if (state.IsKeyDown(Keys.Left))
             {
-                position.X -= 10;
+                position.X += 10;
             }
             if (state.IsKeyDown(Keys.Down))
             {
@@ -149,19 +148,19 @@ namespace BlackholeBattle
             {
                 position.Y -= 10;
             }
-            if(state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(Keys.A))
             {
                 zoom += 10;
             }
-            if(state.IsKeyDown(Keys.Z))
+            if (state.IsKeyDown(Keys.Z))
             {
                 zoom -= 10;
             }
-            if(state.IsKeyDown(Keys.LeftShift))
+            if (state.IsKeyDown(Keys.LeftShift))
             {
                 rotationX += 10;
             }
-            if(state.IsKeyDown(Keys.LeftControl))
+            if (state.IsKeyDown(Keys.LeftControl))
             {
                 rotationX -= 10;
             }

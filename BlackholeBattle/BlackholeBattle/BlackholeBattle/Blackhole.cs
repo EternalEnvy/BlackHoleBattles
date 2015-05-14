@@ -5,8 +5,12 @@ using System.Text;
 
 namespace BlackholeBattle
 {
-    class Blackhole : GravitationalField
+    class Blackhole : GravitationalField, IUnit
     {
-
+        string myOwner = "Yolo";
+        public string Owner()
+        {
+            return myOwner;
+        }
     }
 }

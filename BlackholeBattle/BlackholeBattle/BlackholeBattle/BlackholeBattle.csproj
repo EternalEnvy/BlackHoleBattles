@@ -76,11 +76,13 @@
     <Compile Include="ConnectDecisionPacket.cs" />
     <Compile Include="GravitationalField.cs" />
     <Compile Include="Packet.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="BlackholeBattle.cs" />
     <Compile Include="RequestConnectPacket.cs" />
     <Compile Include="Spheroid.cs" />
+    <Compile Include="IUnit.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
