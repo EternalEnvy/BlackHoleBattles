@@ -24,9 +24,7 @@ namespace BlackholeBattle
         private float rotationY = 0.0f;
         private float rotationX = 0.0f;
         private Matrix gameWorldRotation;
-
-        private static Vector3 avatarPosition = new Vector3(0, 0, -50);
-        private static Vector3 position = avatarPosition;
+        private static Vector3 position = new Vector3(0, 0, 600);
         private Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
         private Dictionary<string, Model> planets = new Dictionary<string, Model>();
         GraphicsDeviceManager graphics;
@@ -52,20 +50,19 @@ namespace BlackholeBattle
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            planets.Add("venus", Content.Load<Model>("venus"));
+            //planets.Add("venus", Content.Load<Model>("venus"));
             planets.Add("mars", Content.Load<Model>("mars"));
-            planets.Add("earth", Content.Load<Model>("earth"));
-            planets.Add("ganymede", Content.Load<Model>("ganymede"));
-            planets.Add("neptune", Content.Load<Model>("neptune"));
-            planets.Add("uranus", Content.Load<Model>("uranus"));
-            planets.Add("moon", Content.Load<Model>("moon"));
+            //planets.Add("earth", Content.Load<Model>("earth"));
+            //planets.Add("ganymede", Content.Load<Model>("ganymede"));
+            //planets.Add("neptune", Content.Load<Model>("neptune"));
+            //planets.Add("uranus", Content.Load<Model>("uranus"));
+            //planets.Add("moon", Content.Load<Model>("moon"));
         }
 
         protected override void UnloadContent()
         {
             
         }
-       
         protected override void Update(GameTime gameTime)
         {
             UpdateGamePad();
@@ -82,11 +79,6 @@ namespace BlackholeBattle
             }
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
@@ -95,13 +87,13 @@ namespace BlackholeBattle
             double index = 0;
             foreach (KeyValuePair<string, Model> m in planets)
             {
-                DrawModel(m.Value, index);
+                DrawModel(m.Value);
                 index += 250;
             }
             spriteBatch.End();
             base.Draw(gameTime);
         }
-        private void DrawModel(Model m, double index)
+        private void DrawModel(Model m)
         {
             Matrix[] transforms = new Matrix[m.Bones.Count];
             float aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
@@ -119,9 +111,10 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateTranslation(position + new Vector3((float)index, 0, 0));
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale(4,4,4) * Matrix.CreateRotationX(MathHelper.ToRadians(rotationX)) * Matrix.CreateRotationY(MathHelper.ToRadians(rotationY)) * Matrix.CreateTranslation(position) ;
                 }
                 mesh.Draw();
+                float rad = m.Meshes[0].BoundingSphere.Transform(m.Meshes[0].ParentBone.Transform).Radius;
             }
         }
         private void UpdateGamePad()

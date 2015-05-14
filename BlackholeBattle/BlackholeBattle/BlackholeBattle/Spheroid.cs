@@ -9,6 +9,11 @@ namespace BlackholeBattle
 {
     class Spheroid : GravitationalField
     {
+        string modelName = "earth";
+        public Spheroid()
+        {
+            mass = randall.Next(100, 1000);
+        }
         public virtual void Update(List<Tuple<Vector3, double>> positionMasses)
         {
             //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.
