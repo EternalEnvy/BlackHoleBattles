@@ -90,7 +90,7 @@ namespace BlackholeBattle
         protected override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Black);
             double index = 0;
             foreach (KeyValuePair<string, Model> m in planets)
