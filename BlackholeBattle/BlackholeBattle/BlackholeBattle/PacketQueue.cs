@@ -8,6 +8,7 @@ namespace BlackholeBattle
 {
     class PacketQueue
     {
+        public static PacketQueue Instance = new PacketQueue();
         List<Packet> _queue = new List<Packet>();
         long id = 0;
         long lastReceivedFromOther = -1;
