@@ -36,8 +36,9 @@ namespace BlackholeBattle
         }
         protected override void Initialize()
         {
-            gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 0), "earth"));
-            gravityObjects.Add(new Spheroid(new Vector3(400, 0, 600), new Vector3(0, 0, 0), "mars"));
+            gravityObjects.Add(new Spheroid(new Vector3(-400, -200, 600), new Vector3(10, 0, 0), "earth"));
+            gravityObjects.Add(new Spheroid(new Vector3(400, 200, 600), new Vector3(0, 0, 0), "mars"));
+            //gravityObjects.Add(new Spheroid(new Vector3(200, 0, 0), new Vector3(0, 0, 0), "uranus"));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -105,7 +106,6 @@ namespace BlackholeBattle
                aspectRatio, 1.0f, 10000.0f);
              Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
                Vector3.Zero, Vector3.Up);
-
             foreach (ModelMesh mesh in m.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)

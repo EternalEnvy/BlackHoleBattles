@@ -15,7 +15,7 @@ namespace BlackholeBattle
             position = startingPos;
             velocity = startingVelocity;
             acceleration = new Vector3(0, 0, 0);
-            mass = 1000;
+            mass = 500;
         }
         public void Update(List<GravitationalField> gravityObjects)
         {
@@ -25,13 +25,18 @@ namespace BlackholeBattle
                 if (this != g)
                 {
                     Vector3 distanceBetween = g.position - position;
-                    if(g.size + size > Math.Abs(distanceBetween.Length()))
+                    if(g.size + size > distanceBetween.Length())
                     {
                         Collide(g);
                     }
-                    double fG = G * g.mass / Math.Pow(distanceBetween.Length(), 2);
-                    distanceBetween.Normalize();
-                    acceleration += distanceBetween * (float)fG;
+                    if (distanceBetween.Length() > 1000)
+                        continue;
+                    else
+                    {
+                        double fG = G * g.mass / Math.Pow(distanceBetween.Length(), 2);
+                        distanceBetween.Normalize();
+                        acceleration += distanceBetween * (float)fG;
+                    }
                 }
             }
             velocity += acceleration;
@@ -39,44 +44,36 @@ namespace BlackholeBattle
         }
         public void Collide(GravitationalField gravityObject)
         {
-            //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
-            //given initla velocities and masses, find final velocity. Modified to find velocity in x,y,and z direction
-            float velocityX = (float)((mass - gravityObject.mass) * velocity.X / (mass + gravityObject.mass) + 2 * gravityObject.mass * gravityObject.velocity.X / (mass + gravityObject.mass));
-            float velocityY = (float)((mass - gravityObject.mass) * velocity.Y / (mass + gravityObject.mass) + 2 * gravityObject.mass * gravityObject.velocity.Y / (mass + gravityObject.mass));
-            float velocityZ = (float)((mass - gravityObject.mass) * velocity.Z / (mass + gravityObject.mass) + 2 * gravityObject.mass * gravityObject.velocity.Z / (mass + gravityObject.mass));
+            float f = velocity.Length();
+            float f2 = gravityObject.velocity.Length();
+            if (velocity.Length() < 0.2 && gravityObject.velocity.Length() < 0.2)
+            {
+                velocity = Vector3.Zero;
+                gravityObject.velocity = Vector3.Zero;
+            }
+            else
+            {
+                //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
+                //given initial velocities and masses, find final velocity.
+                Vector3 normal = position - gravityObject.position;
+                normal.Normalize();
+                Vector3 velocityHat = gravityObject.velocity;
+                velocityHat.Normalize();
+                Vector3 remainingVector = velocityHat - normal;
+                remainingVector += (-1 * (normal));
+                remainingVector.Normalize();
+                gravityObject.velocity = (float)(2 * mass * velocity.Length() / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.Length() / (mass + gravityObject.mass)) * remainingVector;
 
-            //velocityY += 2 * (float)Math.Sin(pos.Y - position.Y);
-            //velocityZ += 2 * (float)Math.Sin(pos.Z - position.Z);
-            //velocityX += 2 * (float)Math.Sin(pos.X - position.X);
+                //the same to this object
 
-            //velocityX -= (float)Math.Cos(pos.Y - position.Y);
-            //velocityX -= (float)Math.Cos(pos.Z - position.Z);
-
-            //velocityY -= (float)Math.Cos(pos.X - position.X);
-            //velocityY -= (float)Math.Cos(pos.Z - position.Z);
-
-            //velocityZ -= (float)Math.Cos(pos.X - position.X);
-            //velocityZ -= (float)Math.Cos(pos.Y - position.Y);
-
-
-            velocity.X = (float)(2 * mass * velocity.X / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.X / (mass + gravityObject.mass));
-            velocity.Y = (float)(2 * mass * velocity.Y / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.Y / (mass + gravityObject.mass));
-            velocity.Z = (float)(2 * mass * velocity.Z / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.Z / (mass + gravityObject.mass));
-
-            //velocity.Y -= 2 * (float)Math.Sin(pos.Y - position.Y);
-            //velocity.Z -= 2 * (float)Math.Sin(pos.Z - position.Z);
-            //velocity.X -= 2 * (float)Math.Sin(pos.X - position.X);
-
-            //velocity.X += (float)Math.Cos(pos.Y - position.Y);
-            //velocity.X += (float)Math.Cos(pos.Z - position.Z);
-
-            //velocity.Y += (float)Math.Cos(pos.X - position.X);
-            //velocity.Y += (float)Math.Cos(pos.Z - position.Z);
-
-            //velocity.Z += (float)Math.Cos(pos.X - position.X);
-            //velocity.Z += (float)Math.Cos(pos.Y - position.Y);
-
-            gravityObject.velocity = new Vector3(velocityX, velocityY, velocityZ);
+                Vector3 normal2 = gravityObject.position - position;
+                normal2.Normalize();
+                Vector3 velocityHat2 = velocity;
+                velocityHat2.Normalize();
+                Vector3 remainingVector2 = velocityHat2 - normal2;
+                remainingVector2 += -1 * (normal2);
+                velocity = (float)((mass - gravityObject.mass) * velocity.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * gravityObject.velocity.Length()) / (mass + gravityObject.mass)) * remainingVector2;
+            }
         }
     }
 }

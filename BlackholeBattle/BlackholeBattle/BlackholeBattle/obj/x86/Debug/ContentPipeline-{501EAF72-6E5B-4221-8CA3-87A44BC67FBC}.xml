@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline" xmlns:Framework="Microsoft.Xna.Framework" xmlns:Processors="Microsoft.Xna.Framework.Content.Pipeline.Processors">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <Item>
+      <Source>moon.fbx</Source>
+      <Name>moon</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\moon.xnb</Output>
+      <Time>2015-05-13T13:11:17.3784723-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Key>
+        <Value>2015-05-15T13:25:54.1110851-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>earth.fbx</Source>
+      <Name>earth</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\earth.xnb</Output>
+      <Time>2015-05-13T13:36:36.0189005-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Key>
+        <Value>2015-05-15T13:25:55.3383776-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>ganymede.fbx</Source>
+      <Name>ganymede</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ganymede.xnb</Output>
+      <Time>2015-05-13T13:55:09.7825004-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Key>
+        <Value>2015-05-15T13:25:58.9790525-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>venus.fbx</Source>
+      <Name>venus</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\venus.xnb</Output>
+      <Time>2015-05-13T13:56:33.4562805-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Key>
+        <Value>2015-05-15T13:26:00.8993994-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>mars.fbx</Source>
+      <Name>mars</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\mars.xnb</Output>
+      <Time>2015-05-13T13:45:38.4714685-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Key>
+        <Value>2015-05-15T13:26:01.4797863-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>uranus.fbx</Source>
+      <Name>uranus</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\uranus.xnb</Output>
+      <Time>2015-05-13T13:53:09.0512642-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Key>
+        <Value>2015-05-15T13:26:02.8050735-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>neptune.fbx</Source>
+      <Name>neptune</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\neptune.xnb</Output>
+      <Time>2015-05-13T13:47:17.8369527-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Key>
+        <Value>2015-05-15T13:26:03.0773625-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>moon.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Output>
+      <Time>2015-05-13T13:11:17.3784723-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\moon.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Output>
+      <Time>2015-05-13T13:10:53.1131582-04:00</Time>
+    </Item>
+    <Item>
+      <Source>earth.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Output>
+      <Time>2015-05-13T13:36:36.0189005-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\world.200411.3x5400x2700.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Output>
+      <Time>2015-05-13T13:41:44.3361672-04:00</Time>
+    </Item>
+    <Item>
+      <Source>ganymede.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Output>
+      <Time>2015-05-13T13:55:09.7825004-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\ganymede.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Output>
+      <Time>2015-05-13T13:54:53.046514-04:00</Time>
+    </Item>
+    <Item>
+      <Source>venus.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Output>
+      <Time>2015-05-13T13:56:33.4562805-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\Venus_map_NASA_JPL_Magellan-Venera-Pioneer.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Output>
+      <Time>2015-05-13T13:56:21.5392429-04:00</Time>
+    </Item>
+    <Item>
+      <Source>mars.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Output>
+      <Time>2015-05-13T13:45:38.4714685-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\mars.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Output>
+      <Time>2015-05-13T13:45:29.6985848-04:00</Time>
+    </Item>
+    <Item>
+      <Source>uranus.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Output>
+      <Time>2015-05-13T13:53:09.0512642-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\uranuscyl1.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Output>
+      <Time>2015-05-13T13:52:57.1955347-04:00</Time>
+    </Item>
+    <Item>
+      <Source>neptune.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Output>
+      <Time>2015-05-13T13:47:17.8369527-04:00</Time>
+    </Item>
+    <Item>
+      <Source>textures\neptune.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Output>
+      <Time>2015-05-13T13:47:04.4766994-04:00</Time>
+    </Item>
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <ContentProjectGUID>{501EAF72-6E5B-4221-8CA3-87A44BC67FBC}</ContentProjectGUID>
+      <TargetPlatform>Windows</TargetPlatform>
+      <TargetProfile>HiDef</TargetProfile>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.VideoImporters.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
+        <Value>2011-09-01T17:22:30-04:00</Value>
+      </Assembly>
+      <Assembly>
+        <Key>C:\WINDOWS\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2015-01-30T17:24:23.5388161-05:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
