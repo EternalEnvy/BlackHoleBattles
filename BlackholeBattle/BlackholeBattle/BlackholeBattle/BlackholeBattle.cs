@@ -21,9 +21,7 @@ namespace BlackholeBattle
         Texture2D hudTexture;
         Rectangle hudRectangle;
         private float zoom = 2500;
-        private float rotationY = 0.0f;
-        private float rotationX = 0.0f;
-        private Matrix gameWorldRotation;
+        private double elapsedTimeSeconds = 0;
         private Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
         private Dictionary<string, Model> planets = new Dictionary<string, Model>();
         GraphicsDeviceManager graphics;
@@ -36,9 +34,8 @@ namespace BlackholeBattle
         }
         protected override void Initialize()
         {
-            gravityObjects.Add(new Spheroid(new Vector3(-400, -200, 600), new Vector3(10, 0, 0), "earth"));
-            gravityObjects.Add(new Spheroid(new Vector3(400, 200, 600), new Vector3(0, 0, 0), "mars"));
-            //gravityObjects.Add(new Spheroid(new Vector3(200, 0, 0), new Vector3(0, 0, 0), "uranus"));
+            gravityObjects.Add(new Spheroid(new Vector3(400, 200, 600), new Vector3(0, 0, 0), 500, 100, "mars"));
+            gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 0), 50, 50, "earth"));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -67,8 +64,7 @@ namespace BlackholeBattle
         }
         protected override void Update(GameTime gameTime)
         {
-            UpdateGamePad();
-
+            elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
             List<GravitationalField> objects = new List<GravitationalField>();
             foreach (GravitationalField gravityObject in gravityObjects)
             {
@@ -79,23 +75,28 @@ namespace BlackholeBattle
                 if (gravityObject is Spheroid)
                     (gravityObject as Spheroid).Update(objects);
             }
-
+            foreach (GravitationalField gravityObject in gravityObjects)
+            {
+                if (gravityObject is Spheroid)
+                    (gravityObject as Spheroid).updatedInLoop = false;
+                gravityObject.Update();
+            }
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.Black);
-            foreach(GravitationalField g in gravityObjects)
+            foreach(Spheroid s in gravityObjects)
             {
-                DrawModel(planets[g.modelName], g.size, g.position);
+                DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds / s.orbitalPeriod * 2 * Math.PI, s.position);
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }
-        private void DrawModel(Model m, double size, Vector3 position)
-            //draw model of size "size"
+        private void DrawModel(Model m, double size, double rotation, Vector3 position)
+        //draw model of size "size"
         {
             float rad = m.Meshes[0].BoundingSphere.Transform(m.Meshes[0].ParentBone.Transform).Radius;
             Matrix[] transforms = new Matrix[m.Bones.Count];
@@ -113,7 +114,7 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationX(MathHelper.ToRadians(rotationX)) * Matrix.CreateRotationY(MathHelper.ToRadians(rotationY)) * Matrix.CreateTranslation(position);
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) * Matrix.CreateTranslation(position);
                 }
                 mesh.Draw();          
             }
@@ -134,25 +135,6 @@ namespace BlackholeBattle
             {
                 zoom -= 10;
             }
-            if (state.IsKeyDown(Keys.LeftShift))
-            {
-                rotationX += 10;
-            }
-            if (state.IsKeyDown(Keys.LeftControl))
-            {
-                rotationX -= 10;
-            }
-            if (state.IsKeyDown(Keys.RightShift))
-            {
-                rotationY += 10;
-            }
-            if (state.IsKeyDown(Keys.RightControl))
-            {
-                rotationY -= 10;
-            }
-            gameWorldRotation =
-                Matrix.CreateRotationX(MathHelper.ToRadians(rotationX)) *
-                Matrix.CreateRotationY(MathHelper.ToRadians(rotationY));
         }
     }
 }

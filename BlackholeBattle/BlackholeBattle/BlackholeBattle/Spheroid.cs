@@ -9,13 +9,15 @@ namespace BlackholeBattle
 {
     class Spheroid : GravitationalField
     {
-        public Spheroid(Vector3 startingPos, Vector3 startingVelocity, string nameModel)
+        public double orbitalPeriod = 0.5; //orbital period in seconds
+        public Spheroid(Vector3 startingPos, Vector3 startingVelocity, double startingMass, double startingSize, string nameModel)
         {
+            size = startingSize;
+            mass = startingMass;
             modelName = nameModel;
             position = startingPos;
             velocity = startingVelocity;
             acceleration = new Vector3(0, 0, 0);
-            mass = 500;
         }
         public void Update(List<GravitationalField> gravityObjects)
         {
@@ -25,7 +27,7 @@ namespace BlackholeBattle
                 if (this != g)
                 {
                     Vector3 distanceBetween = g.position - position;
-                    if(g.size + size > distanceBetween.Length())
+                    if(g.size + size >= distanceBetween.Length())
                     {
                         Collide(g);
                     }
@@ -39,41 +41,52 @@ namespace BlackholeBattle
                     }
                 }
             }
-            velocity += acceleration;
-            position += velocity;
+            updatedInLoop = true;
         }
         public void Collide(GravitationalField gravityObject)
         {
-            float f = velocity.Length();
-            float f2 = gravityObject.velocity.Length();
-            if (velocity.Length() < 0.2 && gravityObject.velocity.Length() < 0.2)
-            {
-                velocity = Vector3.Zero;
-                gravityObject.velocity = Vector3.Zero;
-            }
-            else
-            {
+                Vector3 objectVelocity;
                 //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
                 //given initial velocities and masses, find final velocity.
-                Vector3 normal = position - gravityObject.position;
+                if (gravityObject.updatedInLoop)
+                    objectVelocity = gravityObject.preVelocity;                    
+                else
+                    objectVelocity = gravityObject.velocity;
+                Vector3 normal = gravityObject.position - position;
                 normal.Normalize();
-                Vector3 velocityHat = gravityObject.velocity;
+                Vector3 velocityHat = velocity;
                 velocityHat.Normalize();
                 Vector3 remainingVector = velocityHat - normal;
-                remainingVector += (-1 * (normal));
+                remainingVector += -1 * (normal);
                 remainingVector.Normalize();
-                gravityObject.velocity = (float)(2 * mass * velocity.Length() / (mass + gravityObject.mass) - (mass - gravityObject.mass) * gravityObject.velocity.Length() / (mass + gravityObject.mass)) * remainingVector;
-
-                //the same to this object
-
-                Vector3 normal2 = gravityObject.position - position;
-                normal2.Normalize();
-                Vector3 velocityHat2 = velocity;
-                velocityHat2.Normalize();
-                Vector3 remainingVector2 = velocityHat2 - normal2;
-                remainingVector2 += -1 * (normal2);
-                velocity = (float)((mass - gravityObject.mass) * velocity.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * gravityObject.velocity.Length()) / (mass + gravityObject.mass)) * remainingVector2;
-            }
+                velocity = (float)((mass - gravityObject.mass) * velocity.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * objectVelocity.Length()) / (mass + gravityObject.mass)) * remainingVector;
+        }
+        public Derivative Evaluate(State initial, float t, float dt, Derivative d)
+        {
+            State state;
+            state.x = initial.x + d.dx * dt;
+            state.v = initial.v + d.dv * dt;
+            Derivative output;
+            output.dx = state.v;
+            output.dv = Acceleration(state, t + dt);
+            return output;
+        }
+        Vector3 Acceleration(State state, float t)
+        {
+            //ALL LOGIC HERE
+            return new Vector3(0, 0, 0);
+        }
+        void Integrate(State state, float t, float dt)
+        {
+            Derivative a, b, c, d;
+            a = Evaluate(state, t, 0.0f, new Derivative());
+            b = Evaluate(state, t, dt * 0.5f, a);
+            c = Evaluate(state, t, dt * 0.5f, b);
+            d = Evaluate(state, t, dt, c);
+            Vector3 dxdt = 1.0f / 6.0f * (a.dx + 2.0f * (b.dx + c.dx) + d.dx);
+            Vector3 dvdt = 1.0f / 6.0f * (a.dv + 2.0f * (b.dv + c.dv) + d.dv);
+            state.x += dxdt * dt;
+            state.v = state.v + dvdt * dt;
         }
     }
 }
