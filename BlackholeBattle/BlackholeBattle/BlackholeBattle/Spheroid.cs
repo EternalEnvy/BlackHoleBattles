@@ -61,32 +61,5 @@ namespace BlackholeBattle
                 remainingVector.Normalize();
                 velocity = (float)((mass - gravityObject.mass) * velocity.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * objectVelocity.Length()) / (mass + gravityObject.mass)) * remainingVector;
         }
-        public Derivative Evaluate(State initial, float t, float dt, Derivative d)
-        {
-            State state;
-            state.x = initial.x + d.dx * dt;
-            state.v = initial.v + d.dv * dt;
-            Derivative output;
-            output.dx = state.v;
-            output.dv = Acceleration(state, t + dt);
-            return output;
-        }
-        Vector3 Acceleration(State state, float t)
-        {
-            //ALL LOGIC HERE
-            return new Vector3(0, 0, 0);
-        }
-        void Integrate(State state, float t, float dt)
-        {
-            Derivative a, b, c, d;
-            a = Evaluate(state, t, 0.0f, new Derivative());
-            b = Evaluate(state, t, dt * 0.5f, a);
-            c = Evaluate(state, t, dt * 0.5f, b);
-            d = Evaluate(state, t, dt, c);
-            Vector3 dxdt = 1.0f / 6.0f * (a.dx + 2.0f * (b.dx + c.dx) + d.dx);
-            Vector3 dvdt = 1.0f / 6.0f * (a.dv + 2.0f * (b.dv + c.dv) + d.dv);
-            state.x += dxdt * dt;
-            state.v = state.v + dvdt * dt;
-        }
     }
 }

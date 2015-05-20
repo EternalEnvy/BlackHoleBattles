@@ -79,7 +79,11 @@ namespace BlackholeBattle
             {
                 if (gravityObject is Spheroid)
                     (gravityObject as Spheroid).updatedInLoop = false;
-                gravityObject.Update();
+                //RK4
+                gravityObject.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                //EULER
+                //gravityObject.Update();
+
             }
             base.Update(gameTime);
         }
