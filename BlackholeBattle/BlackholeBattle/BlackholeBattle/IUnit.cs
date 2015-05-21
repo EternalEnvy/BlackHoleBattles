@@ -7,6 +7,5 @@ namespace BlackholeBattle
 {
     interface IUnit : IMovable
     {
-        string Owner();
     }
 }

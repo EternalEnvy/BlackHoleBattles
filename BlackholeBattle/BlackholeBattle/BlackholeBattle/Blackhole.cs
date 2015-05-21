@@ -8,10 +8,14 @@ namespace BlackholeBattle
 {
     class Blackhole : GravitationalField, IUnit
     {
-        string myOwner = "Yolo";
-        public string Owner()
+        string myOwner;
+        public Blackhole(string player, double startMass, Vector3 startingPos)
         {
-            return myOwner;
+            mass = startMass;
+            position = startingPos;
+            velocity = Vector3.Zero;
+            acceleration = Vector3.Zero;
+            myOwner = player;
         }
     }
 }

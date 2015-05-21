@@ -12,3 +12,4 @@ Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb
 Content\textures\mars_0.xnb
 Content\textures\uranuscyl1_0.xnb
 Content\textures\neptune_0.xnb
+Content\SpriteFont1.xnb

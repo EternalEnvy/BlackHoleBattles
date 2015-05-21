@@ -9,8 +9,8 @@ namespace BlackholeBattle
     class GravitationalField : IMovable
     {
         public double size;
-        public string modelName = "earth";
-        protected const double G = 0.03;
+        public string modelName;
+        protected const double G = 0.01;
         public double mass = 0;
         public Vector3 position { get; set; }
         public Vector3 velocity { get; set; }
@@ -35,7 +35,7 @@ namespace BlackholeBattle
             position += dxdt * dt;
             velocity += velocity + dvdt * dt;
         }
-        public Tuple<Vector3, Vector3> Evaluate(float dt, Tuple<Vector3, Vector3> d)
+        Tuple<Vector3, Vector3> Evaluate(float dt, Tuple<Vector3, Vector3> d)
         {
             Vector3 pos;
             Vector3 vel;

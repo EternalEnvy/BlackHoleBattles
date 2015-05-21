@@ -26,19 +26,14 @@ namespace BlackholeBattle
             {
                 if (this != g)
                 {
-                    Vector3 distanceBetween = g.position - position;
+                    Vector3 distanceBetween =  g.position - position;
                     if(g.size + size >= distanceBetween.Length())
                     {
                         Collide(g);
                     }
-                    if (distanceBetween.Length() > 1000)
-                        continue;
-                    else
-                    {
-                        double fG = G * g.mass / Math.Pow(distanceBetween.Length(), 2);
-                        distanceBetween.Normalize();
-                        acceleration += distanceBetween * (float)fG;
-                    }
+                    double fG = G * g.mass / Math.Pow(distanceBetween.Length(), 2);
+                    distanceBetween.Normalize();
+                    acceleration += distanceBetween * (float)fG;
                 }
             }
             updatedInLoop = true;

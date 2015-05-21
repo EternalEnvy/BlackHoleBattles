@@ -13,7 +13,6 @@ namespace BlackholeBattle
         {
             name = userName;
         }
-
         private void AddUnit(IUnit unit)
         {
             PacketQueue.Instance.AddPacket(new AddUnitPacket(unit));

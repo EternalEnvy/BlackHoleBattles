@@ -17,6 +17,7 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
+        private SpriteFont font;
         Player curPlayer = new Player("Default");
         Texture2D hudTexture;
         Rectangle hudRectangle;
@@ -30,16 +31,21 @@ namespace BlackholeBattle
         public BlackholeBattle()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
         }
         protected override void Initialize()
         {
-            gravityObjects.Add(new Spheroid(new Vector3(400, 200, 600), new Vector3(0, 0, 0), 500, 100, "mars"));
-            gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 0), 50, 50, "earth"));
+            gravityObjects.Add(new Spheroid(new Vector3(50, 0, 600), new Vector3(0, 0, 0), 100, 60, "mars"));
+            gravityObjects.Add(new Spheroid(new Vector3(-50, 0, 600), new Vector3(0, 0, 0.01f), 0.01, 15, "earth"));
+            //HORRIBLY DESTRUCTIVE, MY PC DIED FOR LIKE AN HOUR BECAUSE OF THIS
+            //gravityObjects.Add(new Blackhole("Default", 300, new Vector3(0,200,600)));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
-            Byte transparency_amount = 100;
+            Byte transparency_amount = 125;
             c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
             hudTexture.SetData<Color>(c);
             IsMouseVisible = true;
@@ -56,6 +62,7 @@ namespace BlackholeBattle
             planets.Add("neptune", Content.Load<Model>("neptune"));
             planets.Add("uranus", Content.Load<Model>("uranus"));
             planets.Add("moon", Content.Load<Model>("moon"));
+            font = Content.Load<SpriteFont>("SpriteFont1");
         }
 
         protected override void UnloadContent()
@@ -64,6 +71,7 @@ namespace BlackholeBattle
         }
         protected override void Update(GameTime gameTime)
         {
+            UpdateGamePad();
             elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
             List<GravitationalField> objects = new List<GravitationalField>();
             foreach (GravitationalField gravityObject in gravityObjects)
@@ -80,10 +88,9 @@ namespace BlackholeBattle
                 if (gravityObject is Spheroid)
                     (gravityObject as Spheroid).updatedInLoop = false;
                 //RK4
-                gravityObject.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                //gravityObject.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 //EULER
-                //gravityObject.Update();
-
+                gravityObject.Update();
             }
             base.Update(gameTime);
         }
@@ -95,7 +102,8 @@ namespace BlackholeBattle
             {
                 DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds / s.orbitalPeriod * 2 * Math.PI, s.position);
             }
-            spriteBatch.Draw(hudTexture, hudRectangle, Color.Black);
+            spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
+            spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 10, hudRectangle.Y + 5), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }
