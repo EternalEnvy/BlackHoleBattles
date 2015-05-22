@@ -21,7 +21,8 @@ namespace BlackholeBattle
         Player curPlayer = new Player("Default");
         Texture2D hudTexture;
         Rectangle hudRectangle;
-        private float zoom = 2500;
+        Vector3 cameraPosition = Vector3.Zero;
+        Vector3 cameraDirection = Vector3.UnitZ;
         private double elapsedTimeSeconds = 0;
         private Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
         private Dictionary<string, Model> planets = new Dictionary<string, Model>();
@@ -31,15 +32,15 @@ namespace BlackholeBattle
         public BlackholeBattle()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
             Content.RootDirectory = "Content";
         }
         protected override void Initialize()
         {
-            gravityObjects.Add(new Spheroid(new Vector3(50, 0, 600), new Vector3(0, 0, 0), 100, 60, "mars"));
-            gravityObjects.Add(new Spheroid(new Vector3(-50, 0, 600), new Vector3(0, 0, 0.01f), 0.01, 15, "earth"));
+            gravityObjects.Add(new Spheroid(new Vector3(200, 0, 600), new Vector3(0, 0, 0), 100, 60, "neptune"));
+            gravityObjects.Add(new Spheroid(new Vector3(-200, 0, 600), new Vector3(0, 0, 1.581f), 10, 15, "ganymede"));
             //HORRIBLY DESTRUCTIVE, MY PC DIED FOR LIKE AN HOUR BECAUSE OF THIS
             //gravityObjects.Add(new Blackhole("Default", 300, new Vector3(0,200,600)));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
@@ -78,17 +79,16 @@ namespace BlackholeBattle
             {
                objects.Add(gravityObject);
             }
-            foreach (GravitationalField gravityObject in gravityObjects)
+            foreach (Spheroid gravityObject in gravityObjects)
             {
-                if (gravityObject is Spheroid)
-                    (gravityObject as Spheroid).Update(objects);
+                gravityObject.Update(objects);
             }
             foreach (GravitationalField gravityObject in gravityObjects)
             {
                 if (gravityObject is Spheroid)
                     (gravityObject as Spheroid).updatedInLoop = false;
                 //RK4
-                //gravityObject.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+                //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
                 //EULER
                 gravityObject.Update();
             }
@@ -98,12 +98,13 @@ namespace BlackholeBattle
         {
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             foreach(Spheroid s in gravityObjects)
             {
-                DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds / s.orbitalPeriod * 2 * Math.PI, s.position);
+                DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds * 360 / s.orbitalPeriod, s.state.x);
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
-            spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 10, hudRectangle.Y + 5), Color.Black);
+            spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -117,8 +118,7 @@ namespace BlackholeBattle
             Matrix projection =
             Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f),
                aspectRatio, 1.0f, 10000.0f);
-             Matrix view = Matrix.CreateLookAt(new Vector3(0.0f, 50.0f, zoom),
-               Vector3.Zero, Vector3.Up);
+            Matrix view = Matrix.CreateLookAt(cameraPosition, cameraDirection, Vector3.Up);
             foreach (ModelMesh mesh in m.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)
@@ -134,18 +134,38 @@ namespace BlackholeBattle
         private void UpdateGamePad()
         {
             KeyboardState state = Keyboard.GetState();
-
+            MouseState mouse = Mouse.GetState();
             if (state.IsKeyDown(Keys.Escape))
             {
                 this.Exit();
             }
-            if (state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(Keys.Down))
             {
-                zoom += 10;
+                cameraPosition.Z -= 10;
             }
-            if (state.IsKeyDown(Keys.Z))
+            if (state.IsKeyDown(Keys.Up))
             {
-                zoom -= 10;
+                cameraPosition.Z += 10;
+            }
+            if (state.IsKeyDown(Keys.Left))
+            {
+                cameraPosition.X -= 10;
+            }
+            if (state.IsKeyDown(Keys.Right))
+            {
+                cameraPosition.X += 10;
+            }
+            if (state.IsKeyDown(Keys.LeftControl))
+            {
+                cameraPosition.Y -= 10;
+            }
+            if (state.IsKeyDown(Keys.LeftShift))
+            {
+                cameraPosition.Y += 10;
+            }
+            if(mouse.RightButton == ButtonState.Released)
+            {
+                
             }
         }
     }

@@ -6,47 +6,58 @@ using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    class GravitationalField : IMovable
+    class GravitationalField
     {
         public double size;
-        public string modelName;
-        protected const double G = 0.01;
+        public string modelName = "earth";
+        protected const double G = 10;
         public double mass = 0;
-        public Vector3 position { get; set; }
-        public Vector3 velocity { get; set; }
-        public Vector3 acceleration { get; set; }
+        public State state;
+        public Derivative derivative;
         public Vector3 preVelocity { get; set; }
+        public Vector3 netForce;
         public bool updatedInLoop = false;
         public void Update()
         {
-            preVelocity = velocity;
-            velocity += acceleration;
-            position += velocity;
+            preVelocity = state.v;
+            state.v += netForce;
+            state.x += state.v;
         }
-        public void Update(float dt)
+        public void Update(float t, float dt)
         {
-            preVelocity = velocity;
-            Tuple<Vector3, Vector3> a = Evaluate(0.0f, new Tuple<Vector3, Vector3>(Vector3.Zero, Vector3.Zero));
-            Tuple<Vector3, Vector3> b = Evaluate(dt * 0.5f, a);
-            Tuple<Vector3, Vector3> c = Evaluate(dt * 0.5f, b);
-            Tuple<Vector3, Vector3> d = Evaluate(dt, c);
-            Vector3 dxdt = 1.0f / 6.0f * (a.Item1 + 2.0f * (b.Item1 + c.Item1) + d.Item1);
-            Vector3 dvdt = 1.0f / 6.0f * (a.Item2 + 2.0f * (b.Item2 + c.Item2) + d.Item2);
-            position += dxdt * dt;
-            velocity += velocity + dvdt * dt;
+            preVelocity = state.v;
+            Derivative a = Evaluate(state, t, 0.0f, new Derivative());
+            Derivative b = Evaluate(state, t, dt * 0.5f, a);
+            Derivative c = Evaluate(state, t, dt * 0.5f, b);
+            Derivative d = Evaluate(state, t, dt, c);
+            Vector3 dxdt = 1.0f / 6.0f * (a.dv + 2.0f * (b.dv + c.dv) + d.dv);
+            Vector3 dvdt = 1.0f / 6.0f * (a.dx + 2.0f * (b.dx + c.dx) + d.dx);
+            state.x += dxdt * dt;
+            state.v += dvdt * dt;
         }
-        Tuple<Vector3, Vector3> Evaluate(float dt, Tuple<Vector3, Vector3> d)
+        Derivative Evaluate(State initial, float t, float dt, Derivative d)
         {
-            Vector3 pos;
-            Vector3 vel;
-            pos = position + d.Item1 * dt; 
-            vel = velocity + d.Item2 * dt;
-            return new Tuple<Vector3, Vector3>(vel, Acceleration(pos, vel));
+            State newState;
+            newState.x = initial.x + d.dx * dt; 
+            newState.v = initial.v + d.dv * dt;
+            Derivative der;
+            der.dx = state.v;
+            der.dv = Acceleration(state, t+dt);
+            return der;
         }
-        Vector3 Acceleration(Vector3 position, Vector3 velocity)
+        Vector3 Acceleration(State state, float t)
         {
             //ALL LOGIC HERE
-            return velocity + acceleration;
+            return state.v + netForce;
         }
     }
+    public struct Derivative { 
+        public Vector3 dx; // dx/dt = velocity 
+        public Vector3 dv; // dv/dt = acceleration
+    };
+    public struct State 
+    { 
+        public Vector3 x; //position
+        public Vector3 v; // velocity 
+    };
 }

@@ -6,15 +6,15 @@ using System.Text;
 
 namespace BlackholeBattle
 {
-    class Blackhole : GravitationalField, IUnit
+    class Blackhole : GravitationalField //, IUnit
     {
         string myOwner;
         public Blackhole(string player, double startMass, Vector3 startingPos)
         {
             mass = startMass;
-            position = startingPos;
-            velocity = Vector3.Zero;
-            acceleration = Vector3.Zero;
+            state.x = startingPos;
+            state.v = new Vector3(0, 0, 0);
+            derivative.dx = new Vector3(0, 0, 0);
             myOwner = player;
         }
     }

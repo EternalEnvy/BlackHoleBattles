@@ -9,31 +9,32 @@ namespace BlackholeBattle
 {
     class Spheroid : GravitationalField
     {
-        public double orbitalPeriod = 0.5; //orbital period in seconds
+        public double orbitalPeriod = 5; //orbital period in seconds
         public Spheroid(Vector3 startingPos, Vector3 startingVelocity, double startingMass, double startingSize, string nameModel)
         {
             size = startingSize;
             mass = startingMass;
             modelName = nameModel;
-            position = startingPos;
-            velocity = startingVelocity;
-            acceleration = new Vector3(0, 0, 0);
+            state.x = startingPos;
+            state.v = startingVelocity;
+            derivative.dx = new Vector3(0, 0, 0);
         }
         public void Update(List<GravitationalField> gravityObjects)
         {
             //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.
+            netForce = Vector3.Zero;
             foreach (GravitationalField g in gravityObjects)
             {
                 if (this != g)
                 {
-                    Vector3 distanceBetween =  g.position - position;
+                    Vector3 distanceBetween =  g.state.x - state.x;
                     if(g.size + size >= distanceBetween.Length())
                     {
                         Collide(g);
                     }
                     double fG = G * g.mass / Math.Pow(distanceBetween.Length(), 2);
                     distanceBetween.Normalize();
-                    acceleration += distanceBetween * (float)fG;
+                    netForce += distanceBetween * (float)fG;
                 }
             }
             updatedInLoop = true;
@@ -46,15 +47,15 @@ namespace BlackholeBattle
                 if (gravityObject.updatedInLoop)
                     objectVelocity = gravityObject.preVelocity;                    
                 else
-                    objectVelocity = gravityObject.velocity;
-                Vector3 normal = gravityObject.position - position;
+                    objectVelocity = gravityObject.state.v;
+                Vector3 normal = gravityObject.state.x- state.x;
                 normal.Normalize();
-                Vector3 velocityHat = velocity;
+                Vector3 velocityHat = state.v;
                 velocityHat.Normalize();
                 Vector3 remainingVector = velocityHat - normal;
                 remainingVector += -1 * (normal);
                 remainingVector.Normalize();
-                velocity = (float)((mass - gravityObject.mass) * velocity.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * objectVelocity.Length()) / (mass + gravityObject.mass)) * remainingVector;
+                state.v = (float)((mass - gravityObject.mass) * state.v.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * objectVelocity.Length()) / (mass + gravityObject.mass)) * remainingVector;
         }
     }
 }
