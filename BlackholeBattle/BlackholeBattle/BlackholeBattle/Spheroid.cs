@@ -10,8 +10,10 @@ namespace BlackholeBattle
     class Spheroid : GravitationalField
     {
         public double orbitalPeriod = 5; //orbital period in seconds
-        public Spheroid(Vector3 startingPos, Vector3 startingVelocity, double startingMass, double startingSize, string nameModel)
+        public Spheroid(Vector3 startingPos, Vector3 startingVelocity, double startingMass, double startingSize, double rotPeriod, string nameModel)
         {
+            bounds = new BoundingSphere(startingPos, (float)startingSize);
+            orbitalPeriod = rotPeriod;
             size = startingSize;
             mass = startingMass;
             modelName = nameModel;

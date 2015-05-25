@@ -6,8 +6,9 @@ using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    class GravitationalField
+    class GravitationalField : IUnit
     {
+        public BoundingSphere bounds = new BoundingSphere();
         public double size;
         public string modelName = "earth";
         protected const double G = 10;
@@ -17,12 +18,18 @@ namespace BlackholeBattle
         public Vector3 preVelocity { get; set; }
         public Vector3 netForce;
         public bool updatedInLoop = false;
+        public Vector3 Position()
+        {
+            return state.x;
+        }
         public void Update()
         {
             preVelocity = state.v;
             state.v += netForce;
             state.x += state.v;
+            bounds.Center = state.x;
         }
+        //RK4 very close to complete
         public void Update(float t, float dt)
         {
             preVelocity = state.v;

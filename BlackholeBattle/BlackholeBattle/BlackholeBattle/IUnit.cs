@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    interface IUnit : IMovable
+    interface IUnit
     {
+        Vector3 Position();
     }
 }
