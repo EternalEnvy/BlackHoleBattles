@@ -14,7 +14,6 @@ namespace BlackholeBattle
         protected const double G = 10;
         public double mass = 0;
         public State state;
-        public Derivative derivative;
         public Vector3 preVelocity { get; set; }
         public Vector3 netForce;
         public bool updatedInLoop = false;
@@ -37,10 +36,11 @@ namespace BlackholeBattle
             Derivative b = Evaluate(state, t, dt * 0.5f, a);
             Derivative c = Evaluate(state, t, dt * 0.5f, b);
             Derivative d = Evaluate(state, t, dt, c);
-            Vector3 dxdt = 1.0f / 6.0f * (a.dv + 2.0f * (b.dv + c.dv) + d.dv);
-            Vector3 dvdt = 1.0f / 6.0f * (a.dx + 2.0f * (b.dx + c.dx) + d.dx);
+            Vector3 dxdt = 1.0f / 6.0f * (a.dx + 2.0f * (b.dx + c.dx) + d.dx);
+            Vector3 dvdt = 1.0f / 6.0f * (a.dv + 2.0f * (b.dv + c.dv) + d.dv);
             state.x += dxdt * dt;
             state.v += dvdt * dt;
+            bounds.Center = state.x;
         }
         Derivative Evaluate(State initial, float t, float dt, Derivative d)
         {

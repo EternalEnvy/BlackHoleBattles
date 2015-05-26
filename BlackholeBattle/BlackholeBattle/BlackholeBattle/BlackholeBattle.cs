@@ -35,7 +35,7 @@ namespace BlackholeBattle
         Player curPlayer = new Player("Default");
 
         double elapsedTimeSeconds = 0;
-        
+        int scrollValue = 0;
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
         static List<IUnit> selectedUnits = new List<IUnit>();
 
@@ -51,8 +51,7 @@ namespace BlackholeBattle
         {
             gravityObjects.Add(new Spheroid(new Vector3(0, 0, 600), new Vector3(0, 0, 0), 100, 60, 15, "venus"));
             gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 1.581f), 10, 15, 10, "ganymede"));
-            //HORRIBLY DESTRUCTIVE, MY PC DIED FOR LIKE AN HOUR BECAUSE OF THIS
-            //gravityObjects.Add(new Blackhole("Default", 300, new Vector3(0,200,600)));
+            //gravityObjects.Add(new Blackhole("Default", 200, new Vector3(0,400,0)));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -91,9 +90,12 @@ namespace BlackholeBattle
             {
                objects.Add(gravityObject);
             }
-            foreach (Spheroid gravityObject in gravityObjects)
+            foreach (GravitationalField gravityObject in gravityObjects)
             {
-                gravityObject.Update(objects);
+                if (gravityObject is Spheroid)
+                {
+                    (gravityObject as Spheroid).Update(objects);
+                }
             }
             foreach (GravitationalField gravityObject in gravityObjects)
             {
@@ -111,10 +113,14 @@ namespace BlackholeBattle
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.Black);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            foreach(Spheroid s in gravityObjects)
+            foreach(GravitationalField s in gravityObjects)
             {
-                DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds * 360 / s.orbitalPeriod, s.state.x);
+                if (s is Spheroid)
+                {
+                    DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds * 360 / (s as Spheroid).orbitalPeriod, s.state.x);
+                }
             }
+            //have the camera look at the average position of all selected objects
             Vector3 average = new Vector3();
             foreach (IUnit u in selectedUnits)
             {
@@ -124,6 +130,7 @@ namespace BlackholeBattle
             cameraDirection = average;
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
             spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
+            spriteBatch.DrawString(font, Mouse.GetState().ScrollWheelValue.ToString(), new Vector2(hudRectangle.X + 5, hudRectangle.Y + 20), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -159,11 +166,11 @@ namespace BlackholeBattle
             }
             if (state.IsKeyDown(Keys.Down))
             {
-                cameraPosition.Z += 10;
+                cameraPosition.Z -= 10;
             }
             if (state.IsKeyDown(Keys.Up))
             {
-                cameraPosition.Z -= 10;
+                cameraPosition.Z += 10;
             }
             if (state.IsKeyDown(Keys.Left))
             {
@@ -187,13 +194,16 @@ namespace BlackholeBattle
             }
             if (mouse.RightButton == ButtonState.Pressed)
             {
+                //take position of mouse on the screen
                 int mouseX = mouse.X;
                 int mouseY = mouse.Y;
+
                 Vector3 nearsource = new Vector3((float)mouseX, (float)mouseY, 0f);
                 Vector3 farsource = new Vector3((float)mouseX, (float)mouseY, 1f);
 
                 Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
+                //find out where they are in the worldspace by transforming the matrix back
                 Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource,
                     projection, view, world);
 
@@ -201,8 +211,12 @@ namespace BlackholeBattle
                     projection, view, world);
                 Vector3 direction = farPoint - nearPoint;
                 direction.Normalize();
+
+                //create a ray from the points
+
                 Ray pickRay = new Ray(nearPoint, direction);
                 GravitationalField bestGObject = new GravitationalField();
+                //find the closest object to the camera that intersects with the ray
                 float maxDistance = float.MaxValue;
                 foreach (GravitationalField g in gravityObjects)
                 {
@@ -220,11 +234,18 @@ namespace BlackholeBattle
                 {
                     if (selectMultipleUnits == false)
                     {
+                        //this allows for control groups and whatever else to be used later
                         selectedUnits.Clear();
                     }
                     selectedUnits.Add(bestGObject);
                 }
             }
+            //zoom the camera in based on the scroll wheel
+            int mouseScrollValue = mouse.ScrollWheelValue;
+            Vector3 currentCameraDirection = cameraDirection - cameraPosition;
+            currentCameraDirection.Normalize();
+            cameraPosition += ((mouseScrollValue - scrollValue) / 2) * currentCameraDirection;
+            scrollValue = mouseScrollValue;
         }
     }
 }

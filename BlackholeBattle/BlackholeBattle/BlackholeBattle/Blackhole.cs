@@ -14,7 +14,6 @@ namespace BlackholeBattle
             mass = startMass;
             state.x = startingPos;
             state.v = new Vector3(0, 0, 0);
-            derivative.dx = new Vector3(0, 0, 0);
             myOwner = player;
         }
     }
