@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BlackholeBattle
 {
-    class Blackhole : GravitationalField //, IUnit
+    class Blackhole : GravitationalField
     {
         string myOwner;
         public Blackhole(string player, double startMass, Vector3 startingPos)

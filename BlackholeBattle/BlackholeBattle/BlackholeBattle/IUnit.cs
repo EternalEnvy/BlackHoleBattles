@@ -8,6 +8,7 @@ namespace BlackholeBattle
 {
     interface IUnit
     {
+        double Mass();
         Vector3 Position();
     }
 }

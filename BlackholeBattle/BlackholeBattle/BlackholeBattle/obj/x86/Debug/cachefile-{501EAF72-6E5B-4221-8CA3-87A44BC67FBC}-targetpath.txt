@@ -5,6 +5,7 @@ Content\venus.xnb
 Content\mars.xnb
 Content\uranus.xnb
 Content\neptune.xnb
+Content\SpriteFont1.xnb
 Content\textures\moon_0.xnb
 Content\textures\world.200411.3x5400x2700_0.xnb
 Content\textures\ganymede_0.xnb
@@ -12,4 +13,4 @@ Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb
 Content\textures\mars_0.xnb
 Content\textures\uranuscyl1_0.xnb
 Content\textures\neptune_0.xnb
-Content\SpriteFont1.xnb
+Content\arrow.xnb

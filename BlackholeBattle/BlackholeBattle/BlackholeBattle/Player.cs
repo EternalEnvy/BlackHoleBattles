@@ -8,7 +8,7 @@ namespace BlackholeBattle
     class Player
     {
         public string name;
-        List<IUnit> myUnits = new List<IUnit>();
+        public List<IUnit> myUnits = new List<IUnit>();
         public Player(string userName)
         {
             name = userName;

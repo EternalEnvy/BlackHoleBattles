@@ -42,15 +42,22 @@ namespace BlackholeBattle
         }
         public void Collide(GravitationalField gravityObject)
         {
-            Vector3 objectVelocity;
-            //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
-            //given initial velocities and masses, find final velocity.
-            if (gravityObject.updatedInLoop)
-                objectVelocity = gravityObject.preVelocity;                    
+            if (gravityObject is Blackhole)
+            {
+                BlackholeBattle.swallowedObjects.Add(this);
+                gravityObject.mass += this.mass;
+            }
             else
-                objectVelocity = gravityObject.state.v;
+            {
+                Vector3 objectVelocity;
+                //http://farside.ph.utexas.edu/teaching/301/lectures/node76.html
+                //given initial velocities and masses, find final velocity.
+                if (gravityObject.updatedInLoop)
+                    objectVelocity = gravityObject.preVelocity;
+                else
+                    objectVelocity = gravityObject.state.v;
                 //find the component vector normal to the collision surface. Remove it from the velocity vector. Then reverse the component normal to the surface and add it back to the velocity vector
-                Vector3 normal = gravityObject.state.x- state.x;
+                Vector3 normal = gravityObject.state.x - state.x;
                 normal.Normalize();
                 Vector3 velocityHat = state.v;
                 velocityHat.Normalize();
@@ -58,6 +65,7 @@ namespace BlackholeBattle
                 remainingVector += -1 * (normal);
                 remainingVector.Normalize();
                 state.v = (float)((mass - gravityObject.mass) * state.v.Length() / (gravityObject.mass + mass) + (2 * gravityObject.mass * objectVelocity.Length()) / (mass + gravityObject.mass)) * remainingVector;
+            }
         }
     }
 }

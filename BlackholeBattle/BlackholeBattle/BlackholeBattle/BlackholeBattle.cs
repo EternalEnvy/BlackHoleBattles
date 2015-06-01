@@ -17,6 +17,7 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
+        Texture2D arrowTemp;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
@@ -38,6 +39,7 @@ namespace BlackholeBattle
         int scrollValue = 0;
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
         static List<IUnit> selectedUnits = new List<IUnit>();
+        public static List<GravitationalField> swallowedObjects = new List<GravitationalField>();
 
         public BlackholeBattle()
         {
@@ -51,7 +53,7 @@ namespace BlackholeBattle
         {
             gravityObjects.Add(new Spheroid(new Vector3(0, 0, 600), new Vector3(0, 0, 0), 100, 60, 15, "venus"));
             gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 1.581f), 10, 15, 10, "ganymede"));
-            //gravityObjects.Add(new Blackhole("Default", 200, new Vector3(0,400,0)));
+            gravityObjects.Add(new Blackhole("Default", 200, new Vector3(0,400,0)));
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -75,6 +77,7 @@ namespace BlackholeBattle
             planets.Add("uranus", Content.Load<Model>("uranus"));
             planets.Add("moon", Content.Load<Model>("moon"));
             font = Content.Load<SpriteFont>("SpriteFont1");
+            arrowTemp = Content.Load<Texture2D>("arrow");
         }
 
         protected override void UnloadContent()
@@ -106,6 +109,15 @@ namespace BlackholeBattle
                 //EULER
                 gravityObject.Update();
             }
+            foreach(GravitationalField g in swallowedObjects)
+            {
+                gravityObjects.Remove(g);
+                selectedUnits.Remove(g);
+            }
+            if(selectedUnits.Count == 0)
+            {
+                selectedUnits.Add(gravityObjects[0]);
+            }
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
@@ -128,9 +140,26 @@ namespace BlackholeBattle
             }
             average /= selectedUnits.Count;
             cameraDirection = average;
+            foreach(IUnit unit in curPlayer.myUnits)
+            {
+                
+                if (unit is Blackhole)
+                {
+                    Vector3 blackHoleScreenPos = unit.Position();
+                    blackHoleScreenPos = GraphicsDevice.Viewport.Unproject(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
+                    Vector2 posOnScreen;
+                    {
+                        posOnScreen.X =  blackHoleScreenPos.X;
+                        posOnScreen.Y = blackHoleScreenPos.Y;
+                    }
+                    spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X,(int)posOnScreen.Y, 50,50), Color.White);
+                    //draw distance from base to blackhole
+                    //spriteBatch.DrawString(
+                    spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X - 10, posOnScreen.Y - 10), Color.Red);
+                }
+            }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
             spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
-            spriteBatch.DrawString(font, Mouse.GetState().ScrollWheelValue.ToString(), new Vector2(hudRectangle.X + 5, hudRectangle.Y + 20), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }

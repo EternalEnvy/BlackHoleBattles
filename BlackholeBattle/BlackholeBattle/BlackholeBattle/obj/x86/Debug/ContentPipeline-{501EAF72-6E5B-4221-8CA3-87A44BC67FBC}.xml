@@ -11,7 +11,7 @@
       <Time>2015-05-13T13:11:17.3784723-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Key>
-        <Value>2015-05-15T13:25:54.1110851-04:00</Value>
+        <Value>2015-05-27T10:21:53.1145685-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Request>
     </Item>
@@ -25,7 +25,7 @@
       <Time>2015-05-13T13:36:36.0189005-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Key>
-        <Value>2015-05-15T13:25:55.3383776-04:00</Value>
+        <Value>2015-05-27T10:21:53.9322065-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Request>
     </Item>
@@ -39,7 +39,7 @@
       <Time>2015-05-13T13:55:09.7825004-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Key>
-        <Value>2015-05-15T13:25:58.9790525-04:00</Value>
+        <Value>2015-05-27T10:21:57.2003849-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Request>
     </Item>
@@ -53,7 +53,7 @@
       <Time>2015-05-13T13:56:33.4562805-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Key>
-        <Value>2015-05-15T13:26:00.8993994-04:00</Value>
+        <Value>2015-05-27T10:21:58.0329399-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Request>
     </Item>
@@ -67,7 +67,7 @@
       <Time>2015-05-13T13:45:38.4714685-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Key>
-        <Value>2015-05-15T13:26:01.4797863-04:00</Value>
+        <Value>2015-05-27T10:21:58.6053207-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Request>
     </Item>
@@ -81,7 +81,7 @@
       <Time>2015-05-13T13:53:09.0512642-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Key>
-        <Value>2015-05-15T13:26:02.8050735-04:00</Value>
+        <Value>2015-05-27T10:21:59.6290033-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Request>
     </Item>
@@ -95,9 +95,18 @@
       <Time>2015-05-13T13:47:17.8369527-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Key>
-        <Value>2015-05-15T13:26:03.0773625-04:00</Value>
+        <Value>2015-05-27T10:21:59.908188-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>SpriteFont1.spritefont</Source>
+      <Name>SpriteFont1</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\SpriteFont1.xnb</Output>
+      <Time>2015-05-21T13:37:42.2556028-04:00</Time>
     </Item>
     <Item>
       <Source>moon.fbx</Source>
@@ -261,13 +270,13 @@
       <Time>2015-05-13T13:47:04.4766994-04:00</Time>
     </Item>
     <Item>
-      <Source>SpriteFont1.spritefont</Source>
-      <Name>SpriteFont1</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
+      <Source>arrow.png</Source>
+      <Name>arrow</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\SpriteFont1.xnb</Output>
-      <Time>2015-05-21T13:37:42.2556028-04:00</Time>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\arrow.xnb</Output>
+      <Time>2015-05-28T13:35:08.4963187-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

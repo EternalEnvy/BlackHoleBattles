@@ -6,17 +6,21 @@ using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    class GravitationalField : IUnit
+    public class GravitationalField : IUnit
     {
         public BoundingSphere bounds = new BoundingSphere();
         public double size;
-        public string modelName = "earth";
+        public string modelName;
         protected const double G = 10;
         public double mass = 0;
         public State state;
         public Vector3 preVelocity { get; set; }
         public Vector3 netForce;
         public bool updatedInLoop = false;
+        public double Mass()
+        {
+            return mass;
+        }
         public Vector3 Position()
         {
             return state.x;
