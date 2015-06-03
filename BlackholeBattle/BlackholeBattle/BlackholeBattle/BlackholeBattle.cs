@@ -305,16 +305,19 @@ namespace BlackholeBattle
                 {
                     client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
-                    const string url = "http://checkip.dyndns.org";
-                    var req = WebRequest.Create(url);
-                    var resp = req.GetResponse();
-                    var sr = new System.IO.StreamReader(resp.GetResponseStream());
-                    var response = sr.ReadToEnd().Trim();
-                    var a = response.Split(':');
-                    var a2 = a[1].Substring(1);
-                    var a3 = a2.Split('<');
-                    var a4 = a3[0];
-                    ServerIP = a4;
+
+                    IPHostEntry host;
+                    string localIP = "?";
+                    host = Dns.GetHostEntry(Dns.GetHostName());
+                    foreach (var ip in host.AddressList)
+                    {
+                        if (ip.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            localIP = ip.ToString();
+                        }
+                    }
+
+                    ServerIP = localIP;
                     ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue));
                     ReceivingThread.Start();
                 }).Start();
