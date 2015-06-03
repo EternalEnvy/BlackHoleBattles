@@ -6,9 +6,13 @@ using System.Text;
 
 namespace BlackholeBattle
 {
-    class Blackhole : GravitationalField
+    class Blackhole : GravitationalField, IPlayerControlled
     {
         string myOwner;
+        public string Owner()
+        {
+            return myOwner;
+        }
         public Blackhole(string player, double startMass, Vector3 startingPos)
         {
             mass = startMass;
