@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 
 namespace BlackholeBattle
@@ -17,23 +19,24 @@ namespace BlackholeBattle
         public void AddPacket(Packet packet)
         {
             _queue.Add(packet);
+            ++id;
         }
 
         private long ReadLong(Stream stream)
         {
-            var bytes = new byte[4];
-            stream.Read(bytes, 0, 2);
+            var bytes = new byte[8];
+            stream.Read(bytes, 0, 8);
             if (BitConverter.IsLittleEndian)
                 bytes = bytes.Reverse().ToArray();
             return BitConverter.ToInt64(bytes, 0);
         }
 
-        private void WriteLong(Stream stream, long num)
+        private void WriteLong(List<byte> stream, long num)
         {
             var bytes = BitConverter.GetBytes(num);
             if (BitConverter.IsLittleEndian)
                 bytes = bytes.Reverse().ToArray();
-            stream.Write(bytes, 0, bytes.Length);
+            stream.AddRange(bytes);
         }
 
         public Packet[] ReceivePackets(Stream stream)
@@ -74,9 +77,9 @@ namespace BlackholeBattle
             return packets;
         }
 
-        public void WritePackets(Stream stream)
+        public void WritePackets(List<byte> stream)
         {
-            WriteLong(stream, id);
+            WriteLong(stream, id - 1);
 
             WriteLong(stream, lastReceivedFromOther);
 
@@ -88,6 +91,41 @@ namespace BlackholeBattle
             {
                 Packet.WritePacket(stream, _queue[i]);
             }
+        }
+
+        public void TestLoop(UdpClient client, IPEndPoint serverIP, Queue<Packet> queue)
+        {
+            var reset = serverIP.Address.Equals(IPAddress.Any);
+            while (true)
+            {
+                var res = client.Receive(ref serverIP);
+                var otherIP = serverIP.Address;
+                if (reset)
+                    serverIP = new IPEndPoint(IPAddress.Any, serverIP.Port);
+                var stream = new MemoryStream(res);
+                var packets = ReceivePackets(stream);
+                foreach (var packet in packets)
+                {
+                    if (packet.GetPacketID() == 1)
+                    {
+                        var pac = (RequestConnectPacket) packet;
+                        pac.IPAddress = string.Join(".", otherIP.GetAddressBytes().Select(a => a.ToString()));
+                        queue.Enqueue(pac);
+                    }
+                    else
+                    {
+                        queue.Enqueue(packet);
+                    }
+                }
+            }
+        }
+
+        public static void TestFunc(UdpClient client, IPEndPoint serverIP)
+        {
+            var buffer = new List<byte>();
+            Instance.WritePackets(buffer);
+            //Returns number of bytes sent. I'm assuming this is useless?
+            client.Send(buffer.ToArray(), buffer.Count, serverIP);
         }
     }
 }

@@ -279,27 +279,6 @@
       <Time>2015-05-28T13:35:08.4963187-04:00</Time>
     </Item>
     <Item>
-      <Source>skydome.fbx</Source>
-      <Name>skydome</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\skydome.xnb</Output>
-      <Time>2015-06-02T10:45:49.6514741-04:00</Time>
-      <Dependency>
-        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome_0.xml</Key>
-        <Value>2015-06-02T10:47:28.9968355-04:00</Value>
-      </Dependency>
-      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_1.xnb</Request>
-    </Item>
-    <Item>
-      <Source>skydome.fbx</Source>
-      <Importer>FbxImporter</Importer>
-      <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome_0.xml</Output>
-      <Time>2015-06-02T10:45:49.6514741-04:00</Time>
-    </Item>
-    <Item>
       <Source>skydome3.fbx</Source>
       <Name>skydome3</Name>
       <Importer>FbxImporter</Importer>
@@ -309,32 +288,23 @@
       <Time>2015-06-02T10:39:25.5424616-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome3_0.xml</Key>
-        <Value>2015-06-02T10:42:34.7685495-04:00</Value>
+        <Value>2015-06-03T11:05:38.3795077-04:00</Value>
       </Dependency>
-      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_1.xnb</Request>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_0.xnb</Request>
     </Item>
     <Item>
-      <Source>skydome3.fbx</Source>
+      <Source>skydome.fbx</Source>
+      <Name>skydome</Name>
       <Importer>FbxImporter</Importer>
-      <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome3_0.xml</Output>
-      <Time>2015-06-02T10:39:25.5424616-04:00</Time>
-    </Item>
-    <Item>
-      <Source>C:\Users\Lee\Documents\textures\nightSky.jpg</Source>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Parameters>
-        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
-        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
-        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
-        <Data Key="GenerateMipmaps" Type="bool">true</Data>
-        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
-        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
-      </Parameters>
+      <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_1.xnb</Output>
-      <Time>2015-06-02T10:45:27.2711504-04:00</Time>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\skydome.xnb</Output>
+      <Time>2015-06-02T10:45:49.6514741-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome_0.xml</Key>
+        <Value>2015-06-03T11:05:42.3119874-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_0.xnb</Request>
     </Item>
     <Item>
       <Source>iearth.jpg</Source>
@@ -416,6 +386,36 @@
       <Options>None</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ivenus.xnb</Output>
       <Time>2015-06-02T13:38:36.6262305-04:00</Time>
+    </Item>
+    <Item>
+      <Source>skydome3.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome3_0.xml</Output>
+      <Time>2015-06-02T10:39:25.5424616-04:00</Time>
+    </Item>
+    <Item>
+      <Source>C:\Users\Lee\Documents\textures\nightSky.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_0.xnb</Output>
+      <Time>2015-06-02T10:45:27.2711504-04:00</Time>
+    </Item>
+    <Item>
+      <Source>skydome.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome_0.xml</Output>
+      <Time>2015-06-02T10:45:49.6514741-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

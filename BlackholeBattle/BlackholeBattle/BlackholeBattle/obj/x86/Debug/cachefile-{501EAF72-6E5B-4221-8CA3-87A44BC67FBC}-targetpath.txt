@@ -14,9 +14,8 @@ Content\textures\mars_0.xnb
 Content\textures\uranuscyl1_0.xnb
 Content\textures\neptune_0.xnb
 Content\arrow.xnb
-Content\skydome.xnb
 Content\skydome3.xnb
-Content\nightSky_1.xnb
+Content\skydome.xnb
 Content\iearth.xnb
 Content\iganymede.xnb
 Content\ijupiter.xnb
@@ -26,3 +25,4 @@ Content\ineptune.xnb
 Content\isaturn.xnb
 Content\iuranus.xnb
 Content\ivenus.xnb
+Content\nightSky_0.xnb

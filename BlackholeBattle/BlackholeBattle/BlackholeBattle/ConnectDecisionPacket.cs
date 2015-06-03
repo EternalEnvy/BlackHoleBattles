@@ -13,9 +13,9 @@ namespace BlackholeBattle
         {
             PacketTypeID = 2;
         }
-        public override void WritePacketData(Stream stream)
+        public override void WritePacketData(List<byte> stream)
         {
-            stream.WriteByte(Accepted ? (byte)1 : (byte)0);
+            stream.Add(Accepted ? (byte)1 : (byte)0);
         }
 
         public override void ReadPacketData(Stream stream)

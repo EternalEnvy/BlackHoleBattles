@@ -1,6 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.Remoting.Channels;
+using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -17,6 +25,15 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
+        const int PORT = 1521;
+        const int PORT2 = 1522;
+        bool? IsServer = null;
+        string ServerIP = null;
+        string ClientIP = null;
+        Thread ReceivingThread = null;
+        UdpClient client;
+        UdpClient client2;
+        Queue<Packet> packetProcessQueue = new Queue<Packet>();
         Model skyDome;
         Texture2D arrowTemp;
         GraphicsDeviceManager graphics;
@@ -71,7 +88,7 @@ namespace BlackholeBattle
 
         protected override void LoadContent()
         {
-            skyDome = Content.Load<Model>("skydome");
+            //skyDome = Content.Load<Model>("skydome");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             planets.Add("venus", Content.Load<Model>("venus"));
             planets.Add("mars", Content.Load<Model>("mars"));
@@ -102,7 +119,7 @@ namespace BlackholeBattle
             List<GravitationalField> objects = new List<GravitationalField>();
             foreach (GravitationalField gravityObject in gravityObjects)
             {
-               objects.Add(gravityObject);
+                objects.Add(gravityObject);
             }
             foreach (GravitationalField gravityObject in gravityObjects)
             {
@@ -120,15 +137,46 @@ namespace BlackholeBattle
                 //EULER
                 gravityObject.Update();
             }
-            foreach(GravitationalField g in swallowedObjects)
+            foreach (GravitationalField g in swallowedObjects)
             {
                 gravityObjects.Remove(g);
                 selectedUnits.Remove(g);
             }
-            if(selectedUnits.Count == 0)
+            if (selectedUnits.Count == 0)
             {
                 selectedUnits.Add(gravityObjects[0]);
             }
+            while (packetProcessQueue.Any())
+            {
+                var packet = packetProcessQueue.Dequeue();
+                if (packet.GetPacketID() == 1)
+                {
+                    var packet2 = (RequestConnectPacket)packet;
+                    new Task(() =>
+                    {
+                        var response = Interaction.MsgBox("Would you like to allow " + packet2.Nickname + " to connect?", MsgBoxStyle.YesNo);
+                        if (response == MsgBoxResult.Yes)
+                        {
+                            ClientIP = packet2.IPAddress;
+                            PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
+                        }
+                        else
+                        {
+                            PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
+                        }
+                    }).Start();
+                }
+                if (packet.GetPacketID() == 2)
+                {
+                    var packet2 = (ConnectDecisionPacket)packet;
+                    Console.WriteLine(packet2.Accepted);
+                }
+            }
+            if (ServerIP != null)
+                if (IsServer == true && client != null && ClientIP != null)
+                    PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));
+                else if (IsServer == false && client2 != null)
+                    PacketQueue.TestFunc(client2, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT2));
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
@@ -173,6 +221,14 @@ namespace BlackholeBattle
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
             spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
+            if (IsServer != null && ServerIP == null)
+            {
+                spriteBatch.DrawString(font, "Waiting on IP...", new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
+            }
+            if (ServerIP != null)
+            {
+                spriteBatch.DrawString(font, "Server IP is: " + ServerIP, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -192,7 +248,7 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) * Matrix.CreateTranslation(position);
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) *  Matrix.CreateTranslation(position);
                 }
                 mesh.Draw();          
             }
@@ -241,6 +297,41 @@ namespace BlackholeBattle
             if(state.IsKeyDown(Keys.LeftControl))
             {
                 selectMultipleUnits = true;
+            }
+            if (state.IsKeyDown(Keys.Home) && IsServer == null)
+            {
+                IsServer = true;
+                new Task(() =>
+                {
+                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
+                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
+                    const string url = "http://checkip.dyndns.org";
+                    var req = WebRequest.Create(url);
+                    var resp = req.GetResponse();
+                    var sr = new System.IO.StreamReader(resp.GetResponseStream());
+                    var response = sr.ReadToEnd().Trim();
+                    var a = response.Split(':');
+                    var a2 = a[1].Substring(1);
+                    var a3 = a2.Split('<');
+                    var a4 = a3[0];
+                    ServerIP = a4;
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue));
+                    ReceivingThread.Start();
+                }).Start();
+            }
+            if (state.IsKeyDown(Keys.End) && IsServer == null)
+            {
+                IsServer = false;
+                new Task(() =>
+                {
+                    ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
+                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
+                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
+                    ReceivingThread.Start();
+
+                    PacketQueue.Instance.AddPacket(new RequestConnectPacket {Nickname = curPlayer.name});
+                }).Start();
             }
             if (mouse.RightButton == ButtonState.Pressed)
             {
