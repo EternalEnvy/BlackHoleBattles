@@ -56,7 +56,7 @@ namespace BlackholeBattle
         double elapsedTimeSeconds = 0;
         int scrollValue = 0;
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
-        static List<IUnit> selectedUnits = new List<IUnit>();
+        static HashSet<IUnit> selectedUnits = new HashSet<IUnit>();
         public static List<GravitationalField> swallowedObjects = new List<GravitationalField>();
 
         public BlackholeBattle()
@@ -69,7 +69,7 @@ namespace BlackholeBattle
         }
         protected override void Initialize()
         {
-            gravityObjects.Add(new Spheroid(new Vector3(0, 0, 600), new Vector3(0, 0, 0), 100, 60, 15, "venus"));
+            gravityObjects.Add(new Spheroid(new Vector3(0, 0, 600), new Vector3(0, 0, 0), 100, 60, 15, "moon"));
             gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 1.581f), 10, 15, 10, "ganymede"));
             //Blackhole b = new Blackhole("Default", 200, new Vector3(0,0,-300));
             //gravityObjects.Add(b);
@@ -248,7 +248,7 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) * Matrix.CreateTranslation(position);
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) *  Matrix.CreateTranslation(position);
                 }
                 mesh.Draw();          
             }
