@@ -278,6 +278,145 @@
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\arrow.xnb</Output>
       <Time>2015-05-28T13:35:08.4963187-04:00</Time>
     </Item>
+    <Item>
+      <Source>skydome.fbx</Source>
+      <Name>skydome</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\skydome.xnb</Output>
+      <Time>2015-06-02T10:45:49.6514741-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome_0.xml</Key>
+        <Value>2015-06-02T10:47:28.9968355-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_1.xnb</Request>
+    </Item>
+    <Item>
+      <Source>skydome.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome_0.xml</Output>
+      <Time>2015-06-02T10:45:49.6514741-04:00</Time>
+    </Item>
+    <Item>
+      <Source>skydome3.fbx</Source>
+      <Name>skydome3</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\skydome3.xnb</Output>
+      <Time>2015-06-02T10:39:25.5424616-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome3_0.xml</Key>
+        <Value>2015-06-02T10:42:34.7685495-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_1.xnb</Request>
+    </Item>
+    <Item>
+      <Source>skydome3.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\skydome3_0.xml</Output>
+      <Time>2015-06-02T10:39:25.5424616-04:00</Time>
+    </Item>
+    <Item>
+      <Source>C:\Users\Lee\Documents\textures\nightSky.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky_1.xnb</Output>
+      <Time>2015-06-02T10:45:27.2711504-04:00</Time>
+    </Item>
+    <Item>
+      <Source>iearth.jpg</Source>
+      <Name>iearth</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iearth.xnb</Output>
+      <Time>2015-06-02T13:38:19.8940813-04:00</Time>
+    </Item>
+    <Item>
+      <Source>iganymede.jpg</Source>
+      <Name>iganymede</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iganymede.xnb</Output>
+      <Time>2015-06-02T13:38:22.2279938-04:00</Time>
+    </Item>
+    <Item>
+      <Source>ijupiter.jpg</Source>
+      <Name>ijupiter</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ijupiter.xnb</Output>
+      <Time>2015-06-02T13:38:24.2636516-04:00</Time>
+    </Item>
+    <Item>
+      <Source>imars.jpg</Source>
+      <Name>imars</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\imars.xnb</Output>
+      <Time>2015-06-02T13:38:26.0411036-04:00</Time>
+    </Item>
+    <Item>
+      <Source>imoon.jpg</Source>
+      <Name>imoon</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\imoon.xnb</Output>
+      <Time>2015-06-02T13:38:27.8267166-04:00</Time>
+    </Item>
+    <Item>
+      <Source>ineptune.jpg</Source>
+      <Name>ineptune</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ineptune.xnb</Output>
+      <Time>2015-06-02T13:38:29.4638946-04:00</Time>
+    </Item>
+    <Item>
+      <Source>isaturn.jpg</Source>
+      <Name>isaturn</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\isaturn.xnb</Output>
+      <Time>2015-06-02T13:38:31.2643446-04:00</Time>
+    </Item>
+    <Item>
+      <Source>iuranus.jpg</Source>
+      <Name>iuranus</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iuranus.xnb</Output>
+      <Time>2015-06-02T13:38:34.4873425-04:00</Time>
+    </Item>
+    <Item>
+      <Source>ivenus.jpg</Source>
+      <Name>ivenus</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ivenus.xnb</Output>
+      <Time>2015-06-02T13:38:36.6262305-04:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{501EAF72-6E5B-4221-8CA3-87A44BC67FBC}</ContentProjectGUID>
