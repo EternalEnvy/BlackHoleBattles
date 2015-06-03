@@ -29,7 +29,7 @@ namespace BlackholeBattle
         {
             return 0;
         }
-        Vector3 Position()
+        public Vector3 Position()
         {
             return position;
         }
