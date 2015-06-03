@@ -29,7 +29,7 @@ namespace BlackholeBattle
         {
             return 0;
         }
-        Vector3 Position()
+        Vector3 IUnit.Position()
         {
             return position;
         }

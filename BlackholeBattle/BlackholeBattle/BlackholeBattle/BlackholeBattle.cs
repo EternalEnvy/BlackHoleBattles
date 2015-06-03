@@ -26,11 +26,13 @@ namespace BlackholeBattle
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
         const int PORT = 1521;
+        const int PORT2 = 1522;
         bool? IsServer = null;
         string ServerIP = null;
         string ClientIP = null;
         Thread ReceivingThread = null;
         UdpClient client;
+        UdpClient client2;
         Queue<Packet> packetProcessQueue = new Queue<Packet>();
         Model skyDome;
         Texture2D arrowTemp;
@@ -86,7 +88,7 @@ namespace BlackholeBattle
 
         protected override void LoadContent()
         {
-            skyDome = Content.Load<Model>("skydome");
+            //skyDome = Content.Load<Model>("skydome");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             planets.Add("venus", Content.Load<Model>("venus"));
             planets.Add("mars", Content.Load<Model>("mars"));
@@ -117,7 +119,7 @@ namespace BlackholeBattle
             List<GravitationalField> objects = new List<GravitationalField>();
             foreach (GravitationalField gravityObject in gravityObjects)
             {
-               objects.Add(gravityObject);
+                objects.Add(gravityObject);
             }
             foreach (GravitationalField gravityObject in gravityObjects)
             {
@@ -135,12 +137,12 @@ namespace BlackholeBattle
                 //EULER
                 gravityObject.Update();
             }
-            foreach(GravitationalField g in swallowedObjects)
+            foreach (GravitationalField g in swallowedObjects)
             {
                 gravityObjects.Remove(g);
                 selectedUnits.Remove(g);
             }
-            if(selectedUnits.Count == 0)
+            if (selectedUnits.Count == 0)
             {
                 selectedUnits.Add(gravityObjects[0]);
             }
@@ -170,8 +172,11 @@ namespace BlackholeBattle
                     Console.WriteLine(packet2.Accepted);
                 }
             }
-            if(IsServer == false && ServerIP != null)
-                PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT));
+            if (ServerIP != null)
+                if (IsServer == true && client != null && ClientIP != null)
+                    PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));
+                else if (IsServer == false && client2 != null)
+                    PacketQueue.TestFunc(client2, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT2));
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
@@ -298,6 +303,8 @@ namespace BlackholeBattle
                 IsServer = true;
                 new Task(() =>
                 {
+                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
+                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
                     const string url = "http://checkip.dyndns.org";
                     var req = WebRequest.Create(url);
                     var resp = req.GetResponse();
@@ -308,17 +315,18 @@ namespace BlackholeBattle
                     var a3 = a2.Split('<');
                     var a4 = a3[0];
                     ServerIP = a4;
-                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(IPAddress.Any, PORT), packetProcessQueue));
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue));
                     ReceivingThread.Start();
                 }).Start();
             }
-            if (state.IsKeyDown(Keys.Insert) && IsServer == null)
+            if (state.IsKeyDown(Keys.End) && IsServer == null)
             {
                 IsServer = false;
                 new Task(() =>
                 {
-                    client = new UdpClient(PORT);
                     ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
+                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
+                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
                     ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
                     ReceivingThread.Start();
 
