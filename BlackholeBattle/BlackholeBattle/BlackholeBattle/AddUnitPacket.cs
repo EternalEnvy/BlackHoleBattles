@@ -11,7 +11,7 @@ namespace BlackholeBattle
         {
 
         }
-        public override void WritePacketData(System.IO.Stream stream)
+        public override void WritePacketData(List<byte> stream)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.Remoting.Channels;
+using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -17,6 +25,13 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
+        const int PORT = 1521;
+        bool? IsServer = null;
+        string ServerIP = null;
+        string ClientIP = null;
+        Thread ReceivingThread = null;
+        UdpClient client;
+        Queue<Packet> packetProcessQueue = new Queue<Packet>();
         Texture2D arrowTemp;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -118,6 +133,34 @@ namespace BlackholeBattle
             {
                 selectedUnits.Add(gravityObjects[0]);
             }
+            while (packetProcessQueue.Any())
+            {
+                var packet = packetProcessQueue.Dequeue();
+                if (packet.GetPacketID() == 1)
+                {
+                    var packet2 = (RequestConnectPacket)packet;
+                    new Task(() =>
+                    {
+                        var response = Interaction.MsgBox("Would you like to allow " + packet2.Nickname + " to connect?", MsgBoxStyle.YesNo);
+                        if (response == MsgBoxResult.Yes)
+                        {
+                            ClientIP = packet2.IPAddress;
+                            PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
+                        }
+                        else
+                        {
+                            PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
+                        }
+                    }).Start();
+                }
+                if (packet.GetPacketID() == 2)
+                {
+                    var packet2 = (ConnectDecisionPacket)packet;
+                    Console.WriteLine(packet2.Accepted);
+                }
+            }
+            if(IsServer == false && ServerIP != null)
+                PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT));
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
@@ -160,6 +203,14 @@ namespace BlackholeBattle
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
             spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
+            if (IsServer != null && ServerIP == null)
+            {
+                spriteBatch.DrawString(font, "Waiting on IP...", new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
+            }
+            if (ServerIP != null)
+            {
+                spriteBatch.DrawString(font, "Server IP is: " + ServerIP, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }
@@ -220,6 +271,38 @@ namespace BlackholeBattle
             if(state.IsKeyDown(Keys.LeftControl))
             {
                 selectMultipleUnits = true;
+            }
+            if (state.IsKeyDown(Keys.Home) && IsServer == null)
+            {
+                IsServer = true;
+                new Task(() =>
+                {
+                    const string url = "http://checkip.dyndns.org";
+                    var req = WebRequest.Create(url);
+                    var resp = req.GetResponse();
+                    var sr = new System.IO.StreamReader(resp.GetResponseStream());
+                    var response = sr.ReadToEnd().Trim();
+                    var a = response.Split(':');
+                    var a2 = a[1].Substring(1);
+                    var a3 = a2.Split('<');
+                    var a4 = a3[0];
+                    ServerIP = a4;
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(IPAddress.Any, PORT), packetProcessQueue));
+                    ReceivingThread.Start();
+                }).Start();
+            }
+            if (state.IsKeyDown(Keys.Insert) && IsServer == null)
+            {
+                IsServer = false;
+                new Task(() =>
+                {
+                    client = new UdpClient(PORT);
+                    ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
+                    ReceivingThread.Start();
+
+                    PacketQueue.Instance.AddPacket(new RequestConnectPacket {Nickname = curPlayer.name});
+                }).Start();
             }
             if (mouse.RightButton == ButtonState.Pressed)
             {

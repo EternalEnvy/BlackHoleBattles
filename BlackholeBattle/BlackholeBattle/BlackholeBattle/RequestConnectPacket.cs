@@ -9,11 +9,12 @@ namespace BlackholeBattle
     class RequestConnectPacket : Packet
     {
         public string Nickname;
+        public string IPAddress;
         public RequestConnectPacket()
         {
             PacketTypeID = 1;
         }
-        public override void WritePacketData(Stream stream)
+        public override void WritePacketData(List<byte> stream)
         {
             WriteStringBytes(stream, Nickname);
         }

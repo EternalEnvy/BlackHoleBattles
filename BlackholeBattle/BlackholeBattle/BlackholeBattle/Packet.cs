@@ -9,7 +9,7 @@ namespace BlackholeBattle
     abstract class Packet
     {
         protected byte PacketTypeID;
-        public abstract void WritePacketData(Stream stream);
+        public abstract void WritePacketData(List<byte> stream);
         public abstract void ReadPacketData(Stream stream);
 
         public static Packet ReadPacket(Stream stream)
@@ -31,16 +31,18 @@ namespace BlackholeBattle
             }
         }
 
-        public static void WritePacket(Stream stream, Packet packet)
+        public static void WritePacket(List<byte> stream, Packet packet)
         {
-            stream.WriteByte(packet.PacketTypeID);
+            stream.Add(packet.PacketTypeID);
             packet.WritePacketData(stream);
         }
 
-        protected void WriteStringBytes(Stream stream, string str)
+        protected void WriteStringBytes(List<byte> stream, string str)
         {
             var numBytes = (short)ASCIIEncoding.ASCII.GetByteCount(str);
 
+            //Un-necessary intermediate buffer.
+            //TODO: Reduce memory usage and thus strain on the GC
             var arr = new byte[2 + numBytes];
 
             var lengthBytes = BitConverter.GetBytes(numBytes);
@@ -51,7 +53,7 @@ namespace BlackholeBattle
             var stringBytes = ASCIIEncoding.ASCII.GetBytes(str);
             stringBytes.CopyTo(arr, 2);
 
-            stream.Write(arr, 0, arr.Length);
+            stream.AddRange(arr);
         }
 
         protected string ReadStringFromStream(Stream stream)
@@ -61,12 +63,17 @@ namespace BlackholeBattle
 
             if (BitConverter.IsLittleEndian)
                 bytes = bytes.Reverse().ToArray();
-            var length = BitConverter.ToInt32(bytes, 0);
+            var length = BitConverter.ToInt16(bytes, 0);
 
             var stringBytes = new byte[length];
             stream.Read(stringBytes, 0, length);
 
             return ASCIIEncoding.ASCII.GetString(stringBytes);
+        }
+
+        public byte GetPacketID()
+        {
+            return PacketTypeID;
         }
     }
 }
