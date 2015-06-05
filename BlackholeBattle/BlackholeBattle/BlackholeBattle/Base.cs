@@ -6,8 +6,13 @@ using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
-    class Base : IUnit
+    class Base : IUnit, IMovable
     {
+        string unitType = "base";
+        public string UnitType()
+        {
+            return unitType;
+        }
         bool shieldActive = false;
         double shieldRemain = 15;
         double cannonCooldown = 20;
@@ -43,19 +48,35 @@ namespace BlackholeBattle
             };
         }
 
-        public void Update(double elapsedTime, Vector3 acceleration, bool toggleShield, bool shootLaser, Vector3 laserDirection, bool brake, bool createBlackhole)
+        public void Update(double elapsedTime)
         {
-            
-            if(shieldActive)
-                shieldRemain -= elapsedTime;
-            if(shieldRemain < 0)
-                shieldRemain = 0;
-            if (toggleShield)
+            acceleration = Vector3.Zero;
+            //cooldowns
+        }
+        public void Accelerate(Vector3 direction)
+        {
+            acceleration += direction * 0.2f;
+            if(acceleration.Length() > 50)
             {
-                if (shieldActive)
-                    shieldActive = false;
-                else
-                    shieldActive = true;
+                acceleration.Normalize();
+                acceleration *= 50;
+            }
+        }
+        public void Brake()
+        {
+            Vector3 temp = velocity;
+            temp.Normalize();
+            velocity -= temp * 10;
+        }
+        public Vector3 Position
+        {
+            get
+            {
+                return position;
+            }
+            set
+            {
+                position = value;
             }
         }
     }

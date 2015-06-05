@@ -34,7 +34,6 @@ namespace BlackholeBattle
         UdpClient client;
         UdpClient client2;
         Queue<Packet> packetProcessQueue = new Queue<Packet>();
-        Model skyDome;
         Texture2D arrowTemp;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -42,6 +41,7 @@ namespace BlackholeBattle
 
         Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
         Dictionary<string, Model> planets = new Dictionary<string, Model>();
+        Model blackHoleTexture;
 
         Matrix projection;
         Matrix view;
@@ -71,9 +71,9 @@ namespace BlackholeBattle
         {
             gravityObjects.Add(new Spheroid(new Vector3(0, 0, 600), new Vector3(0, 0, 0), 100, 60, 15, "moon"));
             gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 1.581f), 10, 15, 10, "ganymede"));
-            //Blackhole b = new Blackhole("Default", 200, new Vector3(0,0,-300));
-            //gravityObjects.Add(b);
-            //curPlayer.myUnits.Add(b);
+            Blackhole b = new Blackhole("Default", 20, new Vector3(0,0,-300));
+            gravityObjects.Add(b);
+            curPlayer.myUnits.Add(b);
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -97,6 +97,7 @@ namespace BlackholeBattle
             planets.Add("neptune", Content.Load<Model>("neptune"));
             planets.Add("uranus", Content.Load<Model>("uranus"));
             planets.Add("moon", Content.Load<Model>("moon"));
+            blackHoleTexture = Content.Load<Model>("untitled");
             thumbnails.Add("venus", Content.Load<Texture2D>("ivenus"));
             thumbnails.Add("mars", Content.Load<Texture2D>("imars"));
             thumbnails.Add("earth", Content.Load<Texture2D>("iearth"));
@@ -104,6 +105,7 @@ namespace BlackholeBattle
             thumbnails.Add("neptune", Content.Load<Texture2D>("ineptune"));
             thumbnails.Add("uranus", Content.Load<Texture2D>("iuranus"));
             thumbnails.Add("moon", Content.Load<Texture2D>("imoon"));
+            thumbnails.Add("blackhole", Content.Load<Texture2D>("blackhole"));
             font = Content.Load<SpriteFont>("SpriteFont1");
             arrowTemp = Content.Load<Texture2D>("arrow");
         }
@@ -184,14 +186,7 @@ namespace BlackholeBattle
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.Black);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            //DrawModel(skyDome, 200, 0, new Vector3(0, 0, 0));
-            foreach(GravitationalField s in gravityObjects)
-            {
-                if (s is Spheroid)
-                {
-                    DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds * 360 / (s as Spheroid).orbitalPeriod, s.state.x);
-                }
-            }
+            
             //have the camera look at the average position of all selected objects
             Vector3 average = new Vector3();
             foreach (IUnit u in selectedUnits)
@@ -202,21 +197,32 @@ namespace BlackholeBattle
             cameraDirection = average;
             foreach(IUnit unit in curPlayer.myUnits)
             {
-                
                 if (unit is Blackhole)
                 {
-                    Vector3 blackHoleScreenPos = unit.Position();
-                    blackHoleScreenPos = GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
-                    //blackHoleScreenPos = GraphicsDevice.Viewport.Unproject(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
-                    Vector2 posOnScreen;
+                    BoundingFrustum frustum = new BoundingFrustum(projection * view);
+                    if(frustum.Contains(GraphicsDevice.Viewport.Project(unit.Position(),projection, view, Matrix.CreateTranslation(0,0,0))) == ContainmentType.Contains)
                     {
-                        posOnScreen.X =  blackHoleScreenPos.X;
-                        posOnScreen.Y = blackHoleScreenPos.Y;
+                        Vector3 blackHoleScreenPos = unit.Position();
+                        blackHoleScreenPos = GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
+                        //blackHoleScreenPos = GraphicsDevice.Viewport.Unproject(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
+                        Vector2 posOnScreen;
+                        {
+                           posOnScreen.X =  blackHoleScreenPos.X;
+                            posOnScreen.Y = blackHoleScreenPos.Y;
+                         }
+                         spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X,(int)posOnScreen.Y, 50,50), Color.White);
+                         //draw distance from base to blackhole
+                        //spriteBatch.DrawString(
+                        spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 30), Color.Red);
+                        spriteBatch.DrawString(font, (unit.Position() - cameraPosition).Length().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 50), Color.Blue);
                     }
-                    spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X,(int)posOnScreen.Y, 50,50), Color.White);
-                    //draw distance from base to blackhole
-                    //spriteBatch.DrawString(
-                    spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X - 10, posOnScreen.Y - 10), Color.Red);
+                }
+            }
+            foreach (GravitationalField s in gravityObjects)
+            {
+                if (s is Spheroid)
+                {
+                    DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds * 360 / (s as Spheroid).orbitalPeriod, s.state.x);
                 }
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
@@ -264,13 +270,13 @@ namespace BlackholeBattle
             }
             if (state.IsKeyDown(Keys.Down))
             {
-                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitX);
+                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
                 cross.Normalize();
                 cameraPosition += cross * 17;
             }
             if (state.IsKeyDown(Keys.Up))
             {
-                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitX);
+                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
                 cross.Normalize();
                 cameraPosition -= cross * 17;
             }
@@ -286,17 +292,67 @@ namespace BlackholeBattle
                 cross.Normalize();
                 cameraPosition += cross * 17;
             }
-            if (state.IsKeyDown(Keys.RightControl))
-            {
-                cameraPosition.Y -= 10;
-            }
-            if (state.IsKeyDown(Keys.RightShift))
-            {
-                cameraPosition.Y += 10;
-            }
             if(state.IsKeyDown(Keys.LeftControl))
             {
                 selectMultipleUnits = true;
+            }
+            if(state.IsKeyDown(Keys.W))
+            {
+                if(selectedUnits.First() is IMovable)
+                {
+                    Vector3 lookingAt = (cameraDirection - cameraPosition);
+                    lookingAt.Normalize();
+                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                }
+            }
+            if (state.IsKeyDown(Keys.A))
+            {
+                if (selectedUnits.First() is IMovable)
+                {
+                    Vector3 lookingAt = (cameraDirection - cameraPosition);
+                    lookingAt = Vector3.Cross(lookingAt, Vector3.Down);
+                    lookingAt.Normalize();
+                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                }
+            }
+            if (state.IsKeyDown(Keys.S))
+            {
+                if (selectedUnits.First() is IMovable)
+                {
+                    Vector3 lookingAt = (cameraDirection - cameraPosition);
+                    lookingAt.Normalize();
+                    (selectedUnits.First() as IMovable).Accelerate(-lookingAt);
+                }
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                if (selectedUnits.First() is IMovable)
+                {
+                    Vector3 lookingAt = (cameraDirection - cameraPosition);
+                    lookingAt = Vector3.Cross(lookingAt, Vector3.Up);
+                    lookingAt.Normalize();
+                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                }
+            }
+            if (state.IsKeyDown(Keys.LeftShift))
+            {
+                if (selectedUnits.First() is IMovable)
+                {
+                    Vector3 lookingAt = (cameraDirection - cameraPosition);
+                    lookingAt = Vector3.Cross(lookingAt, Vector3.Left);
+                    lookingAt.Normalize();
+                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                }
+            }
+            if (state.IsKeyDown(Keys.LeftControl))
+            {
+                if (selectedUnits.First() is IMovable)
+                {
+                    Vector3 lookingAt = (cameraDirection - cameraPosition);
+                    lookingAt = Vector3.Cross(lookingAt, Vector3.Right);
+                    lookingAt.Normalize();
+                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                }
             }
             if (state.IsKeyDown(Keys.Home) && IsServer == null)
             {

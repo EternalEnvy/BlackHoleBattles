@@ -12,6 +12,7 @@ namespace BlackholeBattle
         public double orbitalPeriod = 5; //orbital period in seconds
         public Spheroid(Vector3 startingPos, Vector3 startingVelocity, double startingMass, double startingSize, double rotPeriod, string nameModel)
         {
+            unitType = nameModel;
             bounds = new BoundingSphere(startingPos, (float)startingSize);
             orbitalPeriod = rotPeriod;
             size = startingSize;
@@ -23,7 +24,6 @@ namespace BlackholeBattle
         public void Update(List<GravitationalField> gravityObjects)
         {
             //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.
-            netForce = Vector3.Zero;
             foreach (GravitationalField g in gravityObjects)
             {
                 if (this != g)
