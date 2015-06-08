@@ -29,9 +29,14 @@ namespace BlackholeBattle
         }
         public void Brake()
         {
-            Vector3 temp = state.v;
-            temp.Normalize();
-            state.v -= temp * 10;
+            if (state.v.Length() < 0.1)
+                state.v = Vector3.Zero;
+            else
+            {
+                float length = state.v.Length();
+                state.v.Normalize();
+                state.v *= length - 0.1f;
+            }
         }
         public Vector3 Position
         {

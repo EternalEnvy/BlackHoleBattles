@@ -9,7 +9,7 @@ namespace BlackholeBattle
     public class GravitationalField : IUnit
     {
         protected string unitType = "Gravity Object";
-        public string UnitType()
+        public string ModelName()
         {
             return unitType;
         }   
@@ -29,6 +29,14 @@ namespace BlackholeBattle
         public Vector3 Position()
         {
             return state.x;
+        }
+        public double Rotation()
+        {
+            return 0;
+        }
+        public double Size()
+        {
+            return size;
         }
         public void Update()
         {

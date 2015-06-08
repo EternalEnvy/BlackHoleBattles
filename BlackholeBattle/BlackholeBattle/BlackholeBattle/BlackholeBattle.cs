@@ -25,6 +25,7 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : Microsoft.Xna.Framework.Game
     {
+        Random randall = new Random();
         const int PORT = 1521;
         const int PORT2 = 1522;
         bool? IsServer = null;
@@ -40,21 +41,22 @@ namespace BlackholeBattle
         SpriteFont font;
 
         Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
-        Dictionary<string, Model> planets = new Dictionary<string, Model>();
-        Model blackHoleTexture;
+        Dictionary<string, Model> models = new Dictionary<string, Model>();
 
         Matrix projection;
         Matrix view;
         Vector3 cameraPosition = Vector3.Zero;
         Vector3 cameraDirection = Vector3.UnitZ;
+        float lengthToCamPosition = 0;
 
         Texture2D hudTexture;
         Rectangle hudRectangle;
 
-        Player curPlayer = new Player("Default");
+        Player curPlayer = new Player(null);
 
-        double elapsedTimeSeconds = 0;
+        public static double elapsedTimeSeconds = 0;
         int scrollValue = 0;
+        List<IUnit> units = new List<IUnit>();
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
         static HashSet<IUnit> selectedUnits = new HashSet<IUnit>();
         public static List<GravitationalField> swallowedObjects = new List<GravitationalField>();
@@ -69,11 +71,9 @@ namespace BlackholeBattle
         }
         protected override void Initialize()
         {
-            gravityObjects.Add(new Spheroid(new Vector3(0, 0, 600), new Vector3(0, 0, 0), 100, 60, 15, "moon"));
-            gravityObjects.Add(new Spheroid(new Vector3(-400, 0, 600), new Vector3(0, 0, 1.581f), 10, 15, 10, "ganymede"));
-            Blackhole b = new Blackhole("Default", 20, new Vector3(0,0,-300));
-            gravityObjects.Add(b);
-            curPlayer.myUnits.Add(b);
+            CreateSpheroids(3);
+            CreateBase();
+            CreateBlackHole();
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -90,14 +90,15 @@ namespace BlackholeBattle
         {
             //skyDome = Content.Load<Model>("skydome");
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            planets.Add("venus", Content.Load<Model>("venus"));
-            planets.Add("mars", Content.Load<Model>("mars"));
-            planets.Add("earth", Content.Load<Model>("earth"));
-            planets.Add("ganymede", Content.Load<Model>("ganymede"));
-            planets.Add("neptune", Content.Load<Model>("neptune"));
-            planets.Add("uranus", Content.Load<Model>("uranus"));
-            planets.Add("moon", Content.Load<Model>("moon"));
-            blackHoleTexture = Content.Load<Model>("untitled");
+            models.Add("venus", Content.Load<Model>("venus"));
+            models.Add("mars", Content.Load<Model>("mars"));
+            models.Add("earth", Content.Load<Model>("earth"));
+            models.Add("ganymede", Content.Load<Model>("ganymede"));
+            models.Add("neptune", Content.Load<Model>("neptune"));
+            models.Add("uranus", Content.Load<Model>("uranus"));
+            models.Add("moon", Content.Load<Model>("moon"));
+            models.Add("player1base", Content.Load<Model>("pinksunbase"));
+            models.Add("player2base", Content.Load<Model>("bluesunbase"));
             thumbnails.Add("venus", Content.Load<Texture2D>("ivenus"));
             thumbnails.Add("mars", Content.Load<Texture2D>("imars"));
             thumbnails.Add("earth", Content.Load<Texture2D>("iearth"));
@@ -116,6 +117,10 @@ namespace BlackholeBattle
         }
         protected override void Update(GameTime gameTime)
         {
+            if(curPlayer.name == null)
+            {
+                curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
+            }
             UpdateGamePad();
             elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
             List<GravitationalField> objects = new List<GravitationalField>();
@@ -144,10 +149,11 @@ namespace BlackholeBattle
                 gravityObjects.Remove(g);
                 selectedUnits.Remove(g);
             }
+            swallowedObjects.Clear();
             if (selectedUnits.Count == 0)
             {
                 selectedUnits.Add(gravityObjects[0]);
-            }
+            }           
             while (packetProcessQueue.Any())
             {
                 var packet = packetProcessQueue.Dequeue();
@@ -199,8 +205,8 @@ namespace BlackholeBattle
             {
                 if (unit is Blackhole)
                 {
-                    BoundingFrustum frustum = new BoundingFrustum(projection * view);
-                    if(frustum.Contains(GraphicsDevice.Viewport.Project(unit.Position(),projection, view, Matrix.CreateTranslation(0,0,0))) == ContainmentType.Contains)
+                    BoundingFrustum frustum = new BoundingFrustum(view * projection);
+                    if(frustum.Contains(unit.Position()) == ContainmentType.Contains)
                     {
                         Vector3 blackHoleScreenPos = unit.Position();
                         blackHoleScreenPos = GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
@@ -218,11 +224,11 @@ namespace BlackholeBattle
                     }
                 }
             }
-            foreach (GravitationalField s in gravityObjects)
+            foreach(IUnit unit in units)
             {
-                if (s is Spheroid)
+                if (!(unit is Blackhole))
                 {
-                    DrawModel(planets[s.modelName], s.size, elapsedTimeSeconds * 360 / (s as Spheroid).orbitalPeriod, s.state.x);
+                    DrawModel(models[unit.ModelName()], unit.Size(), unit.Rotation(), unit.Position());
                 }
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
@@ -354,6 +360,13 @@ namespace BlackholeBattle
                     (selectedUnits.First() as IMovable).Accelerate(lookingAt);
                 }
             }
+            if(state.IsKeyDown(Keys.Space))
+            {
+                if(selectedUnits.First() is IMovable)
+                {
+                    (selectedUnits.First() as IMovable).Brake();
+                }
+            }
             if (state.IsKeyDown(Keys.Home) && IsServer == null)
             {
                 IsServer = true;
@@ -446,6 +459,21 @@ namespace BlackholeBattle
             currentCameraDirection.Normalize();
             cameraPosition += ((mouseScrollValue - scrollValue) / 2) * currentCameraDirection;
             scrollValue = mouseScrollValue;
+        }
+        void CreateSpheroids(int numSpheroids)
+        {           
+            for(int i = 0 ; i < numSpheroids; i++)
+            {
+                Spheroid s = new Spheroid();
+            }
+        }
+        void CreateBase()
+        {
+
+        }
+        void CreateBlackHole()
+        {
+
         }
     }
 }

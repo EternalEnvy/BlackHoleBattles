@@ -21,6 +21,10 @@ namespace BlackholeBattle
             state.x = startingPos;
             state.v = startingVelocity;
         }
+        public double Rotation()
+        {
+            return BlackholeBattle.elapsedTimeSeconds * 360 / orbitalPeriod;
+        }
         public void Update(List<GravitationalField> gravityObjects)
         {
             //find a vector representing the distance between two given masses, find the gravitational force, and divide to find the magnitude of acceleration.

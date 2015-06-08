@@ -8,8 +8,10 @@ namespace BlackholeBattle
 {
     interface IUnit
     {
-        string UnitType();
+        string ModelName();
         double Mass();
+        double Size();
+        double Rotation();
         Vector3 Position();
     }
 }
