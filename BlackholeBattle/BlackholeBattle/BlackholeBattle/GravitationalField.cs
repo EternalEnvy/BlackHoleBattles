@@ -8,6 +8,11 @@ namespace BlackholeBattle
 {
     public class GravitationalField : IUnit
     {
+        protected string unitType = "Gravity Object";
+        public string UnitType()
+        {
+            return unitType;
+        }   
         public BoundingSphere bounds = new BoundingSphere();
         public double size;
         public string modelName;
@@ -31,6 +36,7 @@ namespace BlackholeBattle
             state.v += netForce;
             state.x += state.v;
             bounds.Center = state.x;
+            netForce = Vector3.Zero;
         }
         //RK4 very close to complete
         public void Update(float t, float dt)

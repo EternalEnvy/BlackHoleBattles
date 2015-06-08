@@ -8,6 +8,8 @@ namespace BlackholeBattle
 {
     interface IMovable
     {
-        Vector3 position { get; set; }
+        Vector3 Position { get; set; }
+        void Accelerate(Vector3 direction);
+        void Brake();
     }
 }
