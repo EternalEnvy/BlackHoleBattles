@@ -8,6 +8,7 @@ namespace BlackholeBattle
 {
     interface IUnit
     {
+        BoundingSphere GetBounds();
         string ModelName();
         double Mass();
         double Size();

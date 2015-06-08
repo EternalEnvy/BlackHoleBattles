@@ -13,7 +13,7 @@ namespace BlackholeBattle
         {
             return unitType;
         }   
-        public BoundingSphere bounds = new BoundingSphere();
+        protected BoundingSphere bounds = new BoundingSphere();
         public double size;
         public string modelName;
         protected const double G = 10;
@@ -22,6 +22,10 @@ namespace BlackholeBattle
         public Vector3 preVelocity { get; set; }
         public Vector3 netForce;
         public bool updatedInLoop = false;
+        public BoundingSphere GetBounds()
+        {
+            return bounds;
+        }
         public double Mass()
         {
             return mass;

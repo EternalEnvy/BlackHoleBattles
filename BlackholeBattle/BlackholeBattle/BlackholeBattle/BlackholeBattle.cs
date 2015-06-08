@@ -47,7 +47,6 @@ namespace BlackholeBattle
         Matrix view;
         Vector3 cameraPosition = Vector3.Zero;
         Vector3 cameraDirection = Vector3.UnitZ;
-        float lengthToCamPosition = 0;
 
         Texture2D hudTexture;
         Rectangle hudRectangle;
@@ -71,9 +70,9 @@ namespace BlackholeBattle
         }
         protected override void Initialize()
         {
-            CreateSpheroids(3);
-            CreateBase();
-            CreateBlackHole();
+            CreateSpheroids(1);
+            //CreateBase();
+            //CreateBlackHole();
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
             hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
@@ -146,6 +145,7 @@ namespace BlackholeBattle
             }
             foreach (GravitationalField g in swallowedObjects)
             {
+                units.Remove(g);
                 gravityObjects.Remove(g);
                 selectedUnits.Remove(g);
             }
@@ -201,7 +201,7 @@ namespace BlackholeBattle
             }
             average /= selectedUnits.Count;
             cameraDirection = average;
-            foreach(IUnit unit in curPlayer.myUnits)
+            foreach(IUnit unit in units)
             {
                 if (unit is Blackhole)
                 {
@@ -278,25 +278,25 @@ namespace BlackholeBattle
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
                 cross.Normalize();
-                cameraPosition += cross * 17;
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
             }
             if (state.IsKeyDown(Keys.Up))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
                 cross.Normalize();
-                cameraPosition -= cross * 17;
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
             }
             if (state.IsKeyDown(Keys.Left))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
                 cross.Normalize();
-                cameraPosition -= cross * 17;
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
             }
             if (state.IsKeyDown(Keys.Right))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
                 cross.Normalize();
-                cameraPosition += cross * 17;
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
             }
             if(state.IsKeyDown(Keys.LeftControl))
             {
@@ -401,7 +401,7 @@ namespace BlackholeBattle
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
                     ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
                     ReceivingThread.Start();
-
+                    curPlayer.playerID = 2;
                     PacketQueue.Instance.AddPacket(new RequestConnectPacket {Nickname = curPlayer.name});
                 }).Start();
             }
@@ -428,17 +428,17 @@ namespace BlackholeBattle
                 //create a ray from the points
 
                 Ray pickRay = new Ray(nearPoint, direction);
-                GravitationalField bestGObject = new GravitationalField();
+                IUnit bestGObject = new GravitationalField();
                 //find the closest object to the camera that intersects with the ray
                 float maxDistance = float.MaxValue;
-                foreach (GravitationalField g in gravityObjects)
+                foreach (IUnit u in units)
                 {
-                    float? distanceIntersection = pickRay.Intersects(g.bounds);
+                    float? distanceIntersection = pickRay.Intersects(u.GetBounds());
                     if (distanceIntersection.HasValue)
                     {
                         if (distanceIntersection < maxDistance)
                         {
-                            bestGObject = g;
+                            bestGObject = u;
                             maxDistance = distanceIntersection.Value;
                         }
                     }
@@ -464,16 +464,21 @@ namespace BlackholeBattle
         {           
             for(int i = 0 ; i < numSpheroids; i++)
             {
-                Spheroid s = new Spheroid();
+                int randy = randall.Next(1,8);
+                Spheroid s = new Spheroid(new Vector3(randall.Next(-1000, 1000), randall.Next(-1000, 1000), randall.Next(-1000, 1000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
+                gravityObjects.Add(s);
+                units.Add(s);
             }
         }
         void CreateBase()
         {
-
+            units.Add(new Base(curPlayer.playerID == 1 ? new Vector3(-1000,0,0) : new Vector3(1000,0,0), curPlayer.playerID == 1 ? "player1base" : "player2base"));
         }
         void CreateBlackHole()
         {
-
+            Blackhole b = new Blackhole(curPlayer.name, 200, curPlayer.playerID == 1 ? new Vector3(-1000, 250, 0) : new Vector3(1000, 250, 0));
+            gravityObjects.Add(b);
+            units.Add(b);
         }
     }
 }

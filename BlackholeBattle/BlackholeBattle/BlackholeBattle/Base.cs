@@ -13,6 +13,7 @@ namespace BlackholeBattle
         {
             return unitType;
         }
+        BoundingSphere bounds;
         bool shieldActive = false;
         double shieldRemain = 15000;
         double cannonCooldown = 20000;
@@ -25,6 +26,7 @@ namespace BlackholeBattle
         {
             unitType = modelName;
             position = posit;
+            bounds = new BoundingSphere(posit, 100);
         }
         public string Owner()
         {
@@ -47,7 +49,10 @@ namespace BlackholeBattle
                 blackHoleCreateCooldown.ToString() + " seconds of blackhole creation cooldown",
             };
         }
-
+        public BoundingSphere GetBounds()
+        {
+            return bounds;
+        }
         public void Update(double elapsedTime)
         {
             acceleration = Vector3.Zero;
@@ -56,6 +61,7 @@ namespace BlackholeBattle
                 shieldRemain -= elapsedTime;
             blackHoleCreateCooldown -= elapsedTime;
             cannonCooldown -= elapsedTime;
+            bounds.Center = velocity;
         }
         public void Accelerate(Vector3 direction)
         {
