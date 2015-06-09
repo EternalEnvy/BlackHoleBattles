@@ -54,6 +54,7 @@ namespace BlackholeBattle
         Player curPlayer = new Player(null);
 
         public static double elapsedTimeSeconds = 0;
+        float camToPosition;
         int scrollValue = 0;
         List<IUnit> units = new List<IUnit>();
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
@@ -116,10 +117,18 @@ namespace BlackholeBattle
         }
         protected override void Update(GameTime gameTime)
         {
+            //have the camera look at the average position of all selected objects
             if(curPlayer.name == null)
             {
                 curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
             }
+            Vector3 average = new Vector3();
+            foreach (IUnit u in selectedUnits)
+            {
+                average += u.Position();
+            }
+            average /= selectedUnits.Count;
+            cameraDirection = average;
             UpdateGamePad();
             elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
             List<GravitationalField> objects = new List<GravitationalField>();
@@ -191,16 +200,7 @@ namespace BlackholeBattle
         {
             spriteBatch.Begin();
             GraphicsDevice.Clear(Color.Black);
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            
-            //have the camera look at the average position of all selected objects
-            Vector3 average = new Vector3();
-            foreach (IUnit u in selectedUnits)
-            {
-                average += u.Position();
-            }
-            average /= selectedUnits.Count;
-            cameraDirection = average;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;           
             foreach(IUnit unit in units)
             {
                 if (unit is Blackhole)
@@ -278,25 +278,25 @@ namespace BlackholeBattle
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
                 cross.Normalize();
-                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
             if (state.IsKeyDown(Keys.Up))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
                 cross.Normalize();
-                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
             if (state.IsKeyDown(Keys.Left))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
                 cross.Normalize();
-                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
             if (state.IsKeyDown(Keys.Right))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
                 cross.Normalize();
-                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
             if(state.IsKeyDown(Keys.LeftControl))
             {
@@ -458,6 +458,7 @@ namespace BlackholeBattle
             Vector3 currentCameraDirection = cameraDirection - cameraPosition;
             currentCameraDirection.Normalize();
             cameraPosition += ((mouseScrollValue - scrollValue) / 2) * currentCameraDirection;
+            camToPosition = (cameraDirection - cameraPosition).Length();
             scrollValue = mouseScrollValue;
         }
         void CreateSpheroids(int numSpheroids)
