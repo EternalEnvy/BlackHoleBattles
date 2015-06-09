@@ -53,7 +53,8 @@ namespace BlackholeBattle
             var amount = newLastReceivedFromMe - lastReceivedFromMe;
             if (amount > 0)
             {
-                _queue.RemoveRange(0, (int)amount);
+                lock(lockobj)
+                    _queue.RemoveRange(0, (int)amount);
                 lastReceivedFromMe = newLastReceivedFromMe;
             }
 
@@ -83,15 +84,20 @@ namespace BlackholeBattle
 
             WriteLong(stream, lastReceivedFromOther);
 
-            var numPackets = _queue.Count;
-
-            WriteLong(stream, numPackets);
-
-            for (int i = 0; i < numPackets; i++)
+            lock (lockobj)
             {
-                Packet.WritePacket(stream, _queue[i]);
+                var numPackets = _queue.Count;
+
+                WriteLong(stream, numPackets);
+
+                for (int i = 0; i < numPackets; i++)
+                {
+                    Packet.WritePacket(stream, _queue[i]);
+                }
             }
         }
+
+        static readonly object lockobj = new object();
 
         public void TestLoop(UdpClient client, IPEndPoint serverIP, Queue<Packet> queue)
         {
