@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace BlackholeBattle
 {
@@ -69,6 +71,99 @@ namespace BlackholeBattle
             stream.Read(stringBytes, 0, length);
 
             return ASCIIEncoding.ASCII.GetString(stringBytes);
+        }
+
+        protected long ReadLong(Stream stream)
+        {
+            var bytes = new byte[8];
+            stream.Read(bytes, 0, 8);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            return BitConverter.ToInt64(bytes, 0);
+        }
+
+        protected void WriteLong(List<byte> stream, long num)
+        {
+            var bytes = BitConverter.GetBytes(num);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            stream.AddRange(bytes);
+        }
+
+        protected int ReadInt(Stream stream)
+        {
+            var bytes = new byte[4];
+            stream.Read(bytes, 0, 4);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
+        protected void WriteInt(List<byte> stream, int num)
+        {
+            var bytes = BitConverter.GetBytes(num);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            stream.AddRange(bytes);
+        }
+
+        protected long ReadShort(Stream stream)
+        {
+            var bytes = new byte[2];
+            stream.Read(bytes, 0, 2);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            return BitConverter.ToInt16(bytes, 0);
+        }
+
+        protected void WriteShort(List<byte> stream, short num)
+        {
+            var bytes = BitConverter.GetBytes(num);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            stream.AddRange(bytes);
+        }
+
+        protected Vector3 ReadVector3(Stream stream)
+        {
+            var vec = new float[3];
+            for (int i = 0; i < 3; i++)
+            {
+                var bytes = new byte[8];
+                stream.Read(bytes, 0, 8);
+                if (BitConverter.IsLittleEndian)
+                    bytes = bytes.Reverse().ToArray();
+                vec[i] = BitConverter.ToSingle(bytes, 0);
+            }
+            return new Vector3(vec[0], vec[1], vec[2]);
+        }
+
+        protected void WriteVector3(List<byte> stream, Vector3 num)
+        {
+            var vec = new[] {num.X, num.Y, num.Z};
+            foreach(var n in vec)
+            {
+                var bytes = BitConverter.GetBytes(n);
+                if (BitConverter.IsLittleEndian)
+                    bytes = bytes.Reverse().ToArray();
+                stream.AddRange(bytes);
+            }
+        }
+        protected double ReadDouble(Stream stream)
+        {
+            var bytes = new byte[8];
+            stream.Read(bytes, 0, 8);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            return BitConverter.ToDouble(bytes, 0);
+        }
+
+        protected void WriteDouble(List<byte> stream, double num)
+        {
+            var bytes = BitConverter.GetBytes(num);
+            if (BitConverter.IsLittleEndian)
+                bytes = bytes.Reverse().ToArray();
+            stream.AddRange(bytes);
         }
 
         public byte GetPacketID()

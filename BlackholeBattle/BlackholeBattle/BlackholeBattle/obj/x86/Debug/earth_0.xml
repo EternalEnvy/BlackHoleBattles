@@ -3,7 +3,7 @@
   <Asset Type="Graphics:NodeContent">
     <Name>RootNode</Name>
     <Identity>
-      <SourceFilename>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\earth.fbx</SourceFilename>
+      <SourceFilename>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\earth.fbx</SourceFilename>
       <SourceTool>FbxImporter</SourceTool>
     </Identity>
     <Transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</Transform>
@@ -32,7 +32,7 @@
     <Resource ID="#Resource1" Type="Graphics:BasicMaterialContent">
       <Name>Material</Name>
       <Identity>
-        <SourceFilename>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\earth.fbx</SourceFilename>
+        <SourceFilename>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\earth.fbx</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>

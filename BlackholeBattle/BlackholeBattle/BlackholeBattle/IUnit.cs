@@ -14,5 +14,6 @@ namespace BlackholeBattle
         double Size();
         double Rotation();
         Vector3 Position();
+        int ID();
     }
 }
