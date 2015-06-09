@@ -133,8 +133,8 @@ namespace BlackholeBattle
             var vec = new float[3];
             for (int i = 0; i < 3; i++)
             {
-                var bytes = new byte[8];
-                stream.Read(bytes, 0, 8);
+                var bytes = new byte[4];
+                stream.Read(bytes, 0, 4);
                 if (BitConverter.IsLittleEndian)
                     bytes = bytes.Reverse().ToArray();
                 vec[i] = BitConverter.ToSingle(bytes, 0);
