@@ -122,6 +122,7 @@ namespace BlackholeBattle
             if (state.IsKeyDown(Keys.Home) && IsServer == null)
             {
                 IsServer = true;
+                selectedUnits.Add(units.First(a => (a is Blackhole) && (a as Blackhole).Owner() == IsServer.Value));
                 new Task(() =>
                 {
                     client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
@@ -147,6 +148,7 @@ namespace BlackholeBattle
             if (state.IsKeyDown(Keys.End) && IsServer == null)
             {
                 IsServer = false;
+                selectedUnits.Add(units.First(a => (a is Blackhole) && (a as Blackhole).Owner() == IsServer.Value));
                 new Task(() =>
                 {
                     ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
@@ -154,7 +156,7 @@ namespace BlackholeBattle
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
                     ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
                     ReceivingThread.Start();
-                    curPlayer.playerID = false; ;
+                    curPlayer.playerID = false;
                     PacketQueue.Instance.AddPacket(new RequestConnectPacket { Nickname = curPlayer.name });
                 }).Start();
             }
@@ -205,13 +207,14 @@ namespace BlackholeBattle
                 //Send keyboard input to server. This is done using reliable UDP as keyboard inputs should generally not be dropped unless they don't arrive within the buffer on the other side.
                 if (IsServer == false)
                 {
+                    UpdateGamePad();
                     //Selected units sounds like a bad idea considering it's a hashset and .First() can be any element...
                     var packet = new InputPacket
                     {
                         FrameNumber = FrameNumber.Value,
                         CameraPosition = cameraPosition,
                         CameraRotation = cameraDirection,
-                        SelectedBlackHoleID = !selectedUnits.Any() ? -1 : selectedUnits.First().ID(),
+                        SelectedBlackHoleID = !selectedUnits.Any(a=>a is Blackhole) ? -1 : selectedUnits.First(a=>a is Blackhole).ID(),
                         Front = Keyboard.GetState().IsKeyDown(Keys.W),
                         Back = Keyboard.GetState().IsKeyDown(Keys.S),
                         Left = Keyboard.GetState().IsKeyDown(Keys.A),
@@ -364,104 +367,109 @@ namespace BlackholeBattle
             }
         }
 
+        private Blackhole GetCurrentBlackHole()
+        {
+            return selectedUnits.FirstOrDefault(a => a is Blackhole) as Blackhole;
+        }
+
         private void UpdateGamePad()
         {
             KeyboardState state = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
             bool selectMultipleUnits = false;
-                if (state.IsKeyDown(Keys.Down))
-                {
-                    Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
-                    cross.Normalize();
-                    cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
-                }
-                if (state.IsKeyDown(Keys.Up))
-                {
-                    Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
-                    cross.Normalize();
-                    cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
-                }
-                if (state.IsKeyDown(Keys.Left))
-                {
-                    Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
-                    cross.Normalize();
-                    cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
-                }
-                if (state.IsKeyDown(Keys.Right))
-                {
-                    Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
-                    cross.Normalize();
-                    cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
-                }
+            if (state.IsKeyDown(Keys.Down))
+            {
+                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
+                cross.Normalize();
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
+            }
+            if (state.IsKeyDown(Keys.Up))
+            {
+                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
+                cross.Normalize();
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
+            }
+            if (state.IsKeyDown(Keys.Left))
+            {
+                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
+                cross.Normalize();
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 8);
+            }
+            if (state.IsKeyDown(Keys.Right))
+            {
+                Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
+                cross.Normalize();
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 8);
+            }
             if (state.IsKeyDown(Keys.LeftControl))
             {
-                selectMultipleUnits = true;
+                //selectMultipleUnits = true;
             }
             if (IsServer != false)
             {
                 if (state.IsKeyDown(Keys.W))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
                         Vector3 lookingAt = (cameraDirection - cameraPosition);
                         lookingAt.Normalize();
-                        (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                     }
                 }
                 if (state.IsKeyDown(Keys.A))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
                         Vector3 lookingAt = (cameraDirection - cameraPosition);
                         lookingAt = Vector3.Cross(lookingAt, Vector3.Down);
                         lookingAt.Normalize();
-                        (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                     }
                 }
                 if (state.IsKeyDown(Keys.S))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
                         Vector3 lookingAt = (cameraDirection - cameraPosition);
                         lookingAt.Normalize();
-                        (selectedUnits.First() as IMovable).Accelerate(-lookingAt);
+                        GetCurrentBlackHole().Accelerate(-lookingAt);
                     }
                 }
                 if (state.IsKeyDown(Keys.D))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
                         Vector3 lookingAt = (cameraDirection - cameraPosition);
                         lookingAt = Vector3.Cross(lookingAt, Vector3.Up);
                         lookingAt.Normalize();
-                        (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                     }
                 }
                 if (state.IsKeyDown(Keys.LeftShift))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
                         Vector3 lookingAt = (cameraDirection - cameraPosition);
                         lookingAt = Vector3.Cross(lookingAt, Vector3.Left);
                         lookingAt.Normalize();
-                        (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                     }
                 }
                 if (state.IsKeyDown(Keys.LeftControl))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
                         Vector3 lookingAt = (cameraDirection - cameraPosition);
                         lookingAt = Vector3.Cross(lookingAt, Vector3.Right);
                         lookingAt.Normalize();
-                        (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                     }
                 }
                 if (state.IsKeyDown(Keys.Space))
                 {
-                    if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                     {
-                        (selectedUnits.First() as IMovable).Brake();
+                        GetCurrentBlackHole().Brake();
                     }
                 }
             }
@@ -511,6 +519,12 @@ namespace BlackholeBattle
                         //this allows for control groups and whatever else to be used later
                         selectedUnits.Clear();
                     }
+
+                    if(bestGObject is Blackhole)
+                    {
+                        selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => !(a is Blackhole)));
+                    }
+
                     selectedUnits.Add(bestGObject);
                 }
             }
@@ -567,7 +581,8 @@ namespace BlackholeBattle
             for(int i = 0 ; i < numSpheroids; i++)
             {
                 int randy = randall.Next(1,8);
-                Spheroid s = new Spheroid(new Vector3(randall.Next(-1000, 1000), randall.Next(-1000, 1000), randall.Next(-1000, 1000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
+                //Spheroid s = new Spheroid(new Vector3(randall.Next(-1000, 1000), randall.Next(-1000, 1000), randall.Next(-1000, 1000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
+                Spheroid s = new Spheroid(new Vector3(0, 0, 200), Vector3.Zero, 23, 100, 20, randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
                 gravityObjects.Add(s);
                 units.Add(s);
             }
