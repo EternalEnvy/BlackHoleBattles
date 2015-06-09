@@ -1,2 +1,3 @@
 C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\obj\x86\Debug\BlackholeBattleContent.contentprojResolveAssemblyReference.cache
 C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\obj\x86\Debug\BlackholeBattleContent.contentprojResolveAssemblyReference.cache
+C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\obj\x86\Debug\BlackholeBattleContent.contentprojResolveAssemblyReference.cache

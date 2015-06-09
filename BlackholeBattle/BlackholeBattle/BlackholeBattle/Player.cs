@@ -7,7 +7,7 @@ namespace BlackholeBattle
 {
     class Player
     {
-        public int playerID; //Player 1 or Player 2
+        public bool playerID; //Player 1 or Player 2
         public string name;
         public List<IUnit> myUnits = new List<IUnit>();
         public Player(string userName)
@@ -16,7 +16,7 @@ namespace BlackholeBattle
         }
         private void AddUnit(IUnit unit)
         {
-            PacketQueue.Instance.AddPacket(new AddUnitPacket(unit));
+            //PacketQueue.Instance.AddPacket(new AddUnitPacket(unit));
             myUnits.Add(unit);
         }
     }

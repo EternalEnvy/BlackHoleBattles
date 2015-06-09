@@ -6,6 +6,11 @@ namespace BlackholeBattle
 {
     class GameStatePacket : Packet
     {
+        //For server retaining purposes
+        public Vector3 cameraPosition;
+        public Vector3 cameraDirection;
+
+        //Sent to client
         public List<Blackhole> Blackholes=new List<Blackhole>();
         public List<GravitationalField> Planets=new List<GravitationalField>();
 
