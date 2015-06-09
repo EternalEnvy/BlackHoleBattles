@@ -151,6 +151,16 @@ namespace BlackholeBattle
                 //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
                 //EULER
                 gravityObject.Update();
+                foreach(IUnit unit in units)
+                {
+                    if(unit is Base)
+                    {
+                        if(unit.GetBounds().Intersects(gravityObject.GetBounds()) && gravityObject.Owner() != unit.Owner())
+                        {
+                            //end game
+                        }
+                    }
+                }
             }
             foreach (GravitationalField g in swallowedObjects)
             {
@@ -466,18 +476,18 @@ namespace BlackholeBattle
             for(int i = 0 ; i < numSpheroids; i++)
             {
                 int randy = randall.Next(1,8);
-                Spheroid s = new Spheroid(new Vector3(randall.Next(-1000, 1000), randall.Next(-1000, 1000), randall.Next(-1000, 1000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
+                Spheroid s = new Spheroid(new Vector3(randall.Next(-14000, 14000), randall.Next(-14000, 14000), randall.Next(-14000, 14000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", curPlayer.name);
                 gravityObjects.Add(s);
                 units.Add(s);
             }
         }
         void CreateBase()
         {
-            units.Add(new Base(curPlayer.playerID == 1 ? new Vector3(-1000,0,0) : new Vector3(1000,0,0), curPlayer.playerID == 1 ? "player1base" : "player2base"));
+            units.Add(new Base(curPlayer.playerID == 1 ? new Vector3(-10000,0,0) : new Vector3(10000,0,0), curPlayer.playerID == 1 ? "player1base" : "player2base", curPlayer.name));
         }
         void CreateBlackHole()
         {
-            Blackhole b = new Blackhole(curPlayer.name, 200, curPlayer.playerID == 1 ? new Vector3(-1000, 250, 0) : new Vector3(1000, 250, 0));
+            Blackhole b = new Blackhole(curPlayer.name, 200, curPlayer.playerID == 1 ? new Vector3(-10000, 2500, 0) : new Vector3(10000, 2500, 0));
             gravityObjects.Add(b);
             units.Add(b);
         }

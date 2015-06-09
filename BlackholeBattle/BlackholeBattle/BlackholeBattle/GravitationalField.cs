@@ -9,12 +9,9 @@ namespace BlackholeBattle
     public class GravitationalField : IUnit
     {
         protected string unitType = "Gravity Object";
-        public string ModelName()
-        {
-            return unitType;
-        }   
         protected BoundingSphere bounds = new BoundingSphere();
         public double size;
+        protected string owner;
         public string modelName;
         protected const double G = 10;
         public double mass = 0;
@@ -22,6 +19,15 @@ namespace BlackholeBattle
         public Vector3 preVelocity { get; set; }
         public Vector3 netForce;
         public bool updatedInLoop = false;
+
+        public string Owner()
+        {
+            return owner;
+        }
+        public string ModelName()
+        {
+            return unitType;
+        }   
         public BoundingSphere GetBounds()
         {
             return bounds;
@@ -34,9 +40,9 @@ namespace BlackholeBattle
         {
             return state.x;
         }
-        public double Rotation()
+        public Vector3 Rotation()
         {
-            return 0;
+            return Vector3.Zero;
         }
         public double Size()
         {
@@ -45,6 +51,10 @@ namespace BlackholeBattle
         public void Update()
         {
             preVelocity = state.v;
+            if((state.x - Vector3.Zero).Length() > 10000)
+            {
+                state.v = -state.v;
+            }
             state.v += netForce;
             state.x += state.v;
             bounds.Center = state.x;

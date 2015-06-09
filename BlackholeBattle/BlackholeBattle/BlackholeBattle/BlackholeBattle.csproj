@@ -80,6 +80,7 @@
     <Compile Include="ConnectDecisionPacket.cs" />
     <Compile Include="GravitationalField.cs" />
     <Compile Include="IMovable.cs" />
+    <Compile Include="Missile.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PacketQueue.cs" />
     <Compile Include="Player.cs" />

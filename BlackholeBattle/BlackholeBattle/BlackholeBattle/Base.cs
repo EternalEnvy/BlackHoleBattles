@@ -22,8 +22,9 @@ namespace BlackholeBattle
         Vector3 position;
         Vector3 velocity;
         Vector3 acceleration;
-        public Base(Vector3 posit, string modelName)
+        public Base(Vector3 posit, string modelName, string owner)
         {
+            myOwner = owner;
             unitType = modelName;
             position = posit;
             bounds = new BoundingSphere(posit, 100);
@@ -76,9 +77,9 @@ namespace BlackholeBattle
         {
             return 100;
         }
-        public double Rotation()
+        public Vector3 Rotation()
         {
-            return 0;
+            return Vector3.Zero;
         }
         public void ShieldToggle()
         {
