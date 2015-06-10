@@ -256,6 +256,10 @@ namespace BlackholeBattle
                         gravityObjects = gravityObjects.Where(a => usedIds.Contains(a.ID())).ToList();
                         units = units.Where(a => usedIds.Contains(a.ID())).ToList();
                         selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => usedIds.Contains(a.ID())));
+                        if (!selectedUnits.Any())
+                        {
+                            selectedUnits.Add(units.First(a => a is Blackhole));
+                        }
                     }
                 }
                 else if (IsServer == true)
@@ -415,7 +419,7 @@ namespace BlackholeBattle
         {
             while (true)
             {
-                var res = client.Receive(ref ip);
+                var res = c.Receive(ref ip);
                 var stream = new MemoryStream(res);
                 var packet = new GameStatePacket();
                 packet.ReadPacketData(stream);
