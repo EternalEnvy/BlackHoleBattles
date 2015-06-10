@@ -7,13 +7,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\moon.xnb</Output>
-      <Time>2015-05-15T10:08:38.7960339-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\moon.xnb</Output>
+      <Time>2015-06-08T23:38:49.1815252-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Key>
-        <Value>2015-06-09T11:07:49.0349429-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Key>
+        <Value>2015-06-09T22:58:59.3287998-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Request>
     </Item>
     <Item>
       <Source>earth.fbx</Source>
@@ -21,13 +21,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\earth.xnb</Output>
-      <Time>2015-05-15T10:08:38.7840332-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\earth.xnb</Output>
+      <Time>2015-06-08T23:38:49.1655243-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Key>
-        <Value>2015-06-09T11:07:49.8944506-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Key>
+        <Value>2015-06-09T22:59:00.5168677-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Request>
     </Item>
     <Item>
       <Source>ganymede.fbx</Source>
@@ -35,13 +35,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ganymede.xnb</Output>
-      <Time>2015-05-15T10:08:38.7880335-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ganymede.xnb</Output>
+      <Time>2015-06-08T23:38:49.1665244-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Key>
-        <Value>2015-06-09T11:07:53.3244771-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Key>
+        <Value>2015-06-09T22:59:05.6801631-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Request>
     </Item>
     <Item>
       <Source>venus.fbx</Source>
@@ -49,13 +49,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\venus.xnb</Output>
-      <Time>2015-05-15T10:08:38.884039-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\venus.xnb</Output>
+      <Time>2015-06-08T23:38:49.2725304-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Key>
-        <Value>2015-06-09T11:07:54.1844838-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Key>
+        <Value>2015-06-09T22:59:06.8942325-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Request>
     </Item>
     <Item>
       <Source>mars.fbx</Source>
@@ -63,13 +63,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\mars.xnb</Output>
-      <Time>2015-05-15T10:08:38.7920337-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\mars.xnb</Output>
+      <Time>2015-06-08T23:38:49.1785251-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Key>
-        <Value>2015-06-09T11:07:54.7669884-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Key>
+        <Value>2015-06-09T22:59:07.6852777-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Request>
     </Item>
     <Item>
       <Source>uranus.fbx</Source>
@@ -77,13 +77,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\uranus.xnb</Output>
-      <Time>2015-05-15T10:08:38.8790387-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\uranus.xnb</Output>
+      <Time>2015-06-08T23:38:49.2715304-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Key>
-        <Value>2015-06-09T11:07:55.7244959-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Key>
+        <Value>2015-06-09T22:59:09.1263602-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Request>
     </Item>
     <Item>
       <Source>neptune.fbx</Source>
@@ -91,13 +91,13 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\neptune.xnb</Output>
-      <Time>2015-05-15T10:08:38.7990341-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\neptune.xnb</Output>
+      <Time>2015-06-08T23:38:49.1825253-04:00</Time>
       <Dependency>
-        <Key>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Key>
-        <Value>2015-06-09T11:07:55.9969982-04:00</Value>
+        <Key>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Key>
+        <Value>2015-06-09T22:59:09.4043761-04:00</Value>
       </Dependency>
-      <Request>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Request>
+      <Request>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Request>
     </Item>
     <Item>
       <Source>SpriteFont1.spritefont</Source>
@@ -105,8 +105,8 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\SpriteFont1.xnb</Output>
-      <Time>2015-05-27T10:15:07.3030351-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\SpriteFont1.xnb</Output>
+      <Time>2015-06-08T23:38:49.159524-04:00</Time>
     </Item>
     <Item>
       <Source>arrow.png</Source>
@@ -114,8 +114,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\arrow.xnb</Output>
-      <Time>2015-06-02T22:43:01.4384564-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\arrow.xnb</Output>
+      <Time>2015-06-08T23:38:49.160524-04:00</Time>
     </Item>
     <Item>
       <Source>iearth.jpg</Source>
@@ -123,8 +123,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iearth.xnb</Output>
-      <Time>2015-06-02T22:43:01.4774587-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iearth.xnb</Output>
+      <Time>2015-06-08T23:38:49.1745248-04:00</Time>
     </Item>
     <Item>
       <Source>iganymede.jpg</Source>
@@ -132,8 +132,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iganymede.xnb</Output>
-      <Time>2015-06-02T22:43:01.4794588-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iganymede.xnb</Output>
+      <Time>2015-06-08T23:38:49.1745248-04:00</Time>
     </Item>
     <Item>
       <Source>ijupiter.jpg</Source>
@@ -141,8 +141,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ijupiter.xnb</Output>
-      <Time>2015-06-02T22:43:01.4824589-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ijupiter.xnb</Output>
+      <Time>2015-06-08T23:38:49.1755249-04:00</Time>
     </Item>
     <Item>
       <Source>imars.jpg</Source>
@@ -150,8 +150,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\imars.xnb</Output>
-      <Time>2015-06-02T22:43:01.4854591-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\imars.xnb</Output>
+      <Time>2015-06-08T23:38:49.1755249-04:00</Time>
     </Item>
     <Item>
       <Source>imoon.jpg</Source>
@@ -159,8 +159,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\imoon.xnb</Output>
-      <Time>2015-06-02T22:43:01.4884593-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\imoon.xnb</Output>
+      <Time>2015-06-08T23:38:49.1765249-04:00</Time>
     </Item>
     <Item>
       <Source>ineptune.jpg</Source>
@@ -168,8 +168,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ineptune.xnb</Output>
-      <Time>2015-06-02T22:43:01.4914595-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ineptune.xnb</Output>
+      <Time>2015-06-08T23:38:49.1765249-04:00</Time>
     </Item>
     <Item>
       <Source>isaturn.jpg</Source>
@@ -177,8 +177,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\isaturn.xnb</Output>
-      <Time>2015-06-02T22:43:01.4944596-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\isaturn.xnb</Output>
+      <Time>2015-06-08T23:38:49.1765249-04:00</Time>
     </Item>
     <Item>
       <Source>iuranus.jpg</Source>
@@ -186,8 +186,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iuranus.xnb</Output>
-      <Time>2015-06-02T22:43:01.4974598-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\iuranus.xnb</Output>
+      <Time>2015-06-08T23:38:49.177525-04:00</Time>
     </Item>
     <Item>
       <Source>ivenus.jpg</Source>
@@ -195,8 +195,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ivenus.xnb</Output>
-      <Time>2015-06-02T22:43:01.50046-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ivenus.xnb</Output>
+      <Time>2015-06-08T23:38:49.177525-04:00</Time>
     </Item>
     <Item>
       <Source>blackhole.jpg</Source>
@@ -204,15 +204,15 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\blackhole.xnb</Output>
-      <Time>2015-06-08T10:16:16.7354507-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\blackhole.xnb</Output>
+      <Time>2015-06-08T23:38:49.160524-04:00</Time>
     </Item>
     <Item>
       <Source>moon.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Output>
-      <Time>2015-05-15T10:08:38.7960339-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\moon_0.xml</Output>
+      <Time>2015-06-08T23:38:49.1815252-04:00</Time>
     </Item>
     <Item>
       <Source>textures\moon.jpg</Source>
@@ -227,15 +227,15 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.8400364-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\moon_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.2135271-04:00</Time>
     </Item>
     <Item>
       <Source>earth.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Output>
-      <Time>2015-05-15T10:08:38.7840332-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\earth_0.xml</Output>
+      <Time>2015-06-08T23:38:49.1655243-04:00</Time>
     </Item>
     <Item>
       <Source>textures\world.200411.3x5400x2700.jpg</Source>
@@ -250,15 +250,15 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.8760385-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\world.200411.3x5400x2700_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.2695303-04:00</Time>
     </Item>
     <Item>
       <Source>ganymede.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Output>
-      <Time>2015-05-15T10:08:38.7880335-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\ganymede_0.xml</Output>
+      <Time>2015-06-08T23:38:49.1665244-04:00</Time>
     </Item>
     <Item>
       <Source>textures\ganymede.jpg</Source>
@@ -273,15 +273,15 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.8180352-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\ganymede_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.1935259-04:00</Time>
     </Item>
     <Item>
       <Source>venus.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Output>
-      <Time>2015-05-15T10:08:38.884039-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\venus_0.xml</Output>
+      <Time>2015-06-08T23:38:49.2725304-04:00</Time>
     </Item>
     <Item>
       <Source>textures\Venus_map_NASA_JPL_Magellan-Venera-Pioneer.jpg</Source>
@@ -296,15 +296,15 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.850037-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.1895257-04:00</Time>
     </Item>
     <Item>
       <Source>mars.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Output>
-      <Time>2015-05-15T10:08:38.7920337-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\mars_0.xml</Output>
+      <Time>2015-06-08T23:38:49.1785251-04:00</Time>
     </Item>
     <Item>
       <Source>textures\mars.jpg</Source>
@@ -319,15 +319,15 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.8340361-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\mars_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.2105269-04:00</Time>
     </Item>
     <Item>
       <Source>uranus.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Output>
-      <Time>2015-05-15T10:08:38.8790387-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\uranus_0.xml</Output>
+      <Time>2015-06-08T23:38:49.2715304-04:00</Time>
     </Item>
     <Item>
       <Source>textures\uranuscyl1.jpg</Source>
@@ -342,15 +342,15 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.8460368-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\uranuscyl1_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.247529-04:00</Time>
     </Item>
     <Item>
       <Source>neptune.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Output>
-      <Time>2015-05-15T10:08:38.7990341-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\neptune_0.xml</Output>
+      <Time>2015-06-08T23:38:49.1825253-04:00</Time>
     </Item>
     <Item>
       <Source>textures\neptune.jpg</Source>
@@ -365,8 +365,8 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Output>
-      <Time>2015-05-15T10:08:38.8440367-04:00</Time>
+      <Output>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\neptune_0.xnb</Output>
+      <Time>2015-06-08T23:38:49.2155272-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
@@ -375,10 +375,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\sellsj\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattleContent\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Jon\Source\Repos\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
@@ -407,7 +407,7 @@
       </Assembly>
       <Assembly>
         <Key>C:\Windows\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
-        <Value>2015-05-12T11:23:14.4132391-04:00</Value>
+        <Value>2015-05-15T20:28:12.3183663-04:00</Value>
       </Assembly>
     </Assemblies>
   </Asset>

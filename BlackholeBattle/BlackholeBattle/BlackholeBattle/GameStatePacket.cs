@@ -11,12 +11,15 @@ namespace BlackholeBattle
         public Vector3 cameraDirection;
 
         //Sent to client
+        public long Sequence;
+        private static long lastSequence = -1;
         public List<Blackhole> Blackholes=new List<Blackhole>();
         public List<GravitationalField> Planets=new List<GravitationalField>();
 
         public GameStatePacket()
         {
             PacketTypeID = 4;
+            Sequence = ++lastSequence;
         }
 
 

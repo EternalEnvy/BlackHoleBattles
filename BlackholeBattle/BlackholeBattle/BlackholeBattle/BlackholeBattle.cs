@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -21,15 +22,18 @@ namespace BlackholeBattle
         Random randall = new Random();
         const int PORT = 1521;
         const int PORT2 = 1522;
+        const int PORT3 = 1523;
         bool? IsServer;
         string ServerIP;
         string ClientIP;
         Thread ReceivingThread;
         UdpClient client;
         UdpClient client2;
+        UdpClient client3;
         Queue<Packet> packetProcessQueue = new Queue<Packet>();
 
         List<InputPacket> ClientInputBuffer = new List<InputPacket>();
+        List<GameStatePacket> ServerStateBuffer = new List<GameStatePacket>(); 
 
         private long? FrameNumber = null;
 
@@ -127,6 +131,7 @@ namespace BlackholeBattle
                 {
                     client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
+                    client3 = client3 ?? new UdpClient(PORT3, AddressFamily.InterNetwork);
 
                     IPHostEntry host;
                     string localIP = "?";
@@ -154,8 +159,11 @@ namespace BlackholeBattle
                     ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
                     client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
+                    client3 = client3 ?? new UdpClient(PORT3, AddressFamily.InterNetwork);
                     ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
                     ReceivingThread.Start();
+                    var thr = new Thread(() => ReceiveStates(client3, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT3)));
+                    thr.Start();
                     curPlayer.playerID = false;
                     PacketQueue.Instance.AddPacket(new RequestConnectPacket { Nickname = curPlayer.name });
                 }).Start();
@@ -223,6 +231,32 @@ namespace BlackholeBattle
                         Down = Keyboard.GetState().IsKeyDown(Keys.LeftControl)
                     };
                     PacketQueue.Instance.AddPacket(packet);
+
+                    var best = ServerStateBuffer.OrderBy(a => a.Sequence).LastOrDefault();
+                    if (best != default(GameStatePacket))
+                    {
+                        ServerStateBuffer = new List<GameStatePacket>();
+                        var usedIds = new HashSet<long>();
+                        foreach (var blackHole in best.Blackholes)
+                        {
+                            var b = gravityObjects.FirstOrDefault(a=>a.ID() == blackHole.ID());
+                            if (b != default(GravitationalField))
+                            {
+                                b.state = new State {v = b.state.v, x = blackHole.Position};
+                                b.mass = blackHole.Mass();
+                            }
+                            else
+                            {
+                                b = new Blackhole(blackHole.Owner(), blackHole.Mass(), blackHole.Position);
+                                gravityObjects.Add(b);
+                                units.Add(b);
+                            }
+                            usedIds.Add(b.ID());
+                        }
+                        gravityObjects = gravityObjects.Where(a => usedIds.Contains(a.ID())).ToList();
+                        units = units.Where(a => usedIds.Contains(a.ID())).ToList();
+                        selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => usedIds.Contains(a.ID())));
+                    }
                 }
                 else if (IsServer == true)
                 {
@@ -233,7 +267,6 @@ namespace BlackholeBattle
                             if (ClientInputBuffer[i].FrameNumber <= FrameNumber)
                             {
                                 var item = ClientInputBuffer[i];
-                                //TODO: Process other player's input.
                                 UpdateGamePad();
                                 UpdateClientGamePad(item);
                                 ClientInputBuffer.RemoveAt(i);
@@ -277,6 +310,17 @@ namespace BlackholeBattle
                     {
                         selectedUnits.Add(gravityObjects[0]);
                     }
+
+                    var pack = new GameStatePacket()
+                    {
+                        Blackholes = gravityObjects.OfType<Blackhole>().ToList(),
+                        Planets = gravityObjects.Where(a => !(a is Blackhole)).ToList()
+                    };
+
+                    var dat = new List<byte>();
+                    pack.WritePacketData(dat);
+
+                    client3.Send(dat.ToArray(), dat.Count, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
                 }
                 FrameNumber++;
             }
@@ -364,6 +408,18 @@ namespace BlackholeBattle
                     effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) *  Matrix.CreateTranslation(position);
                 }
                 mesh.Draw();          
+            }
+        }
+
+        private void ReceiveStates(UdpClient c, IPEndPoint ip)
+        {
+            while (true)
+            {
+                var res = client.Receive(ref ip);
+                var stream = new MemoryStream(res);
+                var packet = new GameStatePacket();
+                packet.ReadPacketData(stream);
+                ServerStateBuffer.Add(packet);
             }
         }
 
