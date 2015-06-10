@@ -347,13 +347,13 @@ namespace BlackholeBattle
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
                 cross.Normalize();
-                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 16);
+                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
             if (state.IsKeyDown(Keys.Right))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.UnitY);
                 cross.Normalize();
-                cameraPosition += cross * ((cameraDirection - cameraPosition).Length() / 16);
+                cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
             if(state.IsKeyDown(Keys.LeftControl))
             {
