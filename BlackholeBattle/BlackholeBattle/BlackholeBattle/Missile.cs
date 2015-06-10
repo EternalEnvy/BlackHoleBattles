@@ -14,11 +14,6 @@ namespace BlackholeBattle
             owner = player;
             bounds = new BoundingSphere(startingPos, size);
         }
-        public Vector3 Rotation()
-        {
-            //find direction of missile
-            return new Vector3((float)(Math.Tan(state.v.Y / state.v.Z) * 180 / Math.PI), (float)(Math.Tan(state.v.X / state.v.Z)* 180 / Math.PI), 0);
-        }
         public void Update(List<GravitationalField> gravityObjects)
         {
             foreach (GravitationalField g in gravityObjects)
@@ -31,6 +26,8 @@ namespace BlackholeBattle
                     netForce += distanceBetween * fG;
                 }
             }
+            //set rotation
+            rotation = new Vector3((float)(Math.Tan(state.v.Y / state.v.Z) * 180 / Math.PI), (float)(Math.Tan(state.v.X / state.v.Z)* 180 / Math.PI), 0);
         }
     }
 }

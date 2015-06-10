@@ -8,6 +8,7 @@ namespace BlackholeBattle
 {
     public class GravitationalField : IUnit
     {
+        protected Vector3 rotation = Vector3.Zero;
         protected string unitType = "Gravity Object";
         protected BoundingSphere bounds = new BoundingSphere();
         public double size;
@@ -42,7 +43,7 @@ namespace BlackholeBattle
         }
         public Vector3 Rotation()
         {
-            return Vector3.Zero;
+            return rotation;
         }
         public double Size()
         {

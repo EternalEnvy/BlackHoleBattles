@@ -375,10 +375,10 @@
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\untitled.xnb</Output>
-      <Time>2015-06-04T12:37:18.1873772-04:00</Time>
+      <Time>2015-06-09T12:14:58.4238889-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\untitled_0.xml</Key>
-        <Value>2015-06-04T12:40:51.5553841-04:00</Value>
+        <Value>2015-06-09T20:32:33.773453-04:00</Value>
       </Dependency>
       <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\oie_2I6EGmoI9oi8_0.xnb</Request>
     </Item>
@@ -387,7 +387,7 @@
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\untitled_0.xml</Output>
-      <Time>2015-06-04T12:37:18.1873772-04:00</Time>
+      <Time>2015-06-09T12:14:58.4238889-04:00</Time>
     </Item>
     <Item>
       <Source>C:\Users\Lee\Downloads\oie_2I6EGmoI9oi8.png</Source>
@@ -412,12 +412,12 @@
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\bluesunbase.xnb</Output>
-      <Time>2015-06-08T12:14:33.9350526-04:00</Time>
+      <Time>2015-06-09T21:25:52.3609293-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\bluesunbase_0.xml</Key>
-        <Value>2015-06-08T12:18:04.4615004-04:00</Value>
+        <Value>2015-06-10T09:06:37.6410479-04:00</Value>
       </Dependency>
-      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446034 (1)_0.xnb</Request>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446034_0.xnb</Request>
     </Item>
     <Item>
       <Source>pinksunbase.fbx</Source>
@@ -426,45 +426,79 @@
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\pinksunbase.xnb</Output>
-      <Time>2015-06-08T12:13:13.6056806-04:00</Time>
+      <Time>2015-06-09T21:24:05.8010328-04:00</Time>
       <Dependency>
         <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\pinksunbase_0.xml</Key>
-        <Value>2015-06-08T12:18:05.2896915-04:00</Value>
+        <Value>2015-06-10T09:06:38.8536093-04:00</Value>
       </Dependency>
-      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446033_0.xnb</Request>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446033_1.xnb</Request>
     </Item>
     <Item>
       <Source>bluesunbase.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\bluesunbase_0.xml</Output>
-      <Time>2015-06-08T12:14:33.9350526-04:00</Time>
-    </Item>
-    <Item>
-      <Source>C:\Users\Lee\Downloads\143377959446034 (1).png</Source>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Parameters>
-        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
-        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
-        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
-        <Data Key="GenerateMipmaps" Type="bool">true</Data>
-        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
-        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
-      </Parameters>
-      <Options>None</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446034 (1)_0.xnb</Output>
-      <Time>2015-06-08T12:10:43.3526044-04:00</Time>
+      <Time>2015-06-09T21:25:52.3609293-04:00</Time>
     </Item>
     <Item>
       <Source>pinksunbase.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\pinksunbase_0.xml</Output>
-      <Time>2015-06-08T12:13:13.6056806-04:00</Time>
+      <Time>2015-06-09T21:24:05.8010328-04:00</Time>
     </Item>
     <Item>
-      <Source>C:\Users\Lee\Downloads\143377959446033.png</Source>
+      <Source>missile.FBX</Source>
+      <Name>missile</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\missile.xnb</Output>
+      <Time>2015-06-09T12:14:58.3346048-04:00</Time>
+      <Dependency>
+        <Key>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\missile_0.xml</Key>
+        <Value>2015-06-10T09:06:39.3580896-04:00</Value>
+      </Dependency>
+      <Request>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\Air Missle diffuse_0.xnb</Request>
+    </Item>
+    <Item>
+      <Source>gamefont.spritefont</Source>
+      <Name>gamefont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\gamefont.xnb</Output>
+      <Time>2010-09-15T13:43:52-04:00</Time>
+    </Item>
+    <Item>
+      <Source>menufont.spritefont</Source>
+      <Name>menufont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\menufont.xnb</Output>
+      <Time>2010-09-15T13:43:52-04:00</Time>
+    </Item>
+    <Item>
+      <Source>background.png</Source>
+      <Name>background</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\background.xnb</Output>
+      <Time>2011-05-16T13:40:20-04:00</Time>
+    </Item>
+    <Item>
+      <Source>gradient.png</Source>
+      <Name>gradient</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\gradient.xnb</Output>
+      <Time>2010-09-15T13:43:52-04:00</Time>
+    </Item>
+    <Item>
+      <Source>C:\Users\Lee\Documents\143377959446034.png</Source>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Parameters>
@@ -476,8 +510,65 @@
         <Data Key="PremultiplyAlpha" Type="bool">true</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446033_0.xnb</Output>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446034_0.xnb</Output>
+      <Time>2015-06-08T12:09:34.0529023-04:00</Time>
+    </Item>
+    <Item>
+      <Source>C:\Users\Lee\Documents\143377959446033.png</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\143377959446033_1.xnb</Output>
       <Time>2015-06-08T12:10:01.9269726-04:00</Time>
+    </Item>
+    <Item>
+      <Source>missile.FBX</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\obj\x86\Debug\missile_0.xml</Output>
+      <Time>2015-06-09T12:14:58.3346048-04:00</Time>
+    </Item>
+    <Item>
+      <Source>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\Air Missle diffuse.jpg</Source>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Parameters>
+        <Data Key="ColorKeyColor" Type="Framework:Color">FFFF00FF</Data>
+        <Data Key="ColorKeyEnabled" Type="bool">true</Data>
+        <Data Key="TextureFormat" Type="Processors:TextureProcessorOutputFormat">DxtCompressed</Data>
+        <Data Key="GenerateMipmaps" Type="bool">true</Data>
+        <Data Key="ResizeToPowerOfTwo" Type="bool">false</Data>
+        <Data Key="PremultiplyAlpha" Type="bool">true</Data>
+      </Parameters>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\Air Missle diffuse_0.xnb</Output>
+      <Time>2015-06-09T20:02:00.2052367-04:00</Time>
+    </Item>
+    <Item>
+      <Source>blank.png</Source>
+      <Name>blank</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\blank.xnb</Output>
+      <Time>2010-09-15T13:43:52-04:00</Time>
+    </Item>
+    <Item>
+      <Source>nightSky.jpg</Source>
+      <Name>nightSky</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\nightSky.xnb</Output>
+      <Time>2015-06-01T13:01:54.9337254-04:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
