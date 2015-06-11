@@ -704,13 +704,25 @@ namespace BlackholeBattle
                 float maxDistance = float.MaxValue;
                 foreach (IUnit u in units.Where(a => !(a is Blackhole) || ((Blackhole)a).Owner() == IsServer))
                 {
-                    float? distanceIntersection = pickRay.Intersects(u.GetBounds());
-                    if (distanceIntersection.HasValue)
+                    if (u is Blackhole)
                     {
-                        if (distanceIntersection < maxDistance)
+                        Vector3 posOnScreen = ScreenManager.GraphicsDevice.Viewport.Project(u.Position(), projection, view, Matrix.CreateTranslation(0, 0, 0));
+                        if (new Rectangle((int)posOnScreen.X, (int)posOnScreen.Y, 50, 50).Contains(new Point(mouse.X, mouse.Y)))
                         {
                             bestGObject = u;
-                            maxDistance = distanceIntersection.Value;
+                            maxDistance = (u.Position() - cameraPosition).Length();
+                        }
+                    }
+                    else
+                    {
+                        float? distanceIntersection = pickRay.Intersects(u.GetBounds());
+                        if (distanceIntersection.HasValue)
+                        {
+                            if (distanceIntersection < maxDistance)
+                            {
+                                bestGObject = u;
+                                maxDistance = distanceIntersection.Value;
+                            }
                         }
                     }
                 }
