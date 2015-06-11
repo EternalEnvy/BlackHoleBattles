@@ -8,11 +8,12 @@ namespace BlackholeBattle
 {
     interface IUnit
     {
+        string Owner();
         BoundingSphere GetBounds();
         string ModelName();
         double Mass();
         double Size();
-        double Rotation();
+        Vector3 Rotation();
         Vector3 Position();
         int ID();
     }

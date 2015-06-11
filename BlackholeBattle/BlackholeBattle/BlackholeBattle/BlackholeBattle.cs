@@ -12,6 +12,9 @@ using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+using GameStateManagement;
+using GameStateManagementSample;
 
 namespace BlackholeBattle
 {
@@ -19,8 +22,15 @@ namespace BlackholeBattle
     /// This is the main type for your game
     /// </summary>
     /// 
-    public class BlackholeBattle : Game
+    public class BlackholeBattle : GameScreen
     {
+        //TESTING HERE
+        float pauseAlpha;
+        InputAction pauseAction;
+        ContentManager content;
+        SpriteFont gameFont;
+        //END TESTING
+
         Random randall = new Random();
         const int PORT = 1521;
         const int PORT2 = 1522;
@@ -43,9 +53,9 @@ namespace BlackholeBattle
         private long? FrameNumber = null;
 
         Texture2D arrowTemp;
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        //SpriteBatch spriteBatch;
         SpriteFont font;
+        GraphicsDeviceManager graphics;
 
         Dictionary<string, Texture2D> thumbnails = new Dictionary<string, Texture2D>();
         Dictionary<string, Model> models = new Dictionary<string, Model>();
@@ -61,7 +71,7 @@ namespace BlackholeBattle
         Player curPlayer = new Player(null);
 
         public static double elapsedTimeSeconds = 0;
-        float camToPosition;
+        float camToPosition = 300;
         int scrollValue = 0;
         List<IUnit> units = new List<IUnit>();
         static List<GravitationalField> gravityObjects = new List<GravitationalField>();
@@ -70,56 +80,71 @@ namespace BlackholeBattle
 
         public BlackholeBattle()
         {
-            graphics = new GraphicsDeviceManager(this);
+            TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+            pauseAction = new InputAction(
+                new Buttons[] { Buttons.Start, Buttons.Back },
+                new Keys[] { Keys.Escape },
+                true);
             //graphics.IsFullScreen = true;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
-            Content.RootDirectory = "Content";
         }
-        protected override void Initialize()
+        public override void Activate(bool instancePreserved)
         {
+            if (!instancePreserved)
+            {
+                if (content == null)
+                    content = new ContentManager(ScreenManager.Game.Services, "Content");
+                gameFont = content.Load<SpriteFont>("gamefont");
+                models.Add("venus", content.Load<Model>("venus"));
+                models.Add("mars", content.Load<Model>("mars"));
+                models.Add("earth", content.Load<Model>("earth"));
+                models.Add("ganymede", content.Load<Model>("ganymede"));
+                models.Add("neptune", content.Load<Model>("neptune"));
+                models.Add("uranus", content.Load<Model>("uranus"));
+                models.Add("moon", content.Load<Model>("moon"));
+                models.Add("player1base", content.Load<Model>("pinksunbase"));
+                models.Add("player2base", content.Load<Model>("bluesunbase"));
+                thumbnails.Add("venus", content.Load<Texture2D>("ivenus"));
+                thumbnails.Add("mars", content.Load<Texture2D>("imars"));
+                thumbnails.Add("earth", content.Load<Texture2D>("iearth"));
+                thumbnails.Add("ganymede", content.Load<Texture2D>("iganymede"));
+                thumbnails.Add("neptune", content.Load<Texture2D>("ineptune"));
+                thumbnails.Add("uranus", content.Load<Texture2D>("iuranus"));
+                thumbnails.Add("moon", content.Load<Texture2D>("imoon"));
+                thumbnails.Add("blackhole", content.Load<Texture2D>("blackhole"));
+                font = content.Load<SpriteFont>("SpriteFont1");
+                arrowTemp = content.Load<Texture2D>("arrow");
+                // A real game would probably have more content than this sample, so
+                // it would take longer to load. We simulate that by delaying for a
+                // while, giving you a chance to admire the beautiful loading screen.
+                Thread.Sleep(1000);
+
+                // once the load has finished, we use ResetElapsedTime to tell the game's
+                // timing mechanism that we have just finished a very long frame, and that
+                // it should not try to catch up.
+                ScreenManager.Game.ResetElapsedTime();
             CreateSpheroids(1);
             //CreateBase();
             CreateBlackHole(true);
             CreateBlackHole(false);
+            graphics = ScreenManager.Game.Services.GetService(typeof(IGraphicsDeviceService)) as GraphicsDeviceManager;
             hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
-            hudTexture = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             Color[] c = new Color[1];
             Byte transparency_amount = 175;
             c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
             hudTexture.SetData<Color>(c);
-            IsMouseVisible = true;
             //initial camera position
             selectedUnits.Add(gravityObjects[0]);
-            base.Initialize();
         }
-
-        protected override void LoadContent()
-        {
-            //skyDome = Content.Load<Model>("skydome");
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            models.Add("venus", Content.Load<Model>("venus"));
-            models.Add("mars", Content.Load<Model>("mars"));
-            models.Add("earth", Content.Load<Model>("earth"));
-            models.Add("ganymede", Content.Load<Model>("ganymede"));
-            models.Add("neptune", Content.Load<Model>("neptune"));
-            models.Add("uranus", Content.Load<Model>("uranus"));
-            models.Add("moon", Content.Load<Model>("moon"));
-            thumbnails.Add("venus", Content.Load<Texture2D>("ivenus"));
-            thumbnails.Add("mars", Content.Load<Texture2D>("imars"));
-            thumbnails.Add("earth", Content.Load<Texture2D>("iearth"));
-            thumbnails.Add("ganymede", Content.Load<Texture2D>("iganymede"));
-            thumbnails.Add("neptune", Content.Load<Texture2D>("ineptune"));
-            thumbnails.Add("uranus", Content.Load<Texture2D>("iuranus"));
-            thumbnails.Add("moon", Content.Load<Texture2D>("imoon"));
-            thumbnails.Add("blackhole", Content.Load<Texture2D>("blackhole"));
-            font = Content.Load<SpriteFont>("SpriteFont1");
-            arrowTemp = Content.Load<Texture2D>("arrow");
         }
-
-        protected override void UnloadContent()
+        public override void Deactivate()
         {
-            
+            base.Deactivate();
+        }
+        public override void Unload()
+        {
+            content.Unload();
         }
 
         private void UpdateToState(GameStatePacket packet)
@@ -179,7 +204,7 @@ namespace BlackholeBattle
                 Blackholes = gravityObjects.OfType<Blackhole>().ToList(),
                 Planets = gravityObjects.Where(a => !(a is Blackhole)).ToList()
             };
-
+            
             var dat = new List<byte>();
             pack.WritePacketData(dat);
             if (guarentee)
@@ -193,10 +218,15 @@ namespace BlackholeBattle
             }
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            //have the camera look at the average position of all selected objects
-            if(curPlayer.name == null)
+            base.Update(gameTime, otherScreenHasFocus, false);
+            // Gradually fade in or out depending on whether we are covered by the pause screen.
+            if (coveredByOtherScreen)
+                pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
+            else
+                pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
+                if (curPlayer.name == null)
             {
                 curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
                 if (curPlayer.name.Length == 0)
@@ -319,18 +349,18 @@ namespace BlackholeBattle
                         UpdateToState(packet2);
 
                         FrameNumber = 0;
-                    }
+            }
                 }
 
             if (FrameNumber.HasValue)
             {
-                Vector3 average = new Vector3();
-                foreach (IUnit u in selectedUnits)
-                {
-                    average += u.Position();
-                }
-                average /= selectedUnits.Count;
-                cameraDirection = average;
+            Vector3 average = new Vector3();
+            foreach (IUnit u in selectedUnits)
+            {
+                average += u.Position();
+            }
+            average /= selectedUnits.Count;
+            cameraDirection = average;
                 //Send keyboard input to server. This is done using reliable UDP as keyboard inputs should generally not be dropped unless they don't arrive within the buffer on the other side.
                 if (IsServer == false)
                 {
@@ -372,7 +402,7 @@ namespace BlackholeBattle
                             if (ClientInputBuffer[i].FrameNumber <= FrameNumber)
                             {
                                 var item = ClientInputBuffer[i];
-                                UpdateGamePad();
+            UpdateGamePad();
                                 UpdateClientGamePad(item);
                                 ClientInputBuffer.RemoveAt(i);
                                 i--;
@@ -380,6 +410,9 @@ namespace BlackholeBattle
                         }
                     }
                 }
+                Vector3 temp = cameraDirection - cameraPosition;
+                temp.Normalize();
+                cameraPosition = cameraDirection - (camToPosition * temp);
             elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
             List<GravitationalField> objects = new List<GravitationalField>();
             foreach (GravitationalField gravityObject in gravityObjects)
@@ -403,6 +436,16 @@ namespace BlackholeBattle
                 //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
                 //EULER
                 gravityObject.Update();
+                    foreach (IUnit unit in units)
+                    {
+                        if (unit is Base)
+                        {
+                            if (unit.GetBounds().Intersects(gravityObject.GetBounds()) && gravityObject.Owner() != unit.Owner())
+                            {
+                                //end game
+                            }
+                        }
+                    }
             }
             foreach (GravitationalField g in swallowedObjects)
             {
@@ -425,30 +468,31 @@ namespace BlackholeBattle
                     PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));
                 else if (IsServer == false && client2 != null)
                     PacketQueue.TestFunc(client2, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT2));
-            base.Update(gameTime);
+            }
         }
-
-        protected override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
+            ScreenManager.GraphicsDevice.Clear(Color.Black);
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             spriteBatch.Begin();
-            GraphicsDevice.Clear(Color.Black);
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            foreach(IUnit unit in units)
+
+            foreach (IUnit unit in units)
             {
                 if (unit is Blackhole)
                 {
                     BoundingFrustum frustum = new BoundingFrustum(view * projection);
-                    if(frustum.Contains(unit.Position()) == ContainmentType.Contains)
+                    if (frustum.Contains(unit.Position()) == ContainmentType.Contains)
                     {
                         Vector3 blackHoleScreenPos = unit.Position();
-                        blackHoleScreenPos = GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
+                        blackHoleScreenPos = ScreenManager.GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
                         //blackHoleScreenPos = GraphicsDevice.Viewport.Unproject(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
                         Vector2 posOnScreen;
                         {
-                           posOnScreen.X =  blackHoleScreenPos.X;
+                            posOnScreen.X = blackHoleScreenPos.X;
                             posOnScreen.Y = blackHoleScreenPos.Y;
                          }
-                         spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X,(int)posOnScreen.Y, 50,50), Color.White);
+                        spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X, (int)posOnScreen.Y, 50, 50), Color.White);
                          //draw distance from base to blackhole
                         //spriteBatch.DrawString(
                         spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 30), Color.Red);
@@ -456,7 +500,7 @@ namespace BlackholeBattle
                     }
                 }
             }
-            foreach(IUnit unit in units)
+            foreach (IUnit unit in units)
             {
                 if (!(unit is Blackhole))
                 {
@@ -464,7 +508,10 @@ namespace BlackholeBattle
                 }
             }
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
+            if (curPlayer.name != null)
+            {
             spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
+            }
             if (IsServer != null && ServerIP == null)
             {
                 spriteBatch.DrawString(font, "Waiting on IP...", new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
@@ -473,10 +520,18 @@ namespace BlackholeBattle
             {
                 spriteBatch.DrawString(font, "Server IP is: " + ServerIP, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
             }
+
             spriteBatch.End();
-            base.Draw(gameTime);
+
+            // If the game is transitioning on or off, fade it out to black.
+            if (TransitionPosition > 0 || pauseAlpha > 0)
+            {
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
+
+                ScreenManager.FadeBackBufferToBlack(alpha);
+            }
         }
-        private void DrawModel(Model m, double size, double rotation, Vector3 position)
+        private void DrawModel(Model m, double size, Vector3 rotation, Vector3 position)
         //draw model of size "size"
         {
             float rad = m.Meshes[0].BoundingSphere.Transform(m.Meshes[0].ParentBone.Transform).Radius;
@@ -492,7 +547,7 @@ namespace BlackholeBattle
                     effect.EnableDefaultLighting();
                     effect.View = view;
                     effect.Projection = projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationY(MathHelper.ToRadians((float)rotation)) *  Matrix.CreateTranslation(position);
+                    effect.World = transforms[mesh.ParentBone.Index] * Matrix.CreateScale((float)size / rad,(float)size / rad,(float)size/rad) * Matrix.CreateRotationX(rotation.X) * Matrix.CreateRotationY(MathHelper.ToRadians(rotation.Y)) * Matrix.CreateRotationZ(rotation.Z) * Matrix.CreateTranslation(position);
                 }
                 mesh.Draw();          
             }
@@ -521,6 +576,10 @@ namespace BlackholeBattle
             KeyboardState state = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
             bool selectMultipleUnits = false;
+            if (state.IsKeyDown(Keys.Escape))
+            {
+                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+            }
             if (state.IsKeyDown(Keys.Down))
             {
                 Vector3 cross = Vector3.Cross((cameraDirection - cameraPosition), Vector3.Right);
@@ -630,10 +689,10 @@ namespace BlackholeBattle
                 Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
                 //find out where they are in the worldspace by transforming the matrix back
-                Vector3 nearPoint = GraphicsDevice.Viewport.Unproject(nearsource,
+                Vector3 nearPoint = ScreenManager.GraphicsDevice.Viewport.Unproject(nearsource,
                     projection, view, world);
 
-                Vector3 farPoint = GraphicsDevice.Viewport.Unproject(farsource,
+                Vector3 farPoint = ScreenManager.GraphicsDevice.Viewport.Unproject(farsource,
                     projection, view, world);
                 Vector3 direction = farPoint - nearPoint;
                 direction.Normalize();
@@ -674,9 +733,11 @@ namespace BlackholeBattle
             }
             //zoom the camera in based on the scroll wheel
             int mouseScrollValue = mouse.ScrollWheelValue;
+            if (mouseScrollValue != scrollValue)
+            {
             Vector3 currentCameraDirection = cameraDirection - cameraPosition;
             currentCameraDirection.Normalize();
-            cameraPosition += ((mouseScrollValue - scrollValue) / 2) * currentCameraDirection;
+                cameraPosition += (mouseScrollValue - scrollValue) * 2 * currentCameraDirection;
             camToPosition = (cameraDirection - cameraPosition).Length();
             scrollValue = mouseScrollValue;
         }
@@ -733,16 +794,14 @@ namespace BlackholeBattle
             for(int i = 0 ; i < numSpheroids; i++)
             {
                 int randy = randall.Next(1,8);
-                Spheroid s = new Spheroid(new Vector3(randall.Next(-1000, 1000), randall.Next(-1000, 1000), randall.Next(-1000, 1000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
-                //Spheroid s = new Spheroid(new Vector3(0, 0, 200), Vector3.Zero, 23, 100, 20, randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede");
+                Spheroid s = new Spheroid(new Vector3(randall.Next(-14000, 14000), randall.Next(-14000, 14000), randall.Next(-14000, 14000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", curPlayer.name);
                 gravityObjects.Add(s);
                 units.Add(s);
             }
         }
         void CreateBase()
         {
-            //Send command, bases are not part of network stuff yet.
-            units.Add(new Base(curPlayer.playerID ? new Vector3(-1000,0,0) : new Vector3(1000,0,0), curPlayer.playerID ? "player1base" : "player2base"));
+            units.Add(new Base(curPlayer.playerID == 1 ? new Vector3(-10000,0,0) : new Vector3(10000,0,0), curPlayer.playerID == 1 ? "player1base" : "player2base", curPlayer.name));
         }
         void CreateBlackHole(bool id)
         {

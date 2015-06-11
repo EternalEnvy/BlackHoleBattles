@@ -75,20 +75,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddUnitPacket.cs" />
+    <Compile Include="BackgroundScreen.cs" />
     <Compile Include="Base.cs" />
     <Compile Include="Blackhole.cs" />
+    <Compile Include="Button.cs" />
+    <Compile Include="InstructionsMenuScreen.cs" />
     <Compile Include="ConnectDecisionPacket.cs" />
-    <Compile Include="GameStatePacket.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameplayScreen.cs" />
+    <Compile Include="GameScreen.cs" />
+	<Compile Include="GameStatePacket.cs" />
     <Compile Include="GravitationalField.cs" />
     <Compile Include="IMovable.cs" />
-    <Compile Include="InputPacket.cs" />
+    <Compile Include="InputAction.cs" />
+    <Compile Include="InputState.cs" />
+    <Compile Include="IScreenFactory.cs" />
+    <Compile Include="LoadingScreen.cs" />
+    <Compile Include="MainMenuScreen.cs" />
+    <Compile Include="MenuEntry.cs" />
+    <Compile Include="MenuScreen.cs" />
+    <Compile Include="MessageBoxScreen.cs" />
+    <Compile Include="Missile.cs" />
+    <Compile Include="OptionsMenuScreen.cs" />
+	<Compile Include="InputPacket.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PacketQueue.cs" />
+    <Compile Include="PauseMenuScreen.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerIndexEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="BlackholeBattle.cs" />
     <Compile Include="RequestConnectPacket.cs" />
+    <Compile Include="ScreenFactory.cs" />
+    <Compile Include="ScreenManager.cs" />
     <Compile Include="Spheroid.cs" />
     <Compile Include="IUnit.cs" />
   </ItemGroup>
