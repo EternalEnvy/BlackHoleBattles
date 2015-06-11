@@ -228,7 +228,8 @@ namespace BlackholeBattle
                         Left = Keyboard.GetState().IsKeyDown(Keys.A),
                         Right = Keyboard.GetState().IsKeyDown(Keys.D),
                         Up = Keyboard.GetState().IsKeyDown(Keys.LeftShift),
-                        Down = Keyboard.GetState().IsKeyDown(Keys.LeftControl)
+                        Down = Keyboard.GetState().IsKeyDown(Keys.LeftControl),
+                        Brake = Keyboard.GetState().IsKeyDown(Keys.Space)
                     };
                     PacketQueue.Instance.AddPacket(packet);
 
