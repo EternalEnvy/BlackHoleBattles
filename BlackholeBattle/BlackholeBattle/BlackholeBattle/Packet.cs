@@ -32,6 +32,10 @@ namespace BlackholeBattle
                     packet = new InputPacket();
                     packet.ReadPacketData(stream);
                     return packet;
+                case 4:
+                    packet = new GameStatePacket();
+                    packet.ReadPacketData(stream);
+                    return packet;
                 default:
                     throw new Exception("Unrecognized Packet Type");
             }
