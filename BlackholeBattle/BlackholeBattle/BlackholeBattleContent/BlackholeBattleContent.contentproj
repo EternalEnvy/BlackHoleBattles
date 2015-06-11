@@ -163,13 +163,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="untitled.fbx">
-      <Name>untitled</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="bluesunbase.fbx">
       <Name>bluesunbase</Name>
       <Importer>FbxImporter</Importer>
