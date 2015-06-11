@@ -14,6 +14,7 @@ namespace BlackholeBattle
         public bool Right;
         public bool Up;
         public bool Down;
+        public bool Brake;
         public Vector3 CameraPosition;
         public Vector3 CameraRotation;
 
@@ -26,7 +27,8 @@ namespace BlackholeBattle
         {
             WriteLong(stream, FrameNumber);
             WriteInt(stream, SelectedBlackHoleID);
-            var mask = (byte)((Front ? 1 << 5 : 0) |
+            var mask = (byte)((Brake ? 1 << 6 : 0) |
+                              (Front ? 1 << 5 : 0) |
                               (Back ? 1 << 4 : 0) |
                               (Left ? 1 << 3 : 0) |
                               (Right ? 1 << 2 : 0) |
@@ -42,6 +44,7 @@ namespace BlackholeBattle
             FrameNumber = ReadLong(stream);
             SelectedBlackHoleID = ReadInt(stream);
             var mask = stream.ReadByte();
+            Brake = ((mask >> 6) & 1) == 1;
             Front = ((mask >> 5) & 1) == 1;
             Back = ((mask >> 4) & 1) == 1;
             Left = ((mask >> 3) & 1) == 1;

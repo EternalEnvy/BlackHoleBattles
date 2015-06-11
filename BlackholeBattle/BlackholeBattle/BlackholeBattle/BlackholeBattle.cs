@@ -635,6 +635,10 @@ namespace BlackholeBattle
                 lookingAt2.Normalize();
                 unit.Accelerate(lookingAt2);
             }
+            if (input.Brake)
+            {
+                unit.Brake();
+            }
         }
         void CreateSpheroids(int numSpheroids)
         {           
