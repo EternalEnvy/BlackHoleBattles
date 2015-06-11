@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using GameStateManagement;
 using GameStateManagementSample;
+using Microsoft.Xna.Framework.Content;
 
 namespace BlackholeBattle
 {
@@ -123,20 +124,20 @@ namespace BlackholeBattle
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
-            CreateSpheroids(1);
-            //CreateBase();
-            CreateBlackHole(true);
-            CreateBlackHole(false);
-            graphics = ScreenManager.Game.Services.GetService(typeof(IGraphicsDeviceService)) as GraphicsDeviceManager;
-            hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
-                hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            Color[] c = new Color[1];
-            Byte transparency_amount = 175;
-            c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
-            hudTexture.SetData<Color>(c);
-            //initial camera position
-            selectedUnits.Add(gravityObjects[0]);
-        }
+                CreateSpheroids(1);
+                //CreateBase();
+                CreateBlackHole(true);
+                CreateBlackHole(false);
+                graphics = ScreenManager.Game.Services.GetService(typeof(IGraphicsDeviceService)) as GraphicsDeviceManager;
+                hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
+                    hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                Color[] c = new Color[1];
+                Byte transparency_amount = 175;
+                c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
+                hudTexture.SetData<Color>(c);
+                //initial camera position
+                selectedUnits.Add(gravityObjects[0]);
+            }
         }
         public override void Deactivate()
         {
@@ -230,7 +231,7 @@ namespace BlackholeBattle
             {
                 curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
                 if (curPlayer.name.Length == 0)
-                    Exit();
+                    ExitScreen();
             }
 
             var state = Keyboard.GetState();
@@ -291,7 +292,7 @@ namespace BlackholeBattle
 
             if (state.IsKeyDown(Keys.Escape))
             {
-                Exit();
+                ExitScreen();
             }
 
             lock(packetProcessQueueLock)
@@ -349,7 +350,7 @@ namespace BlackholeBattle
                         UpdateToState(packet2);
 
                         FrameNumber = 0;
-            }
+                    }
                 }
 
             if (FrameNumber.HasValue)
@@ -468,7 +469,6 @@ namespace BlackholeBattle
                     PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));
                 else if (IsServer == false && client2 != null)
                     PacketQueue.TestFunc(client2, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT2));
-            }
         }
         public override void Draw(GameTime gameTime)
         {
@@ -614,68 +614,68 @@ namespace BlackholeBattle
                 {
                     if (GetCurrentBlackHole() != null)
                     {
-                    Vector3 lookingAt = (cameraDirection - cameraPosition);
-                    lookingAt.Normalize();
+                        Vector3 lookingAt = (cameraDirection - cameraPosition);
+                        lookingAt.Normalize();
                         GetCurrentBlackHole().Accelerate(lookingAt);
-                }
-            }
-            if (state.IsKeyDown(Keys.A))
-            {
-                    if (GetCurrentBlackHole() != null)
-                {
-                    Vector3 lookingAt = (cameraDirection - cameraPosition);
-                    lookingAt = Vector3.Cross(lookingAt, Vector3.Down);
-                    lookingAt.Normalize();
-                        GetCurrentBlackHole().Accelerate(lookingAt);
-                }
-            }
-            if (state.IsKeyDown(Keys.S))
-            {
-                    if (GetCurrentBlackHole() != null)
-                {
-                    Vector3 lookingAt = (cameraDirection - cameraPosition);
-                    lookingAt.Normalize();
-                        GetCurrentBlackHole().Accelerate(-lookingAt);
-                }
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                    if (GetCurrentBlackHole() != null)
-                {
-                    Vector3 lookingAt = (cameraDirection - cameraPosition);
-                    lookingAt = Vector3.Cross(lookingAt, Vector3.Up);
-                    lookingAt.Normalize();
-                        GetCurrentBlackHole().Accelerate(lookingAt);
-                }
-            }
-            if (state.IsKeyDown(Keys.LeftShift))
-            {
-                    if (GetCurrentBlackHole() != null)
-                {
-                    Vector3 lookingAt = (cameraDirection - cameraPosition);
-                    lookingAt = Vector3.Cross(lookingAt, Vector3.Left);
-                    lookingAt.Normalize();
-                        GetCurrentBlackHole().Accelerate(lookingAt);
-                }
-            }
-            if (state.IsKeyDown(Keys.LeftControl))
-            {
-                    if (GetCurrentBlackHole() != null)
-                {
-                    Vector3 lookingAt = (cameraDirection - cameraPosition);
-                    lookingAt = Vector3.Cross(lookingAt, Vector3.Right);
-                    lookingAt.Normalize();
-                        GetCurrentBlackHole().Accelerate(lookingAt);
-                }
-            }
-                if (state.IsKeyDown(Keys.Space))
-            {
-                    if (GetCurrentBlackHole() != null)
-                {
-                        GetCurrentBlackHole().Brake();
-            }
-                        }
                     }
+                }
+                if (state.IsKeyDown(Keys.A))
+                {
+                    if (GetCurrentBlackHole() != null)
+                    {
+                        Vector3 lookingAt = (cameraDirection - cameraPosition);
+                        lookingAt = Vector3.Cross(lookingAt, Vector3.Down);
+                        lookingAt.Normalize();
+                        GetCurrentBlackHole().Accelerate(lookingAt);
+                    }
+                }
+                if (state.IsKeyDown(Keys.S))
+                {
+                    if (GetCurrentBlackHole() != null)
+                    {
+                        Vector3 lookingAt = (cameraDirection - cameraPosition);
+                        lookingAt.Normalize();
+                        GetCurrentBlackHole().Accelerate(-lookingAt);
+                    }
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    if (GetCurrentBlackHole() != null)
+                    {
+                        Vector3 lookingAt = (cameraDirection - cameraPosition);
+                        lookingAt = Vector3.Cross(lookingAt, Vector3.Up);
+                        lookingAt.Normalize();
+                        GetCurrentBlackHole().Accelerate(lookingAt);
+                    }
+                }
+                if (state.IsKeyDown(Keys.LeftShift))
+                {
+                    if (GetCurrentBlackHole() != null)
+                    {
+                        Vector3 lookingAt = (cameraDirection - cameraPosition);
+                        lookingAt = Vector3.Cross(lookingAt, Vector3.Left);
+                        lookingAt.Normalize();
+                        GetCurrentBlackHole().Accelerate(lookingAt);
+                    }
+                }
+                if (state.IsKeyDown(Keys.LeftControl))
+                {
+                    if (GetCurrentBlackHole() != null)
+                    {
+                        Vector3 lookingAt = (cameraDirection - cameraPosition);
+                        lookingAt = Vector3.Cross(lookingAt, Vector3.Right);
+                        lookingAt.Normalize();
+                        GetCurrentBlackHole().Accelerate(lookingAt);
+                    }
+                }
+                if (state.IsKeyDown(Keys.Space))
+                {
+                    if (GetCurrentBlackHole() != null)
+                    {
+                        GetCurrentBlackHole().Brake();
+                    }
+                }
+            }
 
             if (mouse.RightButton == ButtonState.Pressed)
             {
@@ -683,8 +683,8 @@ namespace BlackholeBattle
                 int mouseX = mouse.X;
                 int mouseY = mouse.Y;
 
-                Vector3 nearsource = new Vector3((float) mouseX, (float) mouseY, 0f);
-                Vector3 farsource = new Vector3((float) mouseX, (float) mouseY, 1f);
+                Vector3 nearsource = new Vector3((float)mouseX, (float)mouseY, 0f);
+                Vector3 farsource = new Vector3((float)mouseX, (float)mouseY, 1f);
 
                 Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
@@ -703,7 +703,7 @@ namespace BlackholeBattle
                 IUnit bestGObject = new GravitationalField();
                 //find the closest object to the camera that intersects with the ray
                 float maxDistance = float.MaxValue;
-                foreach (IUnit u in units.Where(a=>!(a is Blackhole) || ((Blackhole)a).Owner() == IsServer))
+                foreach (IUnit u in units.Where(a => !(a is Blackhole) || ((Blackhole)a).Owner() == IsServer))
                 {
                     float? distanceIntersection = pickRay.Intersects(u.GetBounds());
                     if (distanceIntersection.HasValue)
@@ -723,7 +723,7 @@ namespace BlackholeBattle
                         selectedUnits.Clear();
                     }
 
-                    if(bestGObject is Blackhole)
+                    if (bestGObject is Blackhole)
                     {
                         selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => !(a is Blackhole)));
                     }
@@ -735,11 +735,12 @@ namespace BlackholeBattle
             int mouseScrollValue = mouse.ScrollWheelValue;
             if (mouseScrollValue != scrollValue)
             {
-            Vector3 currentCameraDirection = cameraDirection - cameraPosition;
-            currentCameraDirection.Normalize();
+                Vector3 currentCameraDirection = cameraDirection - cameraPosition;
+                currentCameraDirection.Normalize();
                 cameraPosition += (mouseScrollValue - scrollValue) * 2 * currentCameraDirection;
-            camToPosition = (cameraDirection - cameraPosition).Length();
-            scrollValue = mouseScrollValue;
+                camToPosition = (cameraDirection - cameraPosition).Length();
+                scrollValue = mouseScrollValue;
+            }
         }
         private void UpdateClientGamePad(InputPacket input)
         {
@@ -801,7 +802,7 @@ namespace BlackholeBattle
         }
         void CreateBase()
         {
-            units.Add(new Base(curPlayer.playerID == 1 ? new Vector3(-10000,0,0) : new Vector3(10000,0,0), curPlayer.playerID == 1 ? "player1base" : "player2base", curPlayer.name));
+            units.Add(new Base(curPlayer.playerID ? new Vector3(-10000,0,0) : new Vector3(10000,0,0), curPlayer.playerID ? "player1base" : "player2base", curPlayer.name));
         }
         void CreateBlackHole(bool id)
         {
