@@ -37,6 +37,7 @@ namespace BlackholeBattle
         Queue<Packet> packetProcessQueue = new Queue<Packet>();
 
         List<InputPacket> ClientInputBuffer = new List<InputPacket>();
+        readonly object ServerStateBufferLock = new object();
         List<GameStatePacket> ServerStateBuffer = new List<GameStatePacket>(); 
 
         private long? FrameNumber = null;
@@ -336,10 +337,13 @@ namespace BlackholeBattle
                     };
                     PacketQueue.Instance.AddPacket(packet);
 
-                    var best = ServerStateBuffer.OrderBy(a => a.Sequence).LastOrDefault();
+                    GameStatePacket best;
+                    lock(ServerStateBufferLock)
+                        best = ServerStateBuffer.OrderBy(a => a.Sequence).LastOrDefault();
                     if (best != default(GameStatePacket))
                     {
-                        ServerStateBuffer = new List<GameStatePacket>();
+                        lock(ServerStateBufferLock)
+                            ServerStateBuffer.Clear();
                         UpdateToState(best);
                     }
                 }
@@ -495,7 +499,8 @@ namespace BlackholeBattle
                 var stream = new MemoryStream(res);
                 var packet = new GameStatePacket();
                 packet.ReadPacketData(stream);
-                ServerStateBuffer.Add(packet);
+                lock(ServerStateBufferLock)
+                    ServerStateBuffer.Add(packet);
             }
         }
 
