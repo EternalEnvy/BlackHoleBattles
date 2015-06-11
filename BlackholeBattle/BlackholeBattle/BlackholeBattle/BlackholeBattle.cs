@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -27,9 +28,11 @@ namespace BlackholeBattle
         string ServerIP;
         string ClientIP;
         Thread ReceivingThread;
+        Thread ReceiveStatesThread;
         UdpClient client;
         UdpClient client2;
         UdpClient client3;
+        readonly object packetProcessQueueLock = new object();
         Queue<Packet> packetProcessQueue = new Queue<Packet>();
 
         List<InputPacket> ClientInputBuffer = new List<InputPacket>();
@@ -120,6 +123,8 @@ namespace BlackholeBattle
             if(curPlayer.name == null)
             {
                 curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
+                if (curPlayer.name.Length == 0)
+                    Exit();
             }
 
             var state = Keyboard.GetState();
@@ -145,7 +150,8 @@ namespace BlackholeBattle
                     }
 
                     ServerIP = localIP;
-                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue));
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue, packetProcessQueueLock));
+                    ReceivingThread.IsBackground = true;
                     ReceivingThread.Start();
                 }).Start();
             }
@@ -160,10 +166,12 @@ namespace BlackholeBattle
                     client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
                     client3 = client3 ?? new UdpClient(PORT3, AddressFamily.InterNetwork);
-                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue, packetProcessQueueLock));
+                    ReceivingThread.IsBackground = true;
                     ReceivingThread.Start();
-                    var thr = new Thread(() => ReceiveStates(client3, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT3)));
-                    thr.Start();
+                    ReceiveStatesThread = new Thread(() => ReceiveStates(client3, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT3)));
+                    ReceiveStatesThread.IsBackground = true;
+                    ReceiveStatesThread.Start();
                     curPlayer.playerID = false;
                     PacketQueue.Instance.AddPacket(new RequestConnectPacket { Nickname = curPlayer.name });
                 }).Start();
@@ -174,41 +182,56 @@ namespace BlackholeBattle
                 Exit();
             }
 
-            while (packetProcessQueue.Any())
-            {
-                var packet = packetProcessQueue.Dequeue();
-                if (packet.GetPacketID() == 1)
+            lock(packetProcessQueueLock)
+                while (packetProcessQueue.Any())
                 {
-                    var packet2 = (RequestConnectPacket)packet;
-                    new Task(() =>
+                    var packet = packetProcessQueue.Dequeue();
+                    if (packet.GetPacketID() == 1)
                     {
-                        var response = Interaction.MsgBox("Would you like to allow " + packet2.Nickname + " to connect?", MsgBoxStyle.YesNo);
-                        if (response == MsgBoxResult.Yes)
+                        var packet2 = (RequestConnectPacket)packet;
+                        new Task(() =>
                         {
-                            ClientIP = packet2.IPAddress;
-                            PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
-                        }
+                            var response = Interaction.MsgBox("Would you like to allow " + packet2.Nickname + " to connect?", MsgBoxStyle.YesNo);
+                            if (response == MsgBoxResult.Yes)
+                            {
+                                ClientIP = packet2.IPAddress;
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
+                            }
+                            else
+                            {
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
+                            }
+                        }).Start();
+                    }
+                    if (packet.GetPacketID() == 2)
+                    {
+                        var packet2 = (ConnectDecisionPacket)packet;
+                        Console.WriteLine(packet2.Accepted);
+                        if (packet2.Accepted)
+                            FrameNumber = 0;
                         else
                         {
-                            PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
+                            IsServer = null;
+                            selectedUnits.Clear();
+                            ServerIP = null;
+                            ReceivingThread.Abort();
+                            ReceivingThread = null;
+                            ReceiveStatesThread.Abort();
+                            ReceiveStatesThread = null;
+                            curPlayer.playerID = false;
+                            Interaction.MsgBox(
+                                "Server declined your request to connect. You may try connecting to another host.");
                         }
-                    }).Start();
+                    }
+                    if (packet.GetPacketID() == 3)
+                    {
+                        var packet2 = (InputPacket)packet;
+                        if (!FrameNumber.HasValue)
+                            //x frame delay before starting inputs. This allows the other players inputs to be here before we start processing.
+                            FrameNumber = 0;
+                        ClientInputBuffer.Add(packet2);
+                    }
                 }
-                if (packet.GetPacketID() == 2)
-                {
-                    var packet2 = (ConnectDecisionPacket)packet;
-                    Console.WriteLine(packet2.Accepted);
-                    FrameNumber = 0;
-                }
-                if (packet.GetPacketID() == 3)
-                {
-                    var packet2 = (InputPacket)packet;
-                    if (!FrameNumber.HasValue)
-                        //x frame delay before starting inputs. This allows the other players inputs to be here before we start processing.
-                        FrameNumber = 0;
-                    ClientInputBuffer.Add(packet2);
-                }
-            }
 
             if (FrameNumber.HasValue)
             {
@@ -240,10 +263,10 @@ namespace BlackholeBattle
                         var usedIds = new HashSet<long>();
                         foreach (var blackHole in best.Blackholes)
                         {
-                            var b = gravityObjects.FirstOrDefault(a=>a.ID() == blackHole.ID());
+                            var b = gravityObjects.FirstOrDefault(a => a.ID() == blackHole.ID());
                             if (b != default(GravitationalField))
                             {
-                                b.state = new State {v = b.state.v, x = blackHole.Position};
+                                b.state = new State { v = b.state.v, x = blackHole.Position };
                                 b.mass = blackHole.Mass();
                             }
                             else
@@ -253,6 +276,28 @@ namespace BlackholeBattle
                                 units.Add(b);
                             }
                             usedIds.Add(b.ID());
+                        }
+                        foreach (var planet in best.Planets)
+                        {
+                            var p = gravityObjects.FirstOrDefault(a => a.ID() == planet.ID());
+                            if (p != default(GravitationalField))
+                            {
+                                p.state = new State { v = p.state.v, x = planet.Position() };
+                                p.mass = planet.Mass();
+                            }
+                            else
+                            {
+                                p = new GravitationalField()
+                                {
+                                    _id = planet._id,
+                                    mass = planet.mass,
+                                    size = planet.size,
+                                    state = new State() {v = Vector3.Zero, x = planet.Position()}
+                                };
+                                gravityObjects.Add(p);
+                                units.Add(p);
+                            }
+                            usedIds.Add(p.ID());
                         }
                         gravityObjects = gravityObjects.Where(a => usedIds.Contains(a.ID())).ToList();
                         units = units.Where(a => usedIds.Contains(a.ID())).ToList();
