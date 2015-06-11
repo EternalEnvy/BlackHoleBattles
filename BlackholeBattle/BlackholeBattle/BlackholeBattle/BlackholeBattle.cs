@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -118,6 +119,71 @@ namespace BlackholeBattle
         {
             
         }
+
+        private void UpdateToState(GameStatePacket packet)
+        {
+            var usedIds = new HashSet<long>();
+            foreach (var blackHole in packet.Blackholes)
+            {
+                var b = gravityObjects.FirstOrDefault(a => a.ID() == blackHole.ID());
+                if (b != default(GravitationalField))
+                {
+                    b.state = new State { v = b.state.v, x = blackHole.Position };
+                    b.mass = blackHole.Mass();
+                }
+                else
+                {
+                    b = new Blackhole(blackHole.Owner(), blackHole.Mass(), blackHole.Position);
+                    gravityObjects.Add(b);
+                    units.Add(b);
+                }
+                usedIds.Add(b.ID());
+            }
+            foreach (var planet in packet.Planets)
+            {
+                var p = gravityObjects.FirstOrDefault(a => a.ID() == planet.ID());
+                if (p != default(GravitationalField))
+                {
+                    p.state = new State { v = p.state.v, x = planet.Position() };
+                    p.mass = planet.Mass();
+                }
+                else
+                {
+                    p = new GravitationalField()
+                    {
+                        _id = planet._id,
+                        mass = planet.mass,
+                        size = planet.size,
+                        state = new State() { v = Vector3.Zero, x = planet.Position() }
+                    };
+                    gravityObjects.Add(p);
+                    units.Add(p);
+                }
+                usedIds.Add(p.ID());
+            }
+            gravityObjects = gravityObjects.Where(a => usedIds.Contains(a.ID())).ToList();
+            units = units.Where(a => usedIds.Contains(a.ID())).ToList();
+            selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => usedIds.Contains(a.ID())));
+            if (!selectedUnits.Any())
+            {
+                selectedUnits.Add(units.First(a => a is Blackhole && ((Blackhole)a).Owner() == IsServer));
+            }
+        }
+
+        private void SendStatePacket()
+        {
+            var pack = new GameStatePacket()
+            {
+                Blackholes = gravityObjects.OfType<Blackhole>().ToList(),
+                Planets = gravityObjects.Where(a => !(a is Blackhole)).ToList()
+            };
+
+            var dat = new List<byte>();
+            pack.WritePacketData(dat);
+
+            client3.Send(dat.ToArray(), dat.Count, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
+        }
+
         protected override void Update(GameTime gameTime)
         {
             if(curPlayer.name == null)
@@ -195,12 +261,13 @@ namespace BlackholeBattle
                             if (response == MsgBoxResult.Yes)
                             {
                                 ClientIP = packet2.IPAddress;
-                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = true});
+                                SendStatePacket();
                             }
                             else
                             {
                                 ClientIP = packet2.IPAddress;
-                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = false});
                             }
                         }).Start();
                     }
@@ -208,9 +275,7 @@ namespace BlackholeBattle
                     {
                         var packet2 = (ConnectDecisionPacket)packet;
                         Console.WriteLine(packet2.Accepted);
-                        if (packet2.Accepted)
-                            FrameNumber = 0;
-                        else
+                        if (!packet2.Accepted)
                         {
                             IsServer = null;
                             selectedUnits.Clear();
@@ -231,6 +296,13 @@ namespace BlackholeBattle
                             //x frame delay before starting inputs. This allows the other players inputs to be here before we start processing.
                             FrameNumber = 0;
                         ClientInputBuffer.Add(packet2);
+                    }
+                    if (packet.GetPacketID() == 4)
+                    {
+                        var packet2 = (GameStatePacket) packet;
+                        UpdateToState(packet2);
+
+                        FrameNumber = 0;
                     }
                 }
 
@@ -261,52 +333,7 @@ namespace BlackholeBattle
                     if (best != default(GameStatePacket))
                     {
                         ServerStateBuffer = new List<GameStatePacket>();
-                        var usedIds = new HashSet<long>();
-                        foreach (var blackHole in best.Blackholes)
-                        {
-                            var b = gravityObjects.FirstOrDefault(a => a.ID() == blackHole.ID());
-                            if (b != default(GravitationalField))
-                            {
-                                b.state = new State { v = b.state.v, x = blackHole.Position };
-                                b.mass = blackHole.Mass();
-                            }
-                            else
-                            {
-                                b = new Blackhole(blackHole.Owner(), blackHole.Mass(), blackHole.Position);
-                                gravityObjects.Add(b);
-                                units.Add(b);
-                            }
-                            usedIds.Add(b.ID());
-                        }
-                        foreach (var planet in best.Planets)
-                        {
-                            var p = gravityObjects.FirstOrDefault(a => a.ID() == planet.ID());
-                            if (p != default(GravitationalField))
-                            {
-                                p.state = new State { v = p.state.v, x = planet.Position() };
-                                p.mass = planet.Mass();
-                            }
-                            else
-                            {
-                                p = new GravitationalField()
-                                {
-                                    _id = planet._id,
-                                    mass = planet.mass,
-                                    size = planet.size,
-                                    state = new State() {v = Vector3.Zero, x = planet.Position()}
-                                };
-                                gravityObjects.Add(p);
-                                units.Add(p);
-                            }
-                            usedIds.Add(p.ID());
-                        }
-                        gravityObjects = gravityObjects.Where(a => usedIds.Contains(a.ID())).ToList();
-                        units = units.Where(a => usedIds.Contains(a.ID())).ToList();
-                        selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => usedIds.Contains(a.ID())));
-                        if (!selectedUnits.Any())
-                        {
-                            selectedUnits.Add(units.First(a => a is Blackhole));
-                        }
+                        UpdateToState(best);
                     }
                 }
                 else if (IsServer == true)
@@ -359,19 +386,10 @@ namespace BlackholeBattle
                     swallowedObjects.Clear();
                     if (selectedUnits.Count == 0)
                     {
-                        selectedUnits.Add(gravityObjects[0]);
+                        selectedUnits.Add(units.First(a => a is Blackhole && ((Blackhole)a).Owner() == IsServer));
                     }
 
-                    var pack = new GameStatePacket()
-                    {
-                        Blackholes = gravityObjects.OfType<Blackhole>().ToList(),
-                        Planets = gravityObjects.Where(a => !(a is Blackhole)).ToList()
-                    };
-
-                    var dat = new List<byte>();
-                    pack.WritePacketData(dat);
-
-                    client3.Send(dat.ToArray(), dat.Count, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
+                    SendStatePacket();
                 }
                 FrameNumber++;
             }
@@ -476,7 +494,7 @@ namespace BlackholeBattle
 
         private Blackhole GetCurrentBlackHole()
         {
-            return selectedUnits.FirstOrDefault(a => a is Blackhole) as Blackhole;
+            return selectedUnits.FirstOrDefault(a => (a is Blackhole) && ((Blackhole)a).Owner() == IsServer) as Blackhole;
         }
 
         private void UpdateGamePad()
@@ -607,7 +625,7 @@ namespace BlackholeBattle
                 IUnit bestGObject = new GravitationalField();
                 //find the closest object to the camera that intersects with the ray
                 float maxDistance = float.MaxValue;
-                foreach (IUnit u in units)
+                foreach (IUnit u in units.Where(a=>!(a is Blackhole) || ((Blackhole)a).Owner() == IsServer))
                 {
                     float? distanceIntersection = pickRay.Intersects(u.GetBounds());
                     if (distanceIntersection.HasValue)
@@ -646,45 +664,48 @@ namespace BlackholeBattle
         {
             Vector3 lookingAt = (input.CameraRotation - input.CameraPosition);
             var unit = (units.First(a => a.ID() == input.SelectedBlackHoleID)) as IMovable;
-            if (input.Front)
+            if (unit != null)
             {
-                var lookingAt2 = lookingAt;
-                lookingAt2.Normalize();
-                unit.Accelerate(lookingAt2);
-            }
-            if (input.Left)
-            {
-                var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Down);
-                lookingAt2.Normalize();
-                unit.Accelerate(lookingAt2);
-            }
-            if (input.Back)
-            {
-                var lookingAt2 = -lookingAt;
-                lookingAt2.Normalize();
-                unit.Accelerate(lookingAt2);
-            }
-            if (input.Right)
-            {
-                var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Up);
-                lookingAt2.Normalize();
-                unit.Accelerate(lookingAt2);
-            }
-            if (input.Up)
-            {
-                var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Left);
-                lookingAt2.Normalize();
-                unit.Accelerate(lookingAt2);
-            }
-            if (input.Down)
-            {
-                var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Right);
-                lookingAt2.Normalize();
-                unit.Accelerate(lookingAt2);
-            }
-            if (input.Brake)
-            {
-                unit.Brake();
+                if (input.Front)
+                {
+                    var lookingAt2 = lookingAt;
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Left)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Down);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Back)
+                {
+                    var lookingAt2 = -lookingAt;
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Right)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Up);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Up)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Left);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Down)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Right);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Brake)
+                {
+                    unit.Brake();
+                }
             }
         }
         void CreateSpheroids(int numSpheroids)
