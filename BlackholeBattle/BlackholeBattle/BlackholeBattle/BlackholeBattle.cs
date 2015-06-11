@@ -170,7 +170,7 @@ namespace BlackholeBattle
             }
         }
 
-        private void SendStatePacket()
+        private void SendStatePacket(bool guarentee = false)
         {
             var pack = new GameStatePacket()
             {
@@ -180,8 +180,15 @@ namespace BlackholeBattle
 
             var dat = new List<byte>();
             pack.WritePacketData(dat);
-
-            client3.Send(dat.ToArray(), dat.Count, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
+            if (guarentee)
+            {
+                PacketQueue.Instance.AddPacket(pack);
+            }
+            else
+            {
+                client3.Send(dat.ToArray(), dat.Count,
+                    new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
+            }
         }
 
         protected override void Update(GameTime gameTime)
@@ -262,7 +269,7 @@ namespace BlackholeBattle
                             {
                                 ClientIP = packet2.IPAddress;
                                 PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = true});
-                                SendStatePacket();
+                                SendStatePacket(true);
                             }
                             else
                             {
