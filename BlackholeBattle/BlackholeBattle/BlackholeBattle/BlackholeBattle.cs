@@ -218,8 +218,7 @@ namespace BlackholeBattle
                     new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
             }
         }
-
-        protected override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
             // Gradually fade in or out depending on whether we are covered by the pause screen.
