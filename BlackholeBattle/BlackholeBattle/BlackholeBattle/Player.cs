@@ -7,7 +7,7 @@ namespace BlackholeBattle
 {
     class Player
     {
-        public int playerID; //Player 1 or Player 2
+        public bool playerID; //Player 1 or Player 2
         public string name;
         public Player(string userName)
         {

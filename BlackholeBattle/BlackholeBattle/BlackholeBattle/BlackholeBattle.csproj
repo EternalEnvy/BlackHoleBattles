@@ -84,6 +84,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameplayScreen.cs" />
     <Compile Include="GameScreen.cs" />
+	<Compile Include="GameStatePacket.cs" />
     <Compile Include="GravitationalField.cs" />
     <Compile Include="IMovable.cs" />
     <Compile Include="InputAction.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="MessageBoxScreen.cs" />
     <Compile Include="Missile.cs" />
     <Compile Include="OptionsMenuScreen.cs" />
+	<Compile Include="InputPacket.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PacketQueue.cs" />
     <Compile Include="PauseMenuScreen.cs" />

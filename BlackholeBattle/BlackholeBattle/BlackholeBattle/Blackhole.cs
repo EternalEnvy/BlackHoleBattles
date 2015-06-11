@@ -8,19 +8,19 @@ namespace BlackholeBattle
 {
     class Blackhole : GravitationalField, IMovable
     {
-        string myOwner;
-        public string Owner()
+        bool owner;
+        public bool Owner()
         {
-            return myOwner;
+            return owner;
         }
-        public Blackhole(string player, double startMass, Vector3 startingPos)
+        public Blackhole(bool player, double startMass, Vector3 startingPos)
         {
             bounds = new BoundingSphere(startingPos, 30);
             unitType = "blackhole";
             mass = startMass;
             state.x = startingPos;
             state.v = new Vector3(0, 0, 0);
-            myOwner = player;
+            owner = player;
         }
         public void Accelerate(Vector3 direction)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using Microsoft.Xna.Framework;
 
@@ -10,11 +11,18 @@ namespace BlackholeBattle
     {
         protected Vector3 rotation = Vector3.Zero;
         protected string unitType = "Gravity Object";
+        public int _id;
+        private static int LastID = -1;
+        public string ModelName()
+        {
+            return unitType;
+        }   
         protected BoundingSphere bounds = new BoundingSphere();
         public double size;
         protected string owner;
         public string modelName;
         protected const double G = 10;
+        //Double uses 8 bytes, which will be sent for every object due to redundancy from UDP loss. Maybe a float would be better, or even a short? Do we need lots of precision?
         public double mass = 0;
         public State state;
         public Vector3 preVelocity { get; set; }
@@ -25,10 +33,11 @@ namespace BlackholeBattle
         {
             return owner;
         }
-        public string ModelName()
+
+        public GravitationalField()
         {
-            return unitType;
-        }   
+            _id = ++LastID;
+        }
         public BoundingSphere GetBounds()
         {
             return bounds;
@@ -48,6 +57,11 @@ namespace BlackholeBattle
         public double Size()
         {
             return size;
+        }
+
+        public int ID()
+        {
+            return _id;
         }
         public void Update()
         {

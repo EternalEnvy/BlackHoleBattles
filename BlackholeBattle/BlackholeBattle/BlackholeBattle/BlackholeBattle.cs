@@ -1,18 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Remoting.Channels;
-using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -37,13 +34,24 @@ namespace BlackholeBattle
         Random randall = new Random();
         const int PORT = 1521;
         const int PORT2 = 1522;
-        bool? IsServer = null;
-        string ServerIP = null;
-        string ClientIP = null;
-        Thread ReceivingThread = null;
+        const int PORT3 = 1523;
+        bool? IsServer;
+        string ServerIP;
+        string ClientIP;
+        Thread ReceivingThread;
+        Thread ReceiveStatesThread;
         UdpClient client;
         UdpClient client2;
+        UdpClient client3;
+        readonly object packetProcessQueueLock = new object();
         Queue<Packet> packetProcessQueue = new Queue<Packet>();
+
+        List<InputPacket> ClientInputBuffer = new List<InputPacket>();
+        readonly object ServerStateBufferLock = new object();
+        List<GameStatePacket> ServerStateBuffer = new List<GameStatePacket>(); 
+
+        private long? FrameNumber = null;
+
         Texture2D arrowTemp;
         //SpriteBatch spriteBatch;
         SpriteFont font;
@@ -115,19 +123,20 @@ namespace BlackholeBattle
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
-                CreateSpheroids(1);
-                //CreateBase();
-                //CreateBlackHole();
-                graphics = ScreenManager.Game.Services.GetService(typeof(IGraphicsDeviceService)) as GraphicsDeviceManager;
-                hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
+            CreateSpheroids(1);
+            //CreateBase();
+            CreateBlackHole(true);
+            CreateBlackHole(false);
+            graphics = ScreenManager.Game.Services.GetService(typeof(IGraphicsDeviceService)) as GraphicsDeviceManager;
+            hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
                 hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-                Color[] c = new Color[1];
-                Byte transparency_amount = 175;
-                c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
-                hudTexture.SetData<Color>(c);
-                //initial camera position
-                selectedUnits.Add(gravityObjects[0]);
-            }
+            Color[] c = new Color[1];
+            Byte transparency_amount = 175;
+            c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
+            hudTexture.SetData<Color>(c);
+            //initial camera position
+            selectedUnits.Add(gravityObjects[0]);
+        }
         }
         public override void Deactivate()
         {
@@ -137,7 +146,79 @@ namespace BlackholeBattle
         {
             content.Unload();
         }
-        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+
+        private void UpdateToState(GameStatePacket packet)
+        {
+            var usedIds = new HashSet<long>();
+            foreach (var blackHole in packet.Blackholes)
+            {
+                var b = gravityObjects.FirstOrDefault(a => a.ID() == blackHole.ID());
+                if (b != default(GravitationalField))
+                {
+                    b.state = new State { v = b.state.v, x = blackHole.Position };
+                    b.mass = blackHole.Mass();
+                }
+                else
+                {
+                    b = new Blackhole(blackHole.Owner(), blackHole.Mass(), blackHole.Position);
+                    gravityObjects.Add(b);
+                    units.Add(b);
+                }
+                usedIds.Add(b.ID());
+        }
+            foreach (var planet in packet.Planets)
+            {
+                var p = gravityObjects.FirstOrDefault(a => a.ID() == planet.ID());
+                if (p != default(GravitationalField))
+                {
+                    p.state = new State { v = p.state.v, x = planet.Position() };
+                    p.mass = planet.Mass();
+                }
+                else
+                {
+                    p = new GravitationalField()
+                    {
+                        _id = planet._id,
+                        mass = planet.mass,
+                        size = planet.size,
+                        state = new State() { v = Vector3.Zero, x = planet.Position() }
+                    };
+                    gravityObjects.Add(p);
+                    units.Add(p);
+                }
+                usedIds.Add(p.ID());
+            }
+            gravityObjects = gravityObjects.Where(a => usedIds.Contains(a.ID())).ToList();
+            units = units.Where(a => usedIds.Contains(a.ID())).ToList();
+            selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => usedIds.Contains(a.ID())));
+            if (!selectedUnits.Any())
+            {
+                selectedUnits.Add(units.First(a => a is Blackhole && ((Blackhole)a).Owner() == IsServer));
+            }
+        }
+
+        private void SendStatePacket(bool guarentee = false)
+        {
+            var pack = new GameStatePacket()
+            {
+                Blackholes = gravityObjects.OfType<Blackhole>().ToList(),
+                Planets = gravityObjects.Where(a => !(a is Blackhole)).ToList()
+            };
+            
+            var dat = new List<byte>();
+            pack.WritePacketData(dat);
+            if (guarentee)
+            {
+                PacketQueue.Instance.AddPacket(pack);
+            }
+            else
+            {
+                client3.Send(dat.ToArray(), dat.Count,
+                    new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT3));
+            }
+        }
+
+        protected override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -145,68 +226,75 @@ namespace BlackholeBattle
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
-
-            if (IsActive)
-            {
                 if (curPlayer.name == null)
+            {
+                curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
+                if (curPlayer.name.Length == 0)
+                    Exit();
+            }
+
+            var state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Home) && IsServer == null)
+            {
+                IsServer = true;
+                selectedUnits.Add(units.First(a => (a is Blackhole) && (a as Blackhole).Owner() == IsServer.Value));
+                new Task(() =>
                 {
-                    curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
-                }
-                Vector3 average = new Vector3();
-                foreach (IUnit u in selectedUnits)
-                {
-                    average += u.Position();
-                }
-                average /= selectedUnits.Count;
-                cameraDirection = average;
-                UpdateGamePad();
-                Vector3 temp = cameraDirection - cameraPosition;
-                temp.Normalize();
-                cameraPosition = cameraDirection - (camToPosition * temp);
-                
-                elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
-                List<GravitationalField> objects = new List<GravitationalField>();
-                foreach (GravitationalField gravityObject in gravityObjects)
-                {
-                    objects.Add(gravityObject);
-                }
-                foreach (GravitationalField gravityObject in gravityObjects)
-                {
-                    if (gravityObject is Spheroid)
+                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
+                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
+                    client3 = client3 ?? new UdpClient(PORT3, AddressFamily.InterNetwork);
+
+                    IPHostEntry host;
+                    string localIP = "?";
+                    host = Dns.GetHostEntry(Dns.GetHostName());
+                    foreach (var ip in host.AddressList)
                     {
-                        (gravityObject as Spheroid).Update(objects);
-                    }
-                }
-                foreach (GravitationalField gravityObject in gravityObjects)
-                {
-                    if (gravityObject is Spheroid)
-                        (gravityObject as Spheroid).updatedInLoop = false;
-                    //RK4
-                    //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
-                    //EULER
-                    gravityObject.Update();
-                    foreach (IUnit unit in units)
-                    {
-                        if (unit is Base)
+                        if (ip.AddressFamily == AddressFamily.InterNetwork)
                         {
-                            if (unit.GetBounds().Intersects(gravityObject.GetBounds()) && gravityObject.Owner() != unit.Owner())
-                            {
-                                //end game
-                            }
+                            localIP = ip.ToString();
                         }
                     }
-                }
-                foreach (GravitationalField g in swallowedObjects)
+
+                    ServerIP = localIP;
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue, packetProcessQueueLock));
+                    ReceivingThread.IsBackground = true;
+                    ReceivingThread.Start();
+                }).Start();
+            }
+
+            if (state.IsKeyDown(Keys.End) && IsServer == null)
+            {
+                IsServer = false;
+                selectedUnits.Add(units.First(a => (a is Blackhole) && (a as Blackhole).Owner() == IsServer.Value));
+                new Task(() =>
                 {
-                    units.Remove(g);
-                    gravityObjects.Remove(g);
-                    selectedUnits.Remove(g);
-                }
-                swallowedObjects.Clear();
-                if (selectedUnits.Count == 0)
-                {
-                    selectedUnits.Add(gravityObjects[0]);
-                }
+                    ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
+                    if (ServerIP.Length == 0)
+                    {
+                        IsServer = null;
+                        selectedUnits.Clear();
+                        return;
+                    }
+                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
+                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
+                    client3 = client3 ?? new UdpClient(PORT3, AddressFamily.InterNetwork);
+                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue, packetProcessQueueLock));
+                    ReceivingThread.IsBackground = true;
+                    ReceivingThread.Start();
+                    ReceiveStatesThread = new Thread(() => ReceiveStates(client3, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT3)));
+                    ReceiveStatesThread.IsBackground = true;
+                    ReceiveStatesThread.Start();
+                    curPlayer.playerID = false;
+                    PacketQueue.Instance.AddPacket(new RequestConnectPacket { Nickname = curPlayer.name });
+                }).Start();
+            }
+
+            if (state.IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
+
+            lock(packetProcessQueueLock)
                 while (packetProcessQueue.Any())
                 {
                     var packet = packetProcessQueue.Dequeue();
@@ -219,11 +307,13 @@ namespace BlackholeBattle
                             if (response == MsgBoxResult.Yes)
                             {
                                 ClientIP = packet2.IPAddress;
-                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = true});
+                                SendStatePacket(true);
                             }
                             else
                             {
-                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
+                                ClientIP = packet2.IPAddress;
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = false});
                             }
                         }).Start();
                     }
@@ -231,13 +321,153 @@ namespace BlackholeBattle
                     {
                         var packet2 = (ConnectDecisionPacket)packet;
                         Console.WriteLine(packet2.Accepted);
+                        if (!packet2.Accepted)
+                        {
+                            IsServer = null;
+                            selectedUnits.Clear();
+                            ServerIP = null;
+                            ReceivingThread.Abort();
+                            ReceivingThread = null;
+                            ReceiveStatesThread.Abort();
+                            ReceiveStatesThread = null;
+                            curPlayer.playerID = false;
+                            Interaction.MsgBox(
+                                "Server declined your request to connect. You may try connecting to another host.");
+                        }
+                    }
+                    if (packet.GetPacketID() == 3)
+                    {
+                        var packet2 = (InputPacket)packet;
+                        if (!FrameNumber.HasValue)
+                            //x frame delay before starting inputs. This allows the other players inputs to be here before we start processing.
+                            FrameNumber = 0;
+                        ClientInputBuffer.Add(packet2);
+                    }
+                    if (packet.GetPacketID() == 4)
+                    {
+                        var packet2 = (GameStatePacket) packet;
+                        UpdateToState(packet2);
+
+                        FrameNumber = 0;
+            }
+                }
+
+            if (FrameNumber.HasValue)
+            {
+            Vector3 average = new Vector3();
+            foreach (IUnit u in selectedUnits)
+            {
+                average += u.Position();
+            }
+            average /= selectedUnits.Count;
+            cameraDirection = average;
+                //Send keyboard input to server. This is done using reliable UDP as keyboard inputs should generally not be dropped unless they don't arrive within the buffer on the other side.
+                if (IsServer == false)
+                {
+
+                UpdateGamePad();
+                    //Selected units sounds like a bad idea considering it's a hashset and .First() can be any element...
+                    var packet = new InputPacket
+                    {
+                        FrameNumber = FrameNumber.Value,
+                        CameraPosition = cameraPosition,
+                        CameraRotation = cameraDirection,
+                        SelectedBlackHoleID = !selectedUnits.Any(a=>a is Blackhole) ? -1 : selectedUnits.First(a=>a is Blackhole).ID(),
+                        Front = Keyboard.GetState().IsKeyDown(Keys.W),
+                        Back = Keyboard.GetState().IsKeyDown(Keys.S),
+                        Left = Keyboard.GetState().IsKeyDown(Keys.A),
+                        Right = Keyboard.GetState().IsKeyDown(Keys.D),
+                        Up = Keyboard.GetState().IsKeyDown(Keys.LeftShift),
+                        Down = Keyboard.GetState().IsKeyDown(Keys.LeftControl),
+                        Brake = Keyboard.GetState().IsKeyDown(Keys.Space)
+                    };
+                    PacketQueue.Instance.AddPacket(packet);
+
+                    GameStatePacket best;
+                    lock(ServerStateBufferLock)
+                        best = ServerStateBuffer.OrderBy(a => a.Sequence).LastOrDefault();
+                    if (best != default(GameStatePacket))
+                    {
+                        lock(ServerStateBufferLock)
+                            ServerStateBuffer.Clear();
+                        UpdateToState(best);
                     }
                 }
-                if (ServerIP != null)
-                    if (IsServer == true && client != null && ClientIP != null)
-                        PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));
-                    else if (IsServer == false && client2 != null)
-                        PacketQueue.TestFunc(client2, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT2));
+                else if (IsServer == true)
+                {
+                    if (FrameNumber >= 0)
+                    {
+                        for (int i = 0; i < ClientInputBuffer.Count; i++)
+                        {
+                            if (ClientInputBuffer[i].FrameNumber <= FrameNumber)
+                            {
+                                var item = ClientInputBuffer[i];
+            UpdateGamePad();
+                                UpdateClientGamePad(item);
+                                ClientInputBuffer.RemoveAt(i);
+                                i--;
+                            }
+                        }
+                    }
+                }
+                Vector3 temp = cameraDirection - cameraPosition;
+                temp.Normalize();
+                cameraPosition = cameraDirection - (camToPosition * temp);
+            elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
+            List<GravitationalField> objects = new List<GravitationalField>();
+            foreach (GravitationalField gravityObject in gravityObjects)
+            {
+                objects.Add(gravityObject);
+            }
+                if (IsServer != false)
+                {
+            foreach (GravitationalField gravityObject in gravityObjects)
+            {
+                if (gravityObject is Spheroid)
+                {
+                    (gravityObject as Spheroid).Update(objects);
+                }
+            }
+            foreach (GravitationalField gravityObject in gravityObjects)
+            {
+                if (gravityObject is Spheroid)
+                    (gravityObject as Spheroid).updatedInLoop = false;
+                //RK4
+                //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
+                //EULER
+                gravityObject.Update();
+                    foreach (IUnit unit in units)
+                    {
+                        if (unit is Base)
+                        {
+                            if (unit.GetBounds().Intersects(gravityObject.GetBounds()) && gravityObject.Owner() != unit.Owner())
+                            {
+                                //end game
+                            }
+                        }
+                    }
+            }
+            foreach (GravitationalField g in swallowedObjects)
+            {
+                units.Remove(g);
+                gravityObjects.Remove(g);
+                selectedUnits.Remove(g);
+            }
+            swallowedObjects.Clear();
+            if (selectedUnits.Count == 0)
+            {
+                        selectedUnits.Add(units.First(a => a is Blackhole && ((Blackhole)a).Owner() == IsServer));
+            }           
+
+                    SendStatePacket();
+                        }
+                FrameNumber++;
+                        }
+            if (ServerIP != null)
+                if (IsServer == true && client != null && ClientIP != null)
+                    PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));
+                else if (IsServer == false && client2 != null)
+                    PacketQueue.TestFunc(client2, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT2));
             }
         }
         public override void Draw(GameTime gameTime)
@@ -261,9 +491,9 @@ namespace BlackholeBattle
                         {
                             posOnScreen.X = blackHoleScreenPos.X;
                             posOnScreen.Y = blackHoleScreenPos.Y;
-                        }
+                         }
                         spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X, (int)posOnScreen.Y, 50, 50), Color.White);
-                        //draw distance from base to blackhole
+                         //draw distance from base to blackhole
                         //spriteBatch.DrawString(
                         spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 30), Color.Red);
                         spriteBatch.DrawString(font, (unit.Position() - cameraPosition).Length().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 50), Color.Blue);
@@ -280,7 +510,7 @@ namespace BlackholeBattle
             spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
             if (curPlayer.name != null)
             {
-                spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
+            spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
             }
             if (IsServer != null && ServerIP == null)
             {
@@ -322,6 +552,25 @@ namespace BlackholeBattle
                 mesh.Draw();          
             }
         }
+
+        private void ReceiveStates(UdpClient c, IPEndPoint ip)
+        {
+            while (true)
+            {
+                var res = c.Receive(ref ip);
+                var stream = new MemoryStream(res);
+                var packet = new GameStatePacket();
+                packet.ReadPacketData(stream);
+                lock(ServerStateBufferLock)
+                    ServerStateBuffer.Add(packet);
+            }
+        }
+
+        private Blackhole GetCurrentBlackHole()
+        {
+            return selectedUnits.FirstOrDefault(a => (a is Blackhole) && ((Blackhole)a).Owner() == IsServer) as Blackhole;
+        }
+
         private void UpdateGamePad()
         {
             KeyboardState state = Keyboard.GetState();
@@ -355,121 +604,87 @@ namespace BlackholeBattle
                 cross.Normalize();
                 cameraPosition -= cross * ((cameraDirection - cameraPosition).Length() / 16);
             }
-            if(state.IsKeyDown(Keys.LeftControl))
+            if (state.IsKeyDown(Keys.LeftControl))
             {
-                selectMultipleUnits = true;
+                //selectMultipleUnits = true;
             }
-            if(state.IsKeyDown(Keys.W))
+            if (IsServer != false)
             {
-                if(selectedUnits.First() is IMovable)
+                if (state.IsKeyDown(Keys.W))
                 {
+                    if (GetCurrentBlackHole() != null)
+                    {
                     Vector3 lookingAt = (cameraDirection - cameraPosition);
                     lookingAt.Normalize();
-                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                 }
             }
             if (state.IsKeyDown(Keys.A))
             {
-                if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                 {
                     Vector3 lookingAt = (cameraDirection - cameraPosition);
                     lookingAt = Vector3.Cross(lookingAt, Vector3.Down);
                     lookingAt.Normalize();
-                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                 }
             }
             if (state.IsKeyDown(Keys.S))
             {
-                if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                 {
                     Vector3 lookingAt = (cameraDirection - cameraPosition);
                     lookingAt.Normalize();
-                    (selectedUnits.First() as IMovable).Accelerate(-lookingAt);
+                        GetCurrentBlackHole().Accelerate(-lookingAt);
                 }
             }
             if (state.IsKeyDown(Keys.D))
             {
-                if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                 {
                     Vector3 lookingAt = (cameraDirection - cameraPosition);
                     lookingAt = Vector3.Cross(lookingAt, Vector3.Up);
                     lookingAt.Normalize();
-                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                 }
             }
             if (state.IsKeyDown(Keys.LeftShift))
             {
-                if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                 {
                     Vector3 lookingAt = (cameraDirection - cameraPosition);
                     lookingAt = Vector3.Cross(lookingAt, Vector3.Left);
                     lookingAt.Normalize();
-                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                 }
             }
             if (state.IsKeyDown(Keys.LeftControl))
             {
-                if (selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                 {
                     Vector3 lookingAt = (cameraDirection - cameraPosition);
                     lookingAt = Vector3.Cross(lookingAt, Vector3.Right);
                     lookingAt.Normalize();
-                    (selectedUnits.First() as IMovable).Accelerate(lookingAt);
+                        GetCurrentBlackHole().Accelerate(lookingAt);
                 }
             }
-            if(state.IsKeyDown(Keys.Space))
+                if (state.IsKeyDown(Keys.Space))
             {
-                if(selectedUnits.First() is IMovable)
+                    if (GetCurrentBlackHole() != null)
                 {
-                    (selectedUnits.First() as IMovable).Brake();
-                }
+                        GetCurrentBlackHole().Brake();
             }
-            if (state.IsKeyDown(Keys.Home) && IsServer == null)
-            {
-                IsServer = true;
-                new Task(() =>
-                {
-                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
-                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
-
-                    IPHostEntry host;
-                    string localIP = "?";
-                    host = Dns.GetHostEntry(Dns.GetHostName());
-                    foreach (var ip in host.AddressList)
-                    {
-                        if (ip.AddressFamily == AddressFamily.InterNetwork)
-                        {
-                            localIP = ip.ToString();
                         }
                     }
 
-                    ServerIP = localIP;
-                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client2, new IPEndPoint(IPAddress.Any, PORT2), packetProcessQueue));
-                    ReceivingThread.Start();
-                }).Start();
-            }
-            if (state.IsKeyDown(Keys.End) && IsServer == null)
-            {
-                IsServer = false;
-                new Task(() =>
-                {
-                    ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
-                    client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
-                    client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
-                    ReceivingThread = new Thread(() => PacketQueue.Instance.TestLoop(client, new IPEndPoint(new IPAddress(ServerIP.Split('.').Select(byte.Parse).ToArray()), PORT), packetProcessQueue));
-                    ReceivingThread.Start();
-                    curPlayer.playerID = 2;
-                    PacketQueue.Instance.AddPacket(new RequestConnectPacket {Nickname = curPlayer.name});
-                }).Start();
-            }
             if (mouse.RightButton == ButtonState.Pressed)
             {
                 //take position of mouse on the screen
                 int mouseX = mouse.X;
                 int mouseY = mouse.Y;
 
-                Vector3 nearsource = new Vector3((float)mouseX, (float)mouseY, 0f);
-                Vector3 farsource = new Vector3((float)mouseX, (float)mouseY, 1f);
+                Vector3 nearsource = new Vector3((float) mouseX, (float) mouseY, 0f);
+                Vector3 farsource = new Vector3((float) mouseX, (float) mouseY, 1f);
 
                 Matrix world = Matrix.CreateTranslation(0, 0, 0);
 
@@ -488,7 +703,7 @@ namespace BlackholeBattle
                 IUnit bestGObject = new GravitationalField();
                 //find the closest object to the camera that intersects with the ray
                 float maxDistance = float.MaxValue;
-                foreach (IUnit u in units)
+                foreach (IUnit u in units.Where(a=>!(a is Blackhole) || ((Blackhole)a).Owner() == IsServer))
                 {
                     float? distanceIntersection = pickRay.Intersects(u.GetBounds());
                     if (distanceIntersection.HasValue)
@@ -502,11 +717,17 @@ namespace BlackholeBattle
                 }
                 if (maxDistance != float.MaxValue)
                 {
-                    if (selectMultipleUnits == false)
+                    if (!selectMultipleUnits)
                     {
                         //this allows for control groups and whatever else to be used later
                         selectedUnits.Clear();
                     }
+
+                    if(bestGObject is Blackhole)
+                    {
+                        selectedUnits = new HashSet<IUnit>(selectedUnits.Where(a => !(a is Blackhole)));
+                    }
+
                     selectedUnits.Add(bestGObject);
                 }
             }
@@ -514,11 +735,58 @@ namespace BlackholeBattle
             int mouseScrollValue = mouse.ScrollWheelValue;
             if (mouseScrollValue != scrollValue)
             {
-                Vector3 currentCameraDirection = cameraDirection - cameraPosition;
-                currentCameraDirection.Normalize();
+            Vector3 currentCameraDirection = cameraDirection - cameraPosition;
+            currentCameraDirection.Normalize();
                 cameraPosition += (mouseScrollValue - scrollValue) * 2 * currentCameraDirection;
-                camToPosition = (cameraDirection - cameraPosition).Length();
-                scrollValue = mouseScrollValue;
+            camToPosition = (cameraDirection - cameraPosition).Length();
+            scrollValue = mouseScrollValue;
+        }
+        private void UpdateClientGamePad(InputPacket input)
+        {
+            Vector3 lookingAt = (input.CameraRotation - input.CameraPosition);
+            var unit = (units.First(a => a.ID() == input.SelectedBlackHoleID)) as IMovable;
+            if (unit != null)
+            {
+                if (input.Front)
+                {
+                    var lookingAt2 = lookingAt;
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Left)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Down);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Back)
+                {
+                    var lookingAt2 = -lookingAt;
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Right)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Up);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Up)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Left);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Down)
+                {
+                    var lookingAt2 = Vector3.Cross(lookingAt, Vector3.Right);
+                    lookingAt2.Normalize();
+                    unit.Accelerate(lookingAt2);
+                }
+                if (input.Brake)
+                {
+                    unit.Brake();
+                }
             }
         }
         void CreateSpheroids(int numSpheroids)
@@ -535,9 +803,10 @@ namespace BlackholeBattle
         {
             units.Add(new Base(curPlayer.playerID == 1 ? new Vector3(-10000,0,0) : new Vector3(10000,0,0), curPlayer.playerID == 1 ? "player1base" : "player2base", curPlayer.name));
         }
-        void CreateBlackHole()
+        void CreateBlackHole(bool id)
         {
-            Blackhole b = new Blackhole(curPlayer.name, 200, curPlayer.playerID == 1 ? new Vector3(-10000, 2500, 0) : new Vector3(10000, 2500, 0));
+            //Send command from client instead.
+            Blackhole b = new Blackhole(id, 200, id ? new Vector3(-1000, 250, 0) : new Vector3(1000, 250, 0));
             gravityObjects.Add(b);
             units.Add(b);
         }

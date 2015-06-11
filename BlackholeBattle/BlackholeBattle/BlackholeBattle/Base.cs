@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Xna.Framework;
 
@@ -22,12 +23,15 @@ namespace BlackholeBattle
         Vector3 position;
         Vector3 velocity;
         Vector3 acceleration;
+        private int _id;
+        private static int LastID = -1;
         public Base(Vector3 posit, string modelName, string owner)
         {
             myOwner = owner;
             unitType = modelName;
             position = posit;
             bounds = new BoundingSphere(posit, 100);
+            _id = ++LastID;
         }
         public string Owner()
         {
@@ -106,6 +110,11 @@ namespace BlackholeBattle
             {
                 position = value;
             }
+        }
+
+        public int ID()
+        {
+            return _id;
         }
     }
 }
