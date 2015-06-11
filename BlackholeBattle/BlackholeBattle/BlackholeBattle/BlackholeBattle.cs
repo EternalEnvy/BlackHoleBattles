@@ -118,17 +118,20 @@ namespace BlackholeBattle
                 // A real game would probably have more content than this sample, so
                 // it would take longer to load. We simulate that by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
 
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
-                CreateSpheroids(1);
+                CreateSpheroids(5);
                 //CreateBase();
                 CreateBlackHole(true);
                 CreateBlackHole(false);
                 graphics = ScreenManager.Game.Services.GetService(typeof(IGraphicsDeviceService)) as GraphicsDeviceManager;
+                graphics.PreferredBackBufferWidth = 1280;
+                graphics.PreferredBackBufferHeight = 720;
+                graphics.ApplyChanges();
                 hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
                     hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                 Color[] c = new Color[1];
@@ -177,13 +180,8 @@ namespace BlackholeBattle
                 }
                 else
                 {
-                    p = new GravitationalField()
-                    {
-                        _id = planet._id,
-                        mass = planet.mass,
-                        size = planet.size,
-                        state = new State() { v = Vector3.Zero, x = planet.Position() }
-                    };
+                    var randy = randall.Next(1, 8);
+                    p = new Spheroid(planet.Position(), Vector3.Zero, planet.mass, planet.size, randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", null);
                     gravityObjects.Add(p);
                     units.Add(p);
                 }
@@ -203,7 +201,7 @@ namespace BlackholeBattle
             var pack = new GameStatePacket()
             {
                 Blackholes = gravityObjects.OfType<Blackhole>().ToList(),
-                Planets = gravityObjects.Where(a => !(a is Blackhole)).ToList()
+                Planets = gravityObjects.OfType<Spheroid>().ToList()
             };
             
             var dat = new List<byte>();
@@ -226,7 +224,7 @@ namespace BlackholeBattle
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
-                if (curPlayer.name == null)
+            if (curPlayer.name == null)
             {
                 curPlayer.name = Interaction.InputBox("Enter your name: ", "Name Entry");
                 if (curPlayer.name.Length == 0)
@@ -294,7 +292,7 @@ namespace BlackholeBattle
                 ExitScreen();
             }
 
-            lock(packetProcessQueueLock)
+            lock (packetProcessQueueLock)
                 while (packetProcessQueue.Any())
                 {
                     var packet = packetProcessQueue.Dequeue();
@@ -307,13 +305,13 @@ namespace BlackholeBattle
                             if (response == MsgBoxResult.Yes)
                             {
                                 ClientIP = packet2.IPAddress;
-                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = true});
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = true });
                                 SendStatePacket(true);
                             }
                             else
                             {
                                 ClientIP = packet2.IPAddress;
-                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket {Accepted = false});
+                                PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
                             }
                         }).Start();
                     }
@@ -345,7 +343,7 @@ namespace BlackholeBattle
                     }
                     if (packet.GetPacketID() == 4)
                     {
-                        var packet2 = (GameStatePacket) packet;
+                        var packet2 = (GameStatePacket)packet;
                         UpdateToState(packet2);
 
                         FrameNumber = 0;
@@ -354,25 +352,25 @@ namespace BlackholeBattle
 
             if (FrameNumber.HasValue)
             {
-            Vector3 average = new Vector3();
-            foreach (IUnit u in selectedUnits)
-            {
-                average += u.Position();
-            }
-            average /= selectedUnits.Count;
-            cameraDirection = average;
+                Vector3 average = new Vector3();
+                foreach (IUnit u in selectedUnits)
+                {
+                    average += u.Position();
+                }
+                average /= selectedUnits.Count;
+                cameraDirection = average;
                 //Send keyboard input to server. This is done using reliable UDP as keyboard inputs should generally not be dropped unless they don't arrive within the buffer on the other side.
                 if (IsServer == false)
                 {
 
-                UpdateGamePad();
+                    UpdateGamePad();
                     //Selected units sounds like a bad idea considering it's a hashset and .First() can be any element...
                     var packet = new InputPacket
                     {
                         FrameNumber = FrameNumber.Value,
                         CameraPosition = cameraPosition,
                         CameraRotation = cameraDirection,
-                        SelectedBlackHoleID = !selectedUnits.Any(a=>a is Blackhole) ? -1 : selectedUnits.First(a=>a is Blackhole).ID(),
+                        SelectedBlackHoleID = !selectedUnits.Any(a => a is Blackhole) ? -1 : selectedUnits.First(a => a is Blackhole).ID(),
                         Front = Keyboard.GetState().IsKeyDown(Keys.W),
                         Back = Keyboard.GetState().IsKeyDown(Keys.S),
                         Left = Keyboard.GetState().IsKeyDown(Keys.A),
@@ -384,11 +382,11 @@ namespace BlackholeBattle
                     PacketQueue.Instance.AddPacket(packet);
 
                     GameStatePacket best;
-                    lock(ServerStateBufferLock)
+                    lock (ServerStateBufferLock)
                         best = ServerStateBuffer.OrderBy(a => a.Sequence).LastOrDefault();
                     if (best != default(GameStatePacket))
                     {
-                        lock(ServerStateBufferLock)
+                        lock (ServerStateBufferLock)
                             ServerStateBuffer.Clear();
                         UpdateToState(best);
                     }
@@ -402,7 +400,7 @@ namespace BlackholeBattle
                             if (ClientInputBuffer[i].FrameNumber <= FrameNumber)
                             {
                                 var item = ClientInputBuffer[i];
-            UpdateGamePad();
+                                UpdateGamePad();
                                 UpdateClientGamePad(item);
                                 ClientInputBuffer.RemoveAt(i);
                                 i--;
@@ -413,56 +411,56 @@ namespace BlackholeBattle
                 Vector3 temp = cameraDirection - cameraPosition;
                 temp.Normalize();
                 cameraPosition = cameraDirection - (camToPosition * temp);
-            elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
-            List<GravitationalField> objects = new List<GravitationalField>();
-            foreach (GravitationalField gravityObject in gravityObjects)
-            {
-                objects.Add(gravityObject);
-            }
+                elapsedTimeSeconds += gameTime.ElapsedGameTime.TotalSeconds;
+                List<GravitationalField> objects = new List<GravitationalField>();
+                foreach (GravitationalField gravityObject in gravityObjects)
+                {
+                    objects.Add(gravityObject);
+                }
                 if (IsServer != false)
                 {
-            foreach (GravitationalField gravityObject in gravityObjects)
-            {
-                if (gravityObject is Spheroid)
-                {
-                    (gravityObject as Spheroid).Update(objects);
-                }
-            }
-            foreach (GravitationalField gravityObject in gravityObjects)
-            {
-                if (gravityObject is Spheroid)
-                    (gravityObject as Spheroid).updatedInLoop = false;
-                //RK4
-                //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
-                //EULER
-                gravityObject.Update();
-                    foreach (IUnit unit in units)
+                    foreach (GravitationalField gravityObject in gravityObjects)
                     {
-                        if (unit is Base)
+                        if (gravityObject is Spheroid)
                         {
-                            if (unit.GetBounds().Intersects(gravityObject.GetBounds()) && gravityObject.Owner() != unit.Owner())
+                            (gravityObject as Spheroid).Update(objects);
+                        }
+                    }
+                    foreach (GravitationalField gravityObject in gravityObjects)
+                    {
+                        if (gravityObject is Spheroid)
+                            (gravityObject as Spheroid).updatedInLoop = false;
+                        //RK4
+                        //gravityObject.Update((float)gameTime.TotalGameTime.TotalSeconds,(float)gameTime.ElapsedGameTime.TotalSeconds);
+                        //EULER
+                        gravityObject.Update();
+                        foreach (IUnit unit in units)
+                        {
+                            if (unit is Base)
                             {
-                                //end game
+                                if (unit.GetBounds().Intersects(gravityObject.GetBounds()) && gravityObject.Owner() != unit.Owner())
+                                {
+                                    //end game
+                                }
                             }
                         }
                     }
-            }
-            foreach (GravitationalField g in swallowedObjects)
-            {
-                units.Remove(g);
-                gravityObjects.Remove(g);
-                selectedUnits.Remove(g);
-            }
-            swallowedObjects.Clear();
-            if (selectedUnits.Count == 0)
-            {
+                    foreach (GravitationalField g in swallowedObjects)
+                    {
+                        units.Remove(g);
+                        gravityObjects.Remove(g);
+                        selectedUnits.Remove(g);
+                    }
+                    swallowedObjects.Clear();
+                    if (selectedUnits.Count == 0)
+                    {
                         selectedUnits.Add(units.First(a => a is Blackhole && ((Blackhole)a).Owner() == IsServer));
-            }           
+                    }
 
                     SendStatePacket();
-                        }
+                }
                 FrameNumber++;
-                        }
+            }
             if (ServerIP != null)
                 if (IsServer == true && client != null && ClientIP != null)
                     PacketQueue.TestFunc(client, new IPEndPoint(new IPAddress(ClientIP.Split('.').Select(byte.Parse).ToArray()), PORT));

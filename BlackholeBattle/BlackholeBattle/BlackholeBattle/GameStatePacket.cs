@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace BlackholeBattle
 {
@@ -9,12 +10,13 @@ namespace BlackholeBattle
         //For server retaining purposes
         public Vector3 cameraPosition;
         public Vector3 cameraDirection;
+        private static Random randall = new Random();
 
         //Sent to client
         public long Sequence;
         private static long lastSequence = -1;
         public List<Blackhole> Blackholes=new List<Blackhole>();
-        public List<GravitationalField> Planets=new List<GravitationalField>();
+        public List<Spheroid> Planets = new List<Spheroid>();
 
         public GameStatePacket()
         {
@@ -39,6 +41,7 @@ namespace BlackholeBattle
                 WriteInt(stream, planet.ID());
                 WriteVector3(stream, planet.Position());
                 WriteDouble(stream, planet.Mass());
+                WriteDouble(stream, planet.Size());
             }
         }
 
@@ -61,12 +64,10 @@ namespace BlackholeBattle
                 var id = ReadInt(stream);
                 var pos = ReadVector3(stream);
                 var mass = ReadDouble(stream);
-                var planet = new GravitationalField
-                {
-                    _id = id,
-                    mass = mass,
-                    state = new State {v = Vector3.Zero, x = pos}
-                };
+                var size = ReadDouble(stream);
+                var randy = randall.Next(1, 8);
+                var planet = new Spheroid(pos, Vector3.Zero, mass, size, randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", null);
+                planet._id = id;
                 Planets.Add(planet);
             }
         }
