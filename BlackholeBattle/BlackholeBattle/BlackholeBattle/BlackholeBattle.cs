@@ -199,6 +199,7 @@ namespace BlackholeBattle
                             }
                             else
                             {
+                                ClientIP = packet2.IPAddress;
                                 PacketQueue.Instance.AddPacket(new ConnectDecisionPacket { Accepted = false });
                             }
                         }).Start();
