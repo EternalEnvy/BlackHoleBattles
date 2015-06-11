@@ -17,7 +17,7 @@ namespace BlackholeBattle
         {
             return unitType;
         }   
-        protected BoundingSphere bounds = new BoundingSphere();
+        public BoundingSphere bounds = new BoundingSphere();
         public double size;
         protected string owner;
         public string modelName;

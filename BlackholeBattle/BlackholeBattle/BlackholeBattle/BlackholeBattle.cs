@@ -176,12 +176,13 @@ namespace BlackholeBattle
                 if (p != default(GravitationalField))
                 {
                     p.state = new State { v = p.state.v, x = planet.Position() };
+                    p.bounds.Center = p.state.x;       
                     p.mass = planet.Mass();
                 }
                 else
                 {
                     var randy = randall.Next(1, 8);
-                    p = new Spheroid(planet.Position(), Vector3.Zero, planet.mass, planet.size, randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", null);
+                    p = new Spheroid(planet.Position(), Vector3.Zero, planet.mass, planet.size, randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", null);                 
                     gravityObjects.Add(p);
                     units.Add(p);
                 }
@@ -535,7 +536,7 @@ namespace BlackholeBattle
             Matrix[] transforms = new Matrix[m.Bones.Count];
             float aspectRatio = graphics.GraphicsDevice.Viewport.AspectRatio;
             m.CopyAbsoluteBoneTransformsTo(transforms);
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), aspectRatio, 1.0f, 10000.0f);
+            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), aspectRatio, 1.0f, 1000000.0f);
             view = Matrix.CreateLookAt(cameraPosition, cameraDirection, Vector3.Up);
             foreach (ModelMesh mesh in m.Meshes)
             {
