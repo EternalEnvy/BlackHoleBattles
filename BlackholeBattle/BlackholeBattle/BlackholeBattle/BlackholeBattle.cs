@@ -237,6 +237,12 @@ namespace BlackholeBattle
                 new Task(() =>
                 {
                     ServerIP = Interaction.InputBox("What is the IP adress of the host?", "Connect");
+                    if (ServerIP.Length == 0)
+                    {
+                        IsServer = null;
+                        selectedUnits.Clear();
+                        return;
+                    }
                     client = client ?? new UdpClient(PORT, AddressFamily.InterNetwork);
                     client2 = client2 ?? new UdpClient(PORT2, AddressFamily.InterNetwork);
                     client3 = client3 ?? new UdpClient(PORT3, AddressFamily.InterNetwork);
