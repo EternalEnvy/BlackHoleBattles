@@ -18,7 +18,8 @@ namespace BlackholeBattle
 
         public void AddPacket(Packet packet)
         {
-            _queue.Add(packet);
+            lock (lockobj)
+                _queue.Add(packet);
             ++id;
         }
 
@@ -53,7 +54,8 @@ namespace BlackholeBattle
             var amount = newLastReceivedFromMe - lastReceivedFromMe;
             if (amount > 0)
             {
-                _queue.RemoveRange(0, (int)amount);
+                lock(lockobj)
+                    _queue.RemoveRange(0, (int)amount);
                 lastReceivedFromMe = newLastReceivedFromMe;
             }
 
@@ -83,17 +85,22 @@ namespace BlackholeBattle
 
             WriteLong(stream, lastReceivedFromOther);
 
-            var numPackets = _queue.Count;
-
-            WriteLong(stream, numPackets);
-
-            for (int i = 0; i < numPackets; i++)
+            lock (lockobj)
             {
-                Packet.WritePacket(stream, _queue[i]);
+                var numPackets = _queue.Count;
+
+                WriteLong(stream, numPackets);
+
+                for (int i = 0; i < numPackets; i++)
+                {
+                    Packet.WritePacket(stream, _queue[i]);
+                }
             }
         }
 
-        public void TestLoop(UdpClient client, IPEndPoint serverIP, Queue<Packet> queue)
+        static readonly object lockobj = new object();
+
+        public void TestLoop(UdpClient client, IPEndPoint serverIP, Queue<Packet> queue, object queueLock)
         {
             var reset = serverIP.Address.Equals(IPAddress.Any);
             while (true)
@@ -106,16 +113,17 @@ namespace BlackholeBattle
                 var packets = ReceivePackets(stream);
                 foreach (var packet in packets)
                 {
-                    if (packet.GetPacketID() == 1)
-                    {
-                        var pac = (RequestConnectPacket) packet;
-                        pac.IPAddress = string.Join(".", otherIP.GetAddressBytes().Select(a => a.ToString()));
-                        queue.Enqueue(pac);
-                    }
-                    else
-                    {
-                        queue.Enqueue(packet);
-                    }
+                    lock (queueLock)
+                        if (packet.GetPacketID() == 1)
+                        {
+                            var pac = (RequestConnectPacket) packet;
+                            pac.IPAddress = string.Join(".", otherIP.GetAddressBytes().Select(a => a.ToString()));
+                            queue.Enqueue(pac);
+                        }
+                        else
+                        {
+                            queue.Enqueue(packet);
+                        }
                 }
             }
         }

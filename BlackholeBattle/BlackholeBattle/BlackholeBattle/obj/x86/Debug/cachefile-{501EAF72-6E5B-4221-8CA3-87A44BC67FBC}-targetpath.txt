@@ -6,13 +6,6 @@ Content\mars.xnb
 Content\uranus.xnb
 Content\neptune.xnb
 Content\SpriteFont1.xnb
-Content\textures\moon_0.xnb
-Content\textures\world.200411.3x5400x2700_0.xnb
-Content\textures\ganymede_0.xnb
-Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb
-Content\textures\mars_0.xnb
-Content\textures\uranuscyl1_0.xnb
-Content\textures\neptune_0.xnb
 Content\arrow.xnb
 Content\iearth.xnb
 Content\iganymede.xnb
@@ -24,9 +17,10 @@ Content\isaturn.xnb
 Content\iuranus.xnb
 Content\ivenus.xnb
 Content\blackhole.xnb
-Content\untitled.xnb
-Content\oie_2I6EGmoI9oi8_0.xnb
-Content\bluesunbase.xnb
-Content\pinksunbase.xnb
-Content\143377959446034 (1)_0.xnb
-Content\143377959446033_0.xnb
+Content\textures\moon_0.xnb
+Content\textures\world.200411.3x5400x2700_0.xnb
+Content\textures\ganymede_0.xnb
+Content\textures\Venus_map_NASA_JPL_Magellan-Vene_0.xnb
+Content\textures\mars_0.xnb
+Content\textures\uranuscyl1_0.xnb
+Content\textures\neptune_0.xnb

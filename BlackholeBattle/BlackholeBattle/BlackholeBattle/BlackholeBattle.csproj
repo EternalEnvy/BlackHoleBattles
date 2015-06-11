@@ -78,8 +78,10 @@
     <Compile Include="Base.cs" />
     <Compile Include="Blackhole.cs" />
     <Compile Include="ConnectDecisionPacket.cs" />
+    <Compile Include="GameStatePacket.cs" />
     <Compile Include="GravitationalField.cs" />
     <Compile Include="IMovable.cs" />
+    <Compile Include="InputPacket.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PacketQueue.cs" />
     <Compile Include="Player.cs" />
