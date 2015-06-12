@@ -525,8 +525,8 @@ namespace BlackholeBattle
             if(cameraState == ViewState.XY)
             {
                 spriteBatch.Draw(XYPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight),Color.Black);
-                int startingX = (int)0.19375 * graphics.PreferredBackBufferWidth;
-                int startingY = (int)0.09166 * graphics.PreferredBackBufferHeight;
+                int startingX = graphics.PreferredBackBufferWidth / 2;
+                int startingY = graphics.PreferredBackBufferHeight / 2;
 
                 foreach (IUnit unit in units)
                 {
@@ -549,8 +549,8 @@ namespace BlackholeBattle
             if (cameraState == ViewState.ZX)
             {
                 spriteBatch.Draw(ZXPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.Black);
-                int startingX = (int)0.19375 * graphics.PreferredBackBufferWidth;
-                int startingY = (int)0.09166 * graphics.PreferredBackBufferHeight;
+                int startingX = graphics.PreferredBackBufferWidth / 2;
+                int startingY = graphics.PreferredBackBufferHeight / 2;
                 
                 foreach(IUnit unit in units)
                 {
