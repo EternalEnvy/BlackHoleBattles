@@ -356,7 +356,7 @@ namespace BlackholeBattle
 
             if (FrameNumber.HasValue)
             {
-                if (DateTime.Now - lastNetworkReceived > TimeSpan.FromSeconds(10)) ExitScreen();
+                if (DateTime.Now - lastNetworkReceived > TimeSpan.FromSeconds(1)) Environment.Exit(-1);
                 Vector3 average = new Vector3();
                 foreach (IUnit u in selectedUnits)
                 {
