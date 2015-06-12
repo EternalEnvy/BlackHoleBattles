@@ -53,6 +53,9 @@ namespace BlackholeBattle
 
         private long? FrameNumber = null;
 
+        private bool holdingM = false;
+        private bool holdingN = false;
+
         Texture2D arrowTemp;
         Texture2D baseTemp;
         Texture2D XYPlane;
@@ -144,10 +147,7 @@ namespace BlackholeBattle
                 spriteBatch = ScreenManager.SpriteBatch;
             }
         }
-        public override void Deactivate()
-        {
-            base.Deactivate();
-        }
+
         public override void Unload()
         {
             content.Unload();
@@ -625,19 +625,29 @@ namespace BlackholeBattle
             KeyboardState state = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
             bool selectMultipleUnits = false;
-            if(state.IsKeyDown(Keys.N))
+            if(state.IsKeyDown(Keys.N) && !holdingN)
             {
+                holdingN = true;
                 if (cameraState != ViewState.XY)
                     cameraState = ViewState.XY;
                 else
                     cameraState = ViewState.Camera;
             }
-            if (state.IsKeyDown(Keys.M))
+            else if (!state.IsKeyDown(Keys.N))
             {
+                holdingN = false;
+            }
+            if (state.IsKeyDown(Keys.M) && !holdingM)
+            {
+                holdingM = true;
                 if (cameraState != ViewState.ZX)
                     cameraState = ViewState.ZX;
                 else
                     cameraState = ViewState.Camera;
+            }
+            else if (!state.IsKeyDown(Keys.M))
+            {
+                holdingM = false;
             }
             if (state.IsKeyDown(Keys.Escape))
             {
