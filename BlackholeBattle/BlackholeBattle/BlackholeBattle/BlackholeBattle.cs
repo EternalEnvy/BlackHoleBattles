@@ -26,12 +26,12 @@ namespace BlackholeBattle
     public class BlackholeBattle : GameScreen
     {
         //TESTING HERE
+        ViewState cameraState = ViewState.Camera;
         float pauseAlpha;
         InputAction pauseAction;
         ContentManager content;
         SpriteFont gameFont;
         //END TESTING
-
         Random randall = new Random();
         const int PORT = 1521;
         const int PORT2 = 1522;
@@ -54,7 +54,10 @@ namespace BlackholeBattle
         private long? FrameNumber = null;
 
         Texture2D arrowTemp;
-        //SpriteBatch spriteBatch;
+        Texture2D baseTemp;
+        Texture2D XYPlane;
+        Texture2D ZXPlane;
+        SpriteBatch spriteBatch;
         SpriteFont font;
         GraphicsDeviceManager graphics;
 
@@ -115,11 +118,9 @@ namespace BlackholeBattle
                 thumbnails.Add("blackhole", content.Load<Texture2D>("blackhole"));
                 font = content.Load<SpriteFont>("SpriteFont1");
                 arrowTemp = content.Load<Texture2D>("arrow");
-                // A real game would probably have more content than this sample, so
-                // it would take longer to load. We simulate that by delaying for a
-                // while, giving you a chance to admire the beautiful loading screen.
-                //Thread.Sleep(1000);
-
+                XYPlane = content.Load<Texture2D>("XYPlane");
+                ZXPlane = content.Load<Texture2D>("ZXPlane");
+                baseTemp = content.Load<Texture2D>("BaseTemp");
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
@@ -140,6 +141,7 @@ namespace BlackholeBattle
                 hudTexture.SetData<Color>(c);
                 //initial camera position
                 selectedUnits.Add(gravityObjects[0]);
+                spriteBatch = ScreenManager.SpriteBatch;
             }
         }
         public override void Deactivate()
@@ -471,54 +473,103 @@ namespace BlackholeBattle
         public override void Draw(GameTime gameTime)
         {
             ScreenManager.GraphicsDevice.Clear(Color.Black);
-            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             spriteBatch.Begin();
-
-            foreach (IUnit unit in units)
+            if (cameraState == ViewState.Camera)
             {
-                if (unit is Blackhole)
+                foreach (IUnit unit in units)
                 {
-                    BoundingFrustum frustum = new BoundingFrustum(view * projection);
-                    if (frustum.Contains(unit.Position()) == ContainmentType.Contains)
+                    if (unit is Blackhole)
                     {
-                        Vector3 blackHoleScreenPos = unit.Position();
-                        blackHoleScreenPos = ScreenManager.GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
-                        //blackHoleScreenPos = GraphicsDevice.Viewport.Unproject(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
-                        Vector2 posOnScreen;
+                        BoundingFrustum frustum = new BoundingFrustum(view * projection);
+                        if (frustum.Contains(unit.Position()) == ContainmentType.Contains)
                         {
-                            posOnScreen.X = blackHoleScreenPos.X;
-                            posOnScreen.Y = blackHoleScreenPos.Y;
-                         }
-                        spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X, (int)posOnScreen.Y, 50, 50), Color.White);
-                         //draw distance from base to blackhole
-                        //spriteBatch.DrawString(
-                        spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 30), Color.Red);
-                        spriteBatch.DrawString(font, (unit.Position() - cameraPosition).Length().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 50), Color.Blue);
+                            Vector3 blackHoleScreenPos = unit.Position();
+                            blackHoleScreenPos = ScreenManager.GraphicsDevice.Viewport.Project(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
+                            //blackHoleScreenPos = GraphicsDevice.Viewport.Unproject(blackHoleScreenPos, projection, view, Matrix.CreateTranslation(0, 0, 0));
+                            Vector2 posOnScreen;
+                            {
+                                posOnScreen.X = blackHoleScreenPos.X;
+                                posOnScreen.Y = blackHoleScreenPos.Y;
+                            }
+                            spriteBatch.Draw(arrowTemp, new Rectangle((int)posOnScreen.X, (int)posOnScreen.Y, 50, 50), Color.White);
+                            //draw distance from base to blackhole
+                            //spriteBatch.DrawString(
+                            spriteBatch.DrawString(font, unit.Mass().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 30), Color.Red);
+                            spriteBatch.DrawString(font, (unit.Position() - cameraPosition).Length().ToString(), new Vector2(posOnScreen.X + 10, posOnScreen.Y - 50), Color.Blue);
+                        }
+                    }
+                }
+
+                foreach (IUnit unit in units)
+                {
+                    if (!(unit is Blackhole))
+                    {
+                        DrawModel(models[unit.ModelName()], unit.Size(), unit.Rotation(), unit.Position());
+                    }
+                }
+                spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
+                if (curPlayer.name != null)
+                {
+                    spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
+                }
+                if (IsServer != null && ServerIP == null)
+                {
+                    spriteBatch.DrawString(font, "Waiting on IP...", new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
+                }
+                if (ServerIP != null)
+                {
+                    spriteBatch.DrawString(font, "Server IP is: " + ServerIP, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
+                }
+            }
+            if(cameraState == ViewState.XY)
+            {
+                spriteBatch.Draw(XYPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight),Color.Black);
+                int startingX = (int)0.19375 * graphics.PreferredBackBufferWidth;
+                int startingY = (int)0.09166 * graphics.PreferredBackBufferHeight;
+
+                foreach (IUnit unit in units)
+                {
+                    var pos = unit.Position() * 0.0245f;
+                    Vector2 onScreen = new Vector2(pos.X + startingX, pos.Y + startingY);
+                    if (unit is Spheroid)
+                    {
+                        spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                    }
+                    if (unit is Base)
+                    {
+                        spriteBatch.Draw(baseTemp, new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                    }
+                    if (unit is Blackhole)
+                    {
+                        spriteBatch.Draw(thumbnails["blackhole"], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
                     }
                 }
             }
-            foreach (IUnit unit in units)
+            if (cameraState == ViewState.ZX)
             {
-                if (!(unit is Blackhole))
+                spriteBatch.Draw(ZXPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.Black);
+                int startingX = (int)0.19375 * graphics.PreferredBackBufferWidth;
+                int startingY = (int)0.09166 * graphics.PreferredBackBufferHeight;
+                
+                foreach(IUnit unit in units)
                 {
-                    DrawModel(models[unit.ModelName()], unit.Size(), unit.Rotation(), unit.Position());
+                    var pos = unit.Position() * 0.0245f;
+                    Vector2 onScreen = new Vector2(pos.X + startingX, pos.Z + startingY);
+                    if(unit is Spheroid)
+                    {
+                        spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                    }
+                    if(unit is Base)
+                    {
+                        spriteBatch.Draw(baseTemp, new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                    }
+                    if(unit is Blackhole)
+                    {
+                        spriteBatch.Draw(thumbnails["blackhole"], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                    }
                 }
             }
-            spriteBatch.Draw(hudTexture, hudRectangle, Color.Red);
-            if (curPlayer.name != null)
-            {
-            spriteBatch.DrawString(font, curPlayer.name, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 5), Color.Black);
-            }
-            if (IsServer != null && ServerIP == null)
-            {
-                spriteBatch.DrawString(font, "Waiting on IP...", new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
-            }
-            if (ServerIP != null)
-            {
-                spriteBatch.DrawString(font, "Server IP is: " + ServerIP, new Vector2(hudRectangle.X + 5, hudRectangle.Y + 25), Color.Black);
-            }
-
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -574,6 +625,20 @@ namespace BlackholeBattle
             KeyboardState state = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
             bool selectMultipleUnits = false;
+            if(state.IsKeyDown(Keys.N))
+            {
+                if (cameraState != ViewState.XY)
+                    cameraState = ViewState.XY;
+                else
+                    cameraState = ViewState.Camera;
+            }
+            if (state.IsKeyDown(Keys.M))
+            {
+                if (cameraState != ViewState.ZX)
+                    cameraState = ViewState.ZX;
+                else
+                    cameraState = ViewState.Camera;
+            }
             if (state.IsKeyDown(Keys.Escape))
             {
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
@@ -822,4 +887,10 @@ namespace BlackholeBattle
             units.Add(b);
         }
     }
+    public enum ViewState
+    {
+        Camera,
+        XY,
+        ZX
+    };
 }
