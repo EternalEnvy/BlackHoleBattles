@@ -25,6 +25,7 @@ namespace BlackholeBattle
     /// 
     public class BlackholeBattle : GameScreen
     {
+        public static DateTime? lastNetworkReceived = null;
         //TESTING HERE
         ViewState cameraState = ViewState.Camera;
         float pauseAlpha;
@@ -355,6 +356,7 @@ namespace BlackholeBattle
 
             if (FrameNumber.HasValue)
             {
+                if (DateTime.Now - lastNetworkReceived > TimeSpan.FromSeconds(10)) ExitScreen();
                 Vector3 average = new Vector3();
                 foreach (IUnit u in selectedUnits)
                 {
@@ -607,6 +609,7 @@ namespace BlackholeBattle
             while (true)
             {
                 var res = c.Receive(ref ip);
+                lastNetworkReceived = DateTime.Now;
                 var stream = new MemoryStream(res);
                 var packet = new GameStatePacket();
                 packet.ReadPacketData(stream);

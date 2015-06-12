@@ -106,6 +106,7 @@ namespace BlackholeBattle
             while (true)
             {
                 var res = client.Receive(ref serverIP);
+                BlackholeBattle.lastNetworkReceived = DateTime.Now;
                 var otherIP = serverIP.Address;
                 if (reset)
                     serverIP = new IPEndPoint(IPAddress.Any, serverIP.Port);
