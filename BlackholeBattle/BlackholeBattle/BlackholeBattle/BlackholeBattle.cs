@@ -530,8 +530,8 @@ namespace BlackholeBattle
 
                 foreach (IUnit unit in units)
                 {
-                    var pos = unit.Position() * 0.0245f;
-                    Vector2 onScreen = new Vector2(pos.X + startingX, pos.Y + startingY);
+                    var pos = unit.Position();
+                    Vector2 onScreen = new Vector2((float)(pos.X * 0.30625 * graphics.PreferredBackBufferWidth + startingX), (float)(pos.Y * 0.4083 * graphics.PreferredBackBufferHeight + startingY));
                     if (unit is Spheroid)
                     {
                         spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
@@ -554,8 +554,8 @@ namespace BlackholeBattle
                 
                 foreach(IUnit unit in units)
                 {
-                    var pos = unit.Position() * 0.0245f;
-                    Vector2 onScreen = new Vector2(pos.X + startingX, pos.Z + startingY);
+                    var pos = unit.Position();
+                    Vector2 onScreen = new Vector2((float)(pos.X * 0.30625 * graphics.PreferredBackBufferWidth + startingX), (float)(pos.Y * 0.4083 * graphics.PreferredBackBufferHeight + startingY));
                     if(unit is Spheroid)
                     {
                         spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
