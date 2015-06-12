@@ -820,7 +820,7 @@ namespace BlackholeBattle
         private void UpdateClientGamePad(InputPacket input)
         {
             Vector3 lookingAt = (input.CameraRotation - input.CameraPosition);
-            var unit = (units.First(a => a.ID() == input.SelectedBlackHoleID)) as IMovable;
+            var unit = (units.FirstOrDefault(a => a.ID() == input.SelectedBlackHoleID)) as IMovable;
             if (unit != null)
             {
                 if (input.Front)
