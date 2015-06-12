@@ -129,7 +129,7 @@ namespace BlackholeBattle
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
                 ScreenManager.Game.ResetElapsedTime();
-                CreateSpheroids(5);
+                CreateSpheroids();
                 //CreateBase();
                 CreateBlackHole(true);
                 CreateBlackHole(false);
@@ -878,15 +878,29 @@ namespace BlackholeBattle
                 }
             }
         }
-        void CreateSpheroids(int numSpheroids)
+        void CreateSpheroids()//int numSpheroids)
         {           
-            for(int i = 0 ; i < numSpheroids; i++)
+            /*for(int i = 0 ; i < numSpheroids; i++)
             {
                 int randy = randall.Next(1,8);
                 Spheroid s = new Spheroid(new Vector3(randall.Next(-14000, 14000), randall.Next(-14000, 14000), randall.Next(-14000, 14000)), Vector3.Zero, randall.Next(1, 100), randall.Next(5, 200), randall.Next(2, 40), randy == 1 ? "earth" : randy == 2 ? "mars" : randy == 3 ? "moon" : randy == 4 ? "neptune" : randy == 5 ? "uranus" : randy == 6 ? "venus" : "ganymede", curPlayer.name);
                 gravityObjects.Add(s);
                 units.Add(s);
-            }
+            }*/
+            Spheroid s = new Spheroid(new Vector3(-600, 0, 600), Vector3.Zero, 50, 80, 5, "earth", curPlayer.name);
+            Spheroid t = new Spheroid(new Vector3(-1000, 0, 600), new Vector3(0, 0, 1.12f), 10, 20, 4, "moon", curPlayer.name);
+            Spheroid u = new Spheroid(new Vector3(2500, 80, 0), new Vector3(2, 0, 0), 30, 75, 7, "neptune", curPlayer.name);
+            Spheroid v = new Spheroid(new Vector3(-3000, -1000, -8000), Vector3.Zero, 100, 150, 2, "ganymede", curPlayer.name);
+            Spheroid w = new Spheroid(new Vector3(-5000, 0, 2000), new Vector3(3, 0, 0), 90, 125, 5, "venus", curPlayer.name);
+            Spheroid x = new Spheroid(new Vector3(5000, 0, 2000), new Vector3(-3, 0, 0), 90, 125, 5, "uranus", curPlayer.name);
+            Spheroid y = new Spheroid(new Vector3(12000, 12000, 12000), Vector3.Zero, 10, 300, 15, "mars", curPlayer.name);
+            gravityObjects.Add(s); units.Add(s);
+            gravityObjects.Add(t); units.Add(t);
+            gravityObjects.Add(u); units.Add(u);
+            gravityObjects.Add(v); units.Add(v);
+            gravityObjects.Add(w); units.Add(w);
+            gravityObjects.Add(x); units.Add(x);
+            gravityObjects.Add(y); units.Add(y);
         }
         void CreateBase()
         {
