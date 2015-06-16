@@ -63,7 +63,7 @@ namespace BlackholeBattle
             var numPackets = ReadLong(stream);
 
             //Only return new packets
-            Packet[] packets = new Packet[numPackets2];
+            Packet[] packets = new Packet[numPackets2 < 0 ? 0 : numPackets2];
             for (var i = 0; i < numPackets; i++)
             {
                 //If the packet is new, store it

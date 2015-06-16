@@ -533,6 +533,33 @@
       <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\textures\143377959446033_0.xnb</Output>
       <Time>2015-06-11T10:32:22.2324974-04:00</Time>
     </Item>
+    <Item>
+      <Source>XYPlane.png</Source>
+      <Name>XYPlane</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\XYPlane.xnb</Output>
+      <Time>2015-06-11T20:21:52.439802-04:00</Time>
+    </Item>
+    <Item>
+      <Source>ZXPlane.png</Source>
+      <Name>ZXPlane</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\ZXPlane.xnb</Output>
+      <Time>2015-06-11T20:41:28.0983157-04:00</Time>
+    </Item>
+    <Item>
+      <Source>BaseTemp.png</Source>
+      <Name>BaseTemp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Lee\Documents\GitHub\BlackHoleBattles\BlackholeBattle\BlackholeBattle\BlackholeBattle\bin\x86\Debug\Content\BaseTemp.xnb</Output>
+      <Time>2015-06-11T21:30:41.692829-04:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{501EAF72-6E5B-4221-8CA3-87A44BC67FBC}</ContentProjectGUID>

@@ -138,7 +138,7 @@ namespace BlackholeBattle
                 graphics.PreferredBackBufferHeight = 720;
                 graphics.ApplyChanges();
                 hudRectangle = new Rectangle(0, graphics.PreferredBackBufferHeight * 3 / 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight / 4);
-                    hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                hudTexture = new Texture2D(ScreenManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                 Color[] c = new Color[1];
                 Byte transparency_amount = 175;
                 c[0] = Color.FromNonPremultiplied(255, 255, 255, transparency_amount);
@@ -370,6 +370,7 @@ namespace BlackholeBattle
 
                     UpdateGamePad();
                     //Selected units sounds like a bad idea considering it's a hashset and .First() can be any element...
+                    //Yeah whatever John the Hashset was your idea
                     var packet = new InputPacket
                     {
                         FrameNumber = FrameNumber.Value,
@@ -526,7 +527,7 @@ namespace BlackholeBattle
             }
             if(cameraState == ViewState.XY)
             {
-                spriteBatch.Draw(XYPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight),Color.Black);
+                spriteBatch.Draw(XYPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight),Color.CornflowerBlue);
                 int startingX = graphics.PreferredBackBufferWidth / 2;
                 int startingY = graphics.PreferredBackBufferHeight / 2;
 
@@ -536,21 +537,21 @@ namespace BlackholeBattle
                     Vector2 onScreen = new Vector2((float)(pos.X * 0.30625 * graphics.PreferredBackBufferWidth + startingX), (float)(pos.Y * 0.4083 * graphics.PreferredBackBufferHeight + startingY));
                     if (unit is Spheroid)
                     {
-                        spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                        spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.White);
                     }
                     if (unit is Base)
                     {
-                        spriteBatch.Draw(baseTemp, new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                        spriteBatch.Draw(baseTemp, new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.White);
                     }
                     if (unit is Blackhole)
                     {
-                        spriteBatch.Draw(thumbnails["blackhole"], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                        spriteBatch.Draw(thumbnails["blackhole"], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Red);
                     }
                 }
             }
             if (cameraState == ViewState.ZX)
             {
-                spriteBatch.Draw(ZXPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.Black);
+                spriteBatch.Draw(ZXPlane, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.Orange);
                 int startingX = graphics.PreferredBackBufferWidth / 2;
                 int startingY = graphics.PreferredBackBufferHeight / 2;
                 
@@ -560,15 +561,15 @@ namespace BlackholeBattle
                     Vector2 onScreen = new Vector2((float)(pos.X * 0.30625 * graphics.PreferredBackBufferWidth + startingX), (float)(pos.Y * 0.4083 * graphics.PreferredBackBufferHeight + startingY));
                     if(unit is Spheroid)
                     {
-                        spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                        spriteBatch.Draw(thumbnails[unit.ModelName()], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.White);
                     }
                     if(unit is Base)
                     {
-                        spriteBatch.Draw(baseTemp, new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                        spriteBatch.Draw(baseTemp, new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.White);
                     }
                     if(unit is Blackhole)
                     {
-                        spriteBatch.Draw(thumbnails["blackhole"], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.Black);
+                        spriteBatch.Draw(thumbnails["blackhole"], new Rectangle((int)onScreen.X, (int)onScreen.Y, 10, 10), Color.White);
                     }
                 }
             }

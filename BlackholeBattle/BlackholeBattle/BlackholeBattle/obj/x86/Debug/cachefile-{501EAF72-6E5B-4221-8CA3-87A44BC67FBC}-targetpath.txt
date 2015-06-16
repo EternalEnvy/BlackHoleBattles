@@ -36,3 +36,6 @@ Content\textures\neptune_0.xnb
 Content\Air Missle diffuse_0.xnb
 Content\textures\143377959446034_0.xnb
 Content\textures\143377959446033_0.xnb
+Content\XYPlane.xnb
+Content\ZXPlane.xnb
+Content\BaseTemp.xnb
